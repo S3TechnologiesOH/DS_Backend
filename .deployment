@@ -1,2 +1,5 @@
 [config]
-SCM_DO_BUILD_DURING_DEPLOYMENT=false
+SCM_DO_BUILD_DURING_DEPLOYMENT=true
+ENABLE_ORYX_BUILD=true
+PRE_BUILD_COMMAND=echo "Installing dependencies..."
+POST_BUILD_COMMAND=echo "Build completed successfully"
