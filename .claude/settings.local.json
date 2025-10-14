@@ -9,7 +9,9 @@
       "Bash(git commit:*)",
       "Bash(git push:*)",
       "Bash(npm run build)",
-      "Bash(npx tsc:*)"
+      "Bash(npx tsc:*)",
+      "Bash(az webapp log tail:*)",
+      "Bash(node -e \"console.log(require(''crypto'').randomBytes(32).toString(''hex''))\")"
     ],
     "deny": [],
     "ask": []
