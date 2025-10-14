@@ -14,7 +14,8 @@
     "lint:fix": "eslint . --ext .ts --fix",
     "format": "prettier --write \"src/**/*.ts\"",
     "format:check": "prettier --check \"src/**/*.ts\"",
-    "migrate": "ts-node src/database/migrations/migrate.ts"
+    "migrate": "node dist/database/migrations/migrate.js",
+    "migrate:dev": "ts-node src/database/migrations/migrate.ts"
   },
   "keywords": [
     "digital-signage",

@@ -24,8 +24,12 @@ const loadMigrations = async (): Promise<Migration[]> => {
   const migrationsDir = __dirname;
   const files = await fs.readdir(migrationsDir);
 
+  // Detect if we're running compiled JS or TypeScript source
+  const extension = __filename.endsWith('.js') ? '.js' : '.ts';
+  const migrateFileName = extension === '.js' ? 'migrate.js' : 'migrate.ts';
+
   const migrationFiles = files
-    .filter((file) => file.endsWith('.ts') && file !== 'migrate.ts')
+    .filter((file) => file.endsWith(extension) && file !== migrateFileName)
     .sort();
 
   const migrations: Migration[] = [];
@@ -35,7 +39,7 @@ const loadMigrations = async (): Promise<Migration[]> => {
     // eslint-disable-next-line @typescript-eslint/no-var-requires
     const migration = require(migrationPath);
 
-    const id = file.replace('.ts', '');
+    const id = file.replace(extension, '');
     migrations.push({
       id,
       name: migration.name || id,

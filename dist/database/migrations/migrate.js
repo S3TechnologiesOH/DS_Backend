@@ -20,15 +20,18 @@ const logger_1 = __importDefault(require("../../utils/logger"));
 const loadMigrations = async () => {
     const migrationsDir = __dirname;
     const files = await fs_1.promises.readdir(migrationsDir);
+    // Detect if we're running compiled JS or TypeScript source
+    const extension = __filename.endsWith('.js') ? '.js' : '.ts';
+    const migrateFileName = extension === '.js' ? 'migrate.js' : 'migrate.ts';
     const migrationFiles = files
-        .filter((file) => file.endsWith('.ts') && file !== 'migrate.ts')
+        .filter((file) => file.endsWith(extension) && file !== migrateFileName)
         .sort();
     const migrations = [];
     for (const file of migrationFiles) {
         const migrationPath = path_1.default.join(migrationsDir, file);
         // eslint-disable-next-line @typescript-eslint/no-var-requires
         const migration = require(migrationPath);
-        const id = file.replace('.ts', '');
+        const id = file.replace(extension, '');
         migrations.push({
             id,
             name: migration.name || id,
