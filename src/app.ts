@@ -12,6 +12,7 @@ import rateLimit from 'express-rate-limit';
 import { env } from './config/environment';
 import { errorHandler, notFoundHandler } from './middleware/errorHandler';
 import logger from './utils/logger';
+import apiRoutes from './routes';
 
 /**
  * Create and configure Express application
@@ -67,14 +68,17 @@ export const createApp = (): Application => {
     });
   });
 
-  // API Routes will be mounted here
-  // Example: app.use('/api/v1/auth', authRoutes);
-  // Example: app.use('/api/v1/customers', customerRoutes);
-  // Example: app.use('/api/v1/sites', siteRoutes);
-  // Example: app.use('/api/v1/players', playerRoutes);
-  // Example: app.use('/api/v1/content', contentRoutes);
-  // Example: app.use('/api/v1/playlists', playlistRoutes);
-  // Example: app.use('/api/v1/schedules', scheduleRoutes);
+  // API Routes - all routes are prefixed with /api/v1
+  app.use('/api/v1', apiRoutes);
+
+  // Additional route modules can be added in src/routes/index.ts:
+  // - /api/v1/auth (login, register, token refresh)
+  // - /api/v1/content (media upload, list, update, delete)
+  // - /api/v1/customers (customer management)
+  // - /api/v1/sites (site management)
+  // - /api/v1/players (player management)
+  // - /api/v1/playlists (playlist management)
+  // - /api/v1/schedules (schedule management)
 
   // 404 handler (must be after all routes)
   app.use(notFoundHandler);
