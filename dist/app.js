@@ -14,10 +14,12 @@ const helmet_1 = __importDefault(require("helmet"));
 const cors_1 = __importDefault(require("cors"));
 const compression_1 = __importDefault(require("compression"));
 const express_rate_limit_1 = __importDefault(require("express-rate-limit"));
+const swagger_ui_express_1 = __importDefault(require("swagger-ui-express"));
 const environment_1 = require("./config/environment");
 const errorHandler_1 = require("./middleware/errorHandler");
 const logger_1 = __importDefault(require("./utils/logger"));
 const routes_1 = __importDefault(require("./routes"));
+const swagger_1 = require("./config/swagger");
 /**
  * Create and configure Express application
  */
@@ -64,6 +66,11 @@ const createApp = () => {
             environment: environment_1.env.NODE_ENV,
         });
     });
+    // Swagger API Documentation
+    app.use('/api-docs', swagger_ui_express_1.default.serve, swagger_ui_express_1.default.setup(swagger_1.swaggerSpec, {
+        customCss: '.swagger-ui .topbar { display: none }',
+        customSiteTitle: 'Digital Signage API Docs',
+    }));
     // API Routes - all routes are prefixed with /api/v1
     app.use('/api/v1', routes_1.default);
     // Additional route modules can be added in src/routes/index.ts:

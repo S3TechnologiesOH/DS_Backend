@@ -42,8 +42,54 @@ const contentController = new ContentController(contentService);
 router.use(authenticate);
 
 /**
- * GET /api/v1/content
- * List all content for authenticated user's customer
+ * @swagger
+ * /content:
+ *   get:
+ *     summary: List all content
+ *     description: Get all content items for the authenticated user's customer
+ *     tags: [Content]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: query
+ *         name: page
+ *         schema:
+ *           type: integer
+ *           default: 1
+ *         description: Page number for pagination
+ *       - in: query
+ *         name: limit
+ *         schema:
+ *           type: integer
+ *           default: 20
+ *         description: Number of items per page
+ *       - in: query
+ *         name: type
+ *         schema:
+ *           type: string
+ *           enum: [Image, Video, HTML, URL, PDF]
+ *         description: Filter by content type
+ *     responses:
+ *       200:
+ *         description: Content list retrieved successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 status:
+ *                   type: string
+ *                   example: success
+ *                 data:
+ *                   type: array
+ *                   items:
+ *                     $ref: '#/components/schemas/Content'
+ *       401:
+ *         description: Unauthorized
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Error'
  */
 router.get(
   '/',
@@ -71,9 +117,66 @@ router.get(
 );
 
 /**
- * POST /api/v1/content/upload
- * Upload new content with file
- * Requires Admin or Editor role
+ * @swagger
+ * /content/upload:
+ *   post:
+ *     summary: Upload new content
+ *     description: Upload a new media file (image, video, PDF) to Azure Blob Storage
+ *     tags: [Content]
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         multipart/form-data:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - file
+ *               - name
+ *               - type
+ *             properties:
+ *               file:
+ *                 type: string
+ *                 format: binary
+ *                 description: Media file to upload (max 100MB)
+ *               name:
+ *                 type: string
+ *                 example: Spring Sale Banner
+ *               type:
+ *                 type: string
+ *                 enum: [Image, Video, HTML, URL, PDF]
+ *                 example: Image
+ *               duration:
+ *                 type: integer
+ *                 example: 10
+ *                 description: Display duration in seconds
+ *               tags:
+ *                 type: string
+ *                 example: promotion,seasonal
+ *     responses:
+ *       201:
+ *         description: Content uploaded successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 status:
+ *                   type: string
+ *                   example: success
+ *                 data:
+ *                   $ref: '#/components/schemas/Content'
+ *       400:
+ *         description: Validation error or file too large
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Error'
+ *       401:
+ *         description: Unauthorized
+ *       403:
+ *         description: Forbidden - Requires Admin or Editor role
  */
 router.post(
   '/upload',

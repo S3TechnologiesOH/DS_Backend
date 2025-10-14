@@ -9,10 +9,12 @@ import helmet from 'helmet';
 import cors from 'cors';
 import compression from 'compression';
 import rateLimit from 'express-rate-limit';
+import swaggerUi from 'swagger-ui-express';
 import { env } from './config/environment';
 import { errorHandler, notFoundHandler } from './middleware/errorHandler';
 import logger from './utils/logger';
 import apiRoutes from './routes';
+import { swaggerSpec } from './config/swagger';
 
 /**
  * Create and configure Express application
@@ -67,6 +69,12 @@ export const createApp = (): Application => {
       environment: env.NODE_ENV,
     });
   });
+
+  // Swagger API Documentation
+  app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec, {
+    customCss: '.swagger-ui .topbar { display: none }',
+    customSiteTitle: 'Digital Signage API Docs',
+  }));
 
   // API Routes - all routes are prefixed with /api/v1
   app.use('/api/v1', apiRoutes);
