@@ -1,0 +1,117 @@
+[
+  {
+    "name": "NODE_ENV",
+    "value": "production",
+    "slotSetting": false
+  },
+  {
+    "name": "PORT",
+    "value": "3000",
+    "slotSetting": false
+  },
+  {
+    "name": "DB_HOST",
+    "value": "your-azure-sql-server.database.windows.net",
+    "slotSetting": false
+  },
+  {
+    "name": "DB_PORT",
+    "value": "1433",
+    "slotSetting": false
+  },
+  {
+    "name": "DB_NAME",
+    "value": "digital_signage",
+    "slotSetting": false
+  },
+  {
+    "name": "DB_USER",
+    "value": "your_db_user",
+    "slotSetting": false
+  },
+  {
+    "name": "DB_PASSWORD",
+    "value": "your_db_password",
+    "slotSetting": false
+  },
+  {
+    "name": "DB_ENCRYPT",
+    "value": "true",
+    "slotSetting": false
+  },
+  {
+    "name": "JWT_SECRET",
+    "value": "your-super-secret-jwt-key-change-this-minimum-32-characters-long",
+    "slotSetting": false
+  },
+  {
+    "name": "JWT_EXPIRES_IN",
+    "value": "1h",
+    "slotSetting": false
+  },
+  {
+    "name": "JWT_REFRESH_SECRET",
+    "value": "your-super-secret-refresh-key-change-this-minimum-32-characters",
+    "slotSetting": false
+  },
+  {
+    "name": "JWT_REFRESH_EXPIRES_IN",
+    "value": "7d",
+    "slotSetting": false
+  },
+  {
+    "name": "PLAYER_JWT_SECRET",
+    "value": "your-super-secret-player-jwt-key-minimum-32-characters-long",
+    "slotSetting": false
+  },
+  {
+    "name": "PLAYER_JWT_EXPIRES_IN",
+    "value": "30d",
+    "slotSetting": false
+  },
+  {
+    "name": "AZURE_STORAGE_CONNECTION_STRING",
+    "value": "DefaultEndpointsProtocol=https;AccountName=your-account;AccountKey=your-key;EndpointSuffix=core.windows.net",
+    "slotSetting": false
+  },
+  {
+    "name": "AZURE_STORAGE_CONTAINER",
+    "value": "digital-signage-media",
+    "slotSetting": false
+  },
+  {
+    "name": "CORS_ORIGIN",
+    "value": "https://your-frontend-app.azurewebsites.net,https://your-custom-domain.com",
+    "slotSetting": false
+  },
+  {
+    "name": "CORS_CREDENTIALS",
+    "value": "true",
+    "slotSetting": false
+  },
+  {
+    "name": "RATE_LIMIT_WINDOW_MS",
+    "value": "900000",
+    "slotSetting": false
+  },
+  {
+    "name": "RATE_LIMIT_MAX_REQUESTS",
+    "value": "100",
+    "slotSetting": false
+  },
+  {
+    "name": "LOG_LEVEL",
+    "value": "info",
+    "slotSetting": false
+  },
+  {
+    "name": "LOG_FILE_PATH",
+    "value": "./logs",
+    "slotSetting": false
+  },
+  {
+    "name": "PLAYER_HEARTBEAT_TIMEOUT_MINUTES",
+    "value": "5",
+    "slotSetting": false
+  }
+]
