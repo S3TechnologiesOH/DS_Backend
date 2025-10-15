@@ -74,7 +74,16 @@ export const createApp = (): Application => {
   app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec, {
     customCss: '.swagger-ui .topbar { display: none }',
     customSiteTitle: 'Digital Signage API Docs',
+    swaggerOptions: {
+      persistAuthorization: true,
+    },
   }));
+
+  // OpenAPI JSON specification endpoint
+  app.get('/api-docs.json', (_req, res) => {
+    res.setHeader('Content-Type', 'application/json');
+    res.send(swaggerSpec);
+  });
 
   // API Routes - all routes are prefixed with /api/v1
   app.use('/api/v1', apiRoutes);

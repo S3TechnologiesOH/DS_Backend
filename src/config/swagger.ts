@@ -78,6 +78,54 @@ const options: swaggerJsdoc.Options = {
             },
           },
         },
+        User: {
+          type: 'object',
+          properties: {
+            userId: {
+              type: 'integer',
+              example: 1,
+            },
+            customerId: {
+              type: 'integer',
+              example: 1,
+            },
+            email: {
+              type: 'string',
+              format: 'email',
+              example: 'user@example.com',
+            },
+            firstName: {
+              type: 'string',
+              example: 'John',
+            },
+            lastName: {
+              type: 'string',
+              example: 'Doe',
+            },
+            role: {
+              type: 'string',
+              enum: ['Admin', 'Editor', 'Viewer', 'SiteManager'],
+              example: 'Editor',
+            },
+            isActive: {
+              type: 'boolean',
+              example: true,
+            },
+            assignedSiteId: {
+              type: 'integer',
+              nullable: true,
+              example: 1,
+            },
+            createdAt: {
+              type: 'string',
+              format: 'date-time',
+            },
+            updatedAt: {
+              type: 'string',
+              format: 'date-time',
+            },
+          },
+        },
         Customer: {
           type: 'object',
           properties: {
@@ -188,7 +236,7 @@ const options: swaggerJsdoc.Options = {
               type: 'string',
               example: 'Spring Sale Banner',
             },
-            type: {
+            contentType: {
               type: 'string',
               enum: ['Image', 'Video', 'HTML', 'URL', 'PDF'],
               example: 'Image',
@@ -201,6 +249,241 @@ const options: swaggerJsdoc.Options = {
               type: 'integer',
               example: 10,
               description: 'Duration in seconds',
+            },
+            fileSize: {
+              type: 'integer',
+              example: 1024000,
+              description: 'File size in bytes',
+            },
+            mimeType: {
+              type: 'string',
+              example: 'image/jpeg',
+            },
+            tags: {
+              type: 'string',
+              example: 'promotion,sale',
+              nullable: true,
+            },
+            isActive: {
+              type: 'boolean',
+              example: true,
+            },
+            createdAt: {
+              type: 'string',
+              format: 'date-time',
+            },
+            updatedAt: {
+              type: 'string',
+              format: 'date-time',
+            },
+          },
+        },
+        Playlist: {
+          type: 'object',
+          properties: {
+            playlistId: {
+              type: 'integer',
+              example: 1,
+            },
+            customerId: {
+              type: 'integer',
+              example: 1,
+            },
+            name: {
+              type: 'string',
+              example: 'Holiday Campaign',
+            },
+            description: {
+              type: 'string',
+              example: 'Content for holiday season',
+              nullable: true,
+            },
+            isActive: {
+              type: 'boolean',
+              example: true,
+            },
+            createdBy: {
+              type: 'integer',
+              example: 1,
+            },
+            createdAt: {
+              type: 'string',
+              format: 'date-time',
+            },
+            updatedAt: {
+              type: 'string',
+              format: 'date-time',
+            },
+          },
+        },
+        PlaylistItem: {
+          type: 'object',
+          properties: {
+            playlistItemId: {
+              type: 'integer',
+              example: 1,
+            },
+            playlistId: {
+              type: 'integer',
+              example: 1,
+            },
+            contentId: {
+              type: 'integer',
+              example: 1,
+            },
+            displayOrder: {
+              type: 'integer',
+              example: 0,
+            },
+            duration: {
+              type: 'integer',
+              example: 10,
+              nullable: true,
+              description: 'Display duration in seconds',
+            },
+            transitionType: {
+              type: 'string',
+              enum: ['Fade', 'Slide', 'None'],
+              example: 'Fade',
+            },
+            transitionDuration: {
+              type: 'integer',
+              example: 500,
+              description: 'Transition duration in milliseconds',
+            },
+            createdAt: {
+              type: 'string',
+              format: 'date-time',
+            },
+          },
+        },
+        Schedule: {
+          type: 'object',
+          properties: {
+            scheduleId: {
+              type: 'integer',
+              example: 1,
+            },
+            customerId: {
+              type: 'integer',
+              example: 1,
+            },
+            name: {
+              type: 'string',
+              example: 'Morning Schedule',
+            },
+            playlistId: {
+              type: 'integer',
+              example: 1,
+            },
+            priority: {
+              type: 'integer',
+              example: 50,
+              description: 'Priority 0-100, higher wins',
+            },
+            startDate: {
+              type: 'string',
+              format: 'date',
+              example: '2025-01-01',
+              nullable: true,
+            },
+            endDate: {
+              type: 'string',
+              format: 'date',
+              example: '2025-12-31',
+              nullable: true,
+            },
+            startTime: {
+              type: 'string',
+              example: '09:00:00',
+              nullable: true,
+              description: 'Time in HH:mm:ss format',
+            },
+            endTime: {
+              type: 'string',
+              example: '17:00:00',
+              nullable: true,
+              description: 'Time in HH:mm:ss format',
+            },
+            daysOfWeek: {
+              type: 'string',
+              example: 'Mon,Tue,Wed,Thu,Fri',
+              nullable: true,
+              description: 'Comma-separated days',
+            },
+            isActive: {
+              type: 'boolean',
+              example: true,
+            },
+            createdBy: {
+              type: 'integer',
+              example: 1,
+            },
+            createdAt: {
+              type: 'string',
+              format: 'date-time',
+            },
+            updatedAt: {
+              type: 'string',
+              format: 'date-time',
+            },
+          },
+        },
+        ScheduleAssignment: {
+          type: 'object',
+          properties: {
+            assignmentId: {
+              type: 'integer',
+              example: 1,
+            },
+            scheduleId: {
+              type: 'integer',
+              example: 1,
+            },
+            assignmentType: {
+              type: 'string',
+              enum: ['Customer', 'Site', 'Player'],
+              example: 'Player',
+            },
+            targetCustomerId: {
+              type: 'integer',
+              nullable: true,
+              example: 1,
+            },
+            targetSiteId: {
+              type: 'integer',
+              nullable: true,
+              example: 1,
+            },
+            targetPlayerId: {
+              type: 'integer',
+              nullable: true,
+              example: 1,
+            },
+            createdAt: {
+              type: 'string',
+              format: 'date-time',
+            },
+          },
+        },
+        Pagination: {
+          type: 'object',
+          properties: {
+            page: {
+              type: 'integer',
+              example: 1,
+            },
+            limit: {
+              type: 'integer',
+              example: 20,
+            },
+            total: {
+              type: 'integer',
+              example: 100,
+            },
+            totalPages: {
+              type: 'integer',
+              example: 5,
             },
           },
         },

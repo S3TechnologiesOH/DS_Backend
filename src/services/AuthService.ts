@@ -214,14 +214,13 @@ export class AuthService {
   private generateTokens(user: User): { accessToken: string; refreshToken: string } {
     const accessToken = this.generateAccessToken(user);
 
-    const refreshToken = jwt.sign(
-      {
-        userId: user.userId,
-        customerId: user.customerId,
-      },
-      env.JWT_REFRESH_SECRET,
-      { expiresIn: env.JWT_REFRESH_EXPIRES_IN }
-    );
+    const payload = {
+      userId: user.userId,
+      customerId: user.customerId,
+    };
+    const refreshToken = jwt.sign(payload, env.JWT_REFRESH_SECRET, {
+      expiresIn: env.JWT_REFRESH_EXPIRES_IN,
+    } as jwt.SignOptions);
 
     return { accessToken, refreshToken };
   }
@@ -230,17 +229,16 @@ export class AuthService {
    * Generate JWT access token
    */
   private generateAccessToken(user: User): string {
-    return jwt.sign(
-      {
-        userId: user.userId,
-        customerId: user.customerId,
-        email: user.email,
-        role: user.role,
-        assignedSiteId: user.assignedSiteId,
-      },
-      env.JWT_SECRET,
-      { expiresIn: env.JWT_EXPIRES_IN }
-    );
+    const payload = {
+      userId: user.userId,
+      customerId: user.customerId,
+      email: user.email,
+      role: user.role,
+      assignedSiteId: user.assignedSiteId,
+    };
+    return jwt.sign(payload, env.JWT_SECRET, {
+      expiresIn: env.JWT_EXPIRES_IN,
+    } as jwt.SignOptions);
   }
 
   /**

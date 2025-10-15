@@ -283,3 +283,4 @@ Write unit tests for all services using Jest:
 4. **Validate file uploads** - Check MIME types and file sizes
 5. **Handle player offline status** - Check `LastHeartbeat` for timeouts
 6. **Schedule priority resolution** - Player > Site > Customer
+7. ** Always update the bookstacks documentation on big changes ** - located in the bookstacks folder

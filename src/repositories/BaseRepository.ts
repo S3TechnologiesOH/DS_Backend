@@ -161,7 +161,7 @@ export abstract class BaseRepository {
       }
 
       const result = await request.query(sql);
-      return { recordsets: result.recordsets };
+      return { recordsets: result.recordsets as IRecordSet<T[number]>[] };
     } catch (error) {
       logger.error('Database query error (queryMultipleResultSets)', {
         sql,
