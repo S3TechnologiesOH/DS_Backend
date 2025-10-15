@@ -243,4 +243,21 @@ export class UserRepository extends BaseRepository {
     const result = await this.queryOne<{ count: number }>(sql, params);
     return (result?.count ?? 0) > 0;
   }
+
+  /**
+   * Update user password
+   */
+  async updatePassword(userId: number, customerId: number, passwordHash: string): Promise<void> {
+    const sql = `
+      UPDATE Users
+      SET PasswordHash = @passwordHash, UpdatedAt = GETUTCDATE()
+      WHERE UserId = @userId AND CustomerId = @customerId
+    `;
+
+    const rowsAffected = await this.execute(sql, { userId, customerId, passwordHash });
+
+    if (rowsAffected === 0) {
+      throw new NotFoundError('User not found');
+    }
+  }
 }

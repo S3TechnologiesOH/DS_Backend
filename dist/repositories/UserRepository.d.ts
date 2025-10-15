@@ -42,5 +42,9 @@ export declare class UserRepository extends BaseRepository {
      * Check if email exists within customer
      */
     emailExists(email: string, customerId: number, excludeUserId?: number): Promise<boolean>;
+    /**
+     * Update user password
+     */
+    updatePassword(userId: number, customerId: number, passwordHash: string): Promise<void>;
 }
 //# sourceMappingURL=UserRepository.d.ts.map

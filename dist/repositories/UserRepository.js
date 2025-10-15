@@ -219,6 +219,20 @@ class UserRepository extends BaseRepository_1.BaseRepository {
         const result = await this.queryOne(sql, params);
         return (result?.count ?? 0) > 0;
     }
+    /**
+     * Update user password
+     */
+    async updatePassword(userId, customerId, passwordHash) {
+        const sql = `
+      UPDATE Users
+      SET PasswordHash = @passwordHash, UpdatedAt = GETUTCDATE()
+      WHERE UserId = @userId AND CustomerId = @customerId
+    `;
+        const rowsAffected = await this.execute(sql, { userId, customerId, passwordHash });
+        if (rowsAffected === 0) {
+            throw new errors_1.NotFoundError('User not found');
+        }
+    }
 }
 exports.UserRepository = UserRepository;
 //# sourceMappingURL=UserRepository.js.map

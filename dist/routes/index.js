@@ -19,6 +19,8 @@ const playlist_routes_1 = __importDefault(require("./playlist.routes"));
 const schedule_routes_1 = __importDefault(require("./schedule.routes"));
 const analytics_routes_1 = __importDefault(require("./analytics.routes"));
 const webhook_routes_1 = __importDefault(require("./webhook.routes"));
+const user_routes_1 = __importDefault(require("./user.routes"));
+const player_device_routes_1 = __importDefault(require("./player-device.routes"));
 const router = (0, express_1.Router)();
 // Mount route modules
 router.use('/auth', auth_routes_1.default);
@@ -30,5 +32,7 @@ router.use('/playlists', playlist_routes_1.default);
 router.use('/schedules', schedule_routes_1.default);
 router.use('/analytics', analytics_routes_1.default);
 router.use('/webhooks', webhook_routes_1.default);
+router.use('/users', user_routes_1.default);
+router.use('/player-devices', player_device_routes_1.default);
 exports.default = router;
 //# sourceMappingURL=index.js.map
