@@ -12,15 +12,23 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = require("express");
 const auth_routes_1 = __importDefault(require("./auth.routes"));
 const content_routes_1 = __importDefault(require("./content.routes"));
+const customer_routes_1 = __importDefault(require("./customer.routes"));
+const site_routes_1 = __importDefault(require("./site.routes"));
+const player_routes_1 = __importDefault(require("./player.routes"));
+const playlist_routes_1 = __importDefault(require("./playlist.routes"));
+const schedule_routes_1 = __importDefault(require("./schedule.routes"));
+const analytics_routes_1 = __importDefault(require("./analytics.routes"));
+const webhook_routes_1 = __importDefault(require("./webhook.routes"));
 const router = (0, express_1.Router)();
 // Mount route modules
 router.use('/auth', auth_routes_1.default);
 router.use('/content', content_routes_1.default);
-// Future routes can be added here:
-// router.use('/customers', customerRoutes);
-// router.use('/sites', siteRoutes);
-// router.use('/players', playerRoutes);
-// router.use('/playlists', playlistRoutes);
-// router.use('/schedules', scheduleRoutes);
+router.use('/customers', customer_routes_1.default);
+router.use('/sites', site_routes_1.default);
+router.use('/players', player_routes_1.default);
+router.use('/playlists', playlist_routes_1.default);
+router.use('/schedules', schedule_routes_1.default);
+router.use('/analytics', analytics_routes_1.default);
+router.use('/webhooks', webhook_routes_1.default);
 exports.default = router;
 //# sourceMappingURL=index.js.map

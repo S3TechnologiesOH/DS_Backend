@@ -487,6 +487,418 @@ const options: swaggerJsdoc.Options = {
             },
           },
         },
+        ProofOfPlay: {
+          type: 'object',
+          properties: {
+            proofOfPlayId: {
+              type: 'integer',
+              example: 1,
+            },
+            playerId: {
+              type: 'integer',
+              example: 1,
+            },
+            contentId: {
+              type: 'integer',
+              example: 5,
+            },
+            playlistId: {
+              type: 'integer',
+              nullable: true,
+              example: 3,
+            },
+            scheduleId: {
+              type: 'integer',
+              nullable: true,
+              example: 2,
+            },
+            playbackStartTime: {
+              type: 'string',
+              format: 'date-time',
+            },
+            playbackEndTime: {
+              type: 'string',
+              format: 'date-time',
+              nullable: true,
+            },
+            duration: {
+              type: 'integer',
+              example: 30,
+              description: 'Playback duration in seconds',
+            },
+          },
+        },
+        AnalyticsSummary: {
+          type: 'object',
+          properties: {
+            totalPlays: {
+              type: 'integer',
+              example: 1234,
+            },
+            totalDuration: {
+              type: 'integer',
+              example: 45600,
+              description: 'Total duration in seconds',
+            },
+            uniquePlayers: {
+              type: 'integer',
+              example: 25,
+            },
+            uniqueContent: {
+              type: 'integer',
+              example: 150,
+            },
+            activeSites: {
+              type: 'integer',
+              example: 10,
+            },
+          },
+        },
+        ContentAnalytics: {
+          type: 'object',
+          properties: {
+            contentId: {
+              type: 'integer',
+              example: 5,
+            },
+            contentName: {
+              type: 'string',
+              example: 'Spring Sale Banner',
+            },
+            totalPlays: {
+              type: 'integer',
+              example: 245,
+            },
+            totalDuration: {
+              type: 'integer',
+              example: 7350,
+              description: 'Total duration in seconds',
+            },
+            uniquePlayers: {
+              type: 'integer',
+              example: 15,
+            },
+            lastPlayedAt: {
+              type: 'string',
+              format: 'date-time',
+              nullable: true,
+            },
+          },
+        },
+        PlayerAnalytics: {
+          type: 'object',
+          properties: {
+            playerId: {
+              type: 'integer',
+              example: 1,
+            },
+            playerName: {
+              type: 'string',
+              example: 'Lobby Display',
+            },
+            siteId: {
+              type: 'integer',
+              example: 1,
+            },
+            siteName: {
+              type: 'string',
+              example: 'Main Street Store',
+            },
+            status: {
+              type: 'string',
+              enum: ['Online', 'Offline', 'Error'],
+              example: 'Online',
+            },
+            totalPlays: {
+              type: 'integer',
+              example: 156,
+            },
+            lastHeartbeat: {
+              type: 'string',
+              format: 'date-time',
+            },
+          },
+        },
+        SiteAnalytics: {
+          type: 'object',
+          properties: {
+            siteId: {
+              type: 'integer',
+              example: 1,
+            },
+            siteName: {
+              type: 'string',
+              example: 'Main Street Store',
+            },
+            totalPlayers: {
+              type: 'integer',
+              example: 5,
+            },
+            onlinePlayers: {
+              type: 'integer',
+              example: 4,
+            },
+            totalPlays: {
+              type: 'integer',
+              example: 780,
+            },
+          },
+        },
+        PlaybackReport: {
+          type: 'object',
+          properties: {
+            date: {
+              type: 'string',
+              format: 'date',
+              example: '2025-01-15',
+            },
+            totalPlays: {
+              type: 'integer',
+              example: 156,
+            },
+            totalDuration: {
+              type: 'integer',
+              example: 4680,
+              description: 'Total duration in seconds',
+            },
+            uniquePlayers: {
+              type: 'integer',
+              example: 12,
+            },
+            uniqueContent: {
+              type: 'integer',
+              example: 45,
+            },
+          },
+        },
+        ContentPerformance: {
+          type: 'object',
+          properties: {
+            contentId: {
+              type: 'integer',
+              example: 5,
+            },
+            contentName: {
+              type: 'string',
+              example: 'Spring Sale Banner',
+            },
+            contentType: {
+              type: 'string',
+              enum: ['Image', 'Video', 'HTML', 'URL', 'PDF'],
+              example: 'Image',
+            },
+            totalPlays: {
+              type: 'integer',
+              example: 245,
+            },
+            avgDuration: {
+              type: 'number',
+              format: 'float',
+              example: 28.5,
+              description: 'Average playback duration in seconds',
+            },
+            completionRate: {
+              type: 'number',
+              format: 'float',
+              example: 0.95,
+              description: 'Completion rate (0-1)',
+            },
+          },
+        },
+        Webhook: {
+          type: 'object',
+          properties: {
+            webhookId: {
+              type: 'integer',
+              example: 1,
+            },
+            customerId: {
+              type: 'integer',
+              example: 1,
+            },
+            name: {
+              type: 'string',
+              example: 'Production Webhook',
+            },
+            url: {
+              type: 'string',
+              format: 'uri',
+              example: 'https://api.example.com/webhooks/digital-signage',
+            },
+            events: {
+              type: 'string',
+              example: 'player.online,player.offline,content.created',
+              description: 'Comma-separated list of subscribed events',
+            },
+            secret: {
+              type: 'string',
+              example: 'abc123def456',
+              description: 'Secret key for HMAC signature verification',
+            },
+            isActive: {
+              type: 'boolean',
+              example: true,
+            },
+            createdBy: {
+              type: 'integer',
+              example: 1,
+            },
+            createdAt: {
+              type: 'string',
+              format: 'date-time',
+            },
+            updatedAt: {
+              type: 'string',
+              format: 'date-time',
+            },
+          },
+        },
+        WebhookDelivery: {
+          type: 'object',
+          properties: {
+            deliveryId: {
+              type: 'integer',
+              example: 1,
+            },
+            webhookId: {
+              type: 'integer',
+              example: 1,
+            },
+            event: {
+              type: 'string',
+              example: 'player.online',
+            },
+            payload: {
+              type: 'string',
+              example: '{"event":"player.online","timestamp":"2025-01-15T10:30:00Z","customerId":1,"data":{...}}',
+              description: 'JSON payload sent to webhook',
+            },
+            statusCode: {
+              type: 'integer',
+              nullable: true,
+              example: 200,
+            },
+            responseBody: {
+              type: 'string',
+              nullable: true,
+              example: '{"status":"ok"}',
+            },
+            attemptCount: {
+              type: 'integer',
+              example: 1,
+            },
+            isDelivered: {
+              type: 'boolean',
+              example: true,
+            },
+            deliveredAt: {
+              type: 'string',
+              format: 'date-time',
+              nullable: true,
+            },
+            nextRetryAt: {
+              type: 'string',
+              format: 'date-time',
+              nullable: true,
+            },
+            createdAt: {
+              type: 'string',
+              format: 'date-time',
+            },
+          },
+        },
+        WebhookTestResult: {
+          type: 'object',
+          properties: {
+            success: {
+              type: 'boolean',
+              example: true,
+            },
+            statusCode: {
+              type: 'integer',
+              example: 200,
+            },
+            responseTime: {
+              type: 'integer',
+              example: 245,
+              description: 'Response time in milliseconds',
+            },
+            error: {
+              type: 'string',
+              nullable: true,
+              example: null,
+            },
+          },
+        },
+        WebhookPayload: {
+          type: 'object',
+          properties: {
+            event: {
+              type: 'string',
+              example: 'player.online',
+            },
+            timestamp: {
+              type: 'string',
+              format: 'date-time',
+              example: '2025-01-15T10:30:00Z',
+            },
+            customerId: {
+              type: 'integer',
+              example: 1,
+            },
+            data: {
+              type: 'object',
+              description: 'Event-specific data',
+              example: {
+                playerId: 5,
+                playerName: 'Lobby Display',
+                siteId: 2,
+              },
+            },
+          },
+        },
+      },
+      responses: {
+        BadRequest: {
+          description: 'Bad request - validation error',
+          content: {
+            'application/json': {
+              schema: {
+                $ref: '#/components/schemas/Error',
+              },
+            },
+          },
+        },
+        Unauthorized: {
+          description: 'Unauthorized - invalid or missing token',
+          content: {
+            'application/json': {
+              schema: {
+                $ref: '#/components/schemas/Error',
+              },
+            },
+          },
+        },
+        Forbidden: {
+          description: 'Forbidden - insufficient permissions',
+          content: {
+            'application/json': {
+              schema: {
+                $ref: '#/components/schemas/Error',
+              },
+            },
+          },
+        },
+        NotFound: {
+          description: 'Resource not found',
+          content: {
+            'application/json': {
+              schema: {
+                $ref: '#/components/schemas/Error',
+              },
+            },
+          },
+        },
       },
     },
     security: [
@@ -530,6 +942,10 @@ const options: swaggerJsdoc.Options = {
       {
         name: 'Analytics',
         description: 'Proof of play and analytics',
+      },
+      {
+        name: 'Webhooks',
+        description: 'Webhook event notifications',
       },
     ],
   },

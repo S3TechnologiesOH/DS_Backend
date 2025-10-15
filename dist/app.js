@@ -70,7 +70,15 @@ const createApp = () => {
     app.use('/api-docs', swagger_ui_express_1.default.serve, swagger_ui_express_1.default.setup(swagger_1.swaggerSpec, {
         customCss: '.swagger-ui .topbar { display: none }',
         customSiteTitle: 'Digital Signage API Docs',
+        swaggerOptions: {
+            persistAuthorization: true,
+        },
     }));
+    // OpenAPI JSON specification endpoint
+    app.get('/api-docs.json', (_req, res) => {
+        res.setHeader('Content-Type', 'application/json');
+        res.send(swagger_1.swaggerSpec);
+    });
     // API Routes - all routes are prefixed with /api/v1
     app.use('/api/v1', routes_1.default);
     // Additional route modules can be added in src/routes/index.ts:

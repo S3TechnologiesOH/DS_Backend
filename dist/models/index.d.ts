@@ -10,6 +10,8 @@ export * from './User';
 export * from './Content';
 export * from './Playlist';
 export * from './Schedule';
+export * from './Analytics';
+export * from './Webhook';
 export interface ProofOfPlay {
     proofOfPlayId: number;
     playerId: number;

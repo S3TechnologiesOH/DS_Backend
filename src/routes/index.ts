@@ -13,6 +13,8 @@ import siteRoutes from './site.routes';
 import playerRoutes from './player.routes';
 import playlistRoutes from './playlist.routes';
 import scheduleRoutes from './schedule.routes';
+import analyticsRoutes from './analytics.routes';
+import webhookRoutes from './webhook.routes';
 
 const router = Router();
 
@@ -24,5 +26,7 @@ router.use('/sites', siteRoutes);
 router.use('/players', playerRoutes);
 router.use('/playlists', playlistRoutes);
 router.use('/schedules', scheduleRoutes);
+router.use('/analytics', analyticsRoutes);
+router.use('/webhooks', webhookRoutes);
 
 export default router;

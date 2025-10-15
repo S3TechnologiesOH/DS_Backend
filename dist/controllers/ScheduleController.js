@@ -1,0 +1,206 @@
+"use strict";
+/**
+ * Schedule Controller
+ *
+ * Handles HTTP requests for schedule management endpoints.
+ * Schedules determine when and where playlists are displayed.
+ */
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.ScheduleController = void 0;
+class ScheduleController {
+    scheduleService;
+    constructor(scheduleService) {
+        this.scheduleService = scheduleService;
+    }
+    /**
+     * GET /api/v1/schedules
+     * List all schedules for the authenticated user's customer
+     */
+    async list(req, res, next) {
+        try {
+            const customerId = req.user.customerId;
+            const { page, limit, search, isActive, playlistId } = req.query;
+            const result = await this.scheduleService.list(customerId, {
+                page: page,
+                limit: limit,
+                search: search,
+                isActive: isActive === 'true' ? true : isActive === 'false' ? false : undefined,
+                playlistId: playlistId ? parseInt(playlistId, 10) : undefined,
+            });
+            res.status(200).json({
+                status: 'success',
+                data: result.data,
+                pagination: {
+                    page: result.page,
+                    limit: result.limit,
+                    total: result.total,
+                    totalPages: Math.ceil(result.total / result.limit),
+                },
+            });
+        }
+        catch (error) {
+            next(error);
+        }
+    }
+    /**
+     * GET /api/v1/schedules/:scheduleId
+     * Get schedule by ID with assignments
+     */
+    async getById(req, res, next) {
+        try {
+            const scheduleId = parseInt(req.params.scheduleId, 10);
+            const customerId = req.user.customerId;
+            const schedule = await this.scheduleService.getByIdWithAssignments(scheduleId, customerId);
+            res.status(200).json({
+                status: 'success',
+                data: schedule,
+            });
+        }
+        catch (error) {
+            next(error);
+        }
+    }
+    /**
+     * POST /api/v1/schedules
+     * Create new schedule
+     *
+     * Expected body:
+     * {
+     *   "name": "Schedule Name",
+     *   "playlistId": 1,
+     *   "priority": 50,  // optional, 0-100
+     *   "startDate": "2025-01-01",  // optional
+     *   "endDate": "2025-12-31",    // optional
+     *   "startTime": "09:00:00",    // optional
+     *   "endTime": "17:00:00",      // optional
+     *   "daysOfWeek": "Mon,Tue,Wed,Thu,Fri"  // optional
+     * }
+     */
+    async create(req, res, next) {
+        try {
+            const customerId = req.user.customerId;
+            const userId = req.user.userId;
+            const schedule = await this.scheduleService.create({
+                customerId,
+                name: req.body.name,
+                playlistId: req.body.playlistId,
+                priority: req.body.priority,
+                startDate: req.body.startDate,
+                endDate: req.body.endDate,
+                startTime: req.body.startTime,
+                endTime: req.body.endTime,
+                daysOfWeek: req.body.daysOfWeek,
+                createdBy: userId,
+            });
+            res.status(201).json({
+                status: 'success',
+                data: schedule,
+                message: 'Schedule created successfully',
+            });
+        }
+        catch (error) {
+            next(error);
+        }
+    }
+    /**
+     * PATCH /api/v1/schedules/:scheduleId
+     * Update schedule
+     *
+     * All fields are optional:
+     * {
+     *   "name": "Updated Name",
+     *   "playlistId": 2,
+     *   "priority": 75,
+     *   "startDate": "2025-02-01",
+     *   "endDate": "2025-11-30",
+     *   "startTime": "08:00:00",
+     *   "endTime": "18:00:00",
+     *   "daysOfWeek": "Mon,Wed,Fri",
+     *   "isActive": true
+     * }
+     */
+    async update(req, res, next) {
+        try {
+            const scheduleId = parseInt(req.params.scheduleId, 10);
+            const customerId = req.user.customerId;
+            const schedule = await this.scheduleService.update(scheduleId, customerId, req.body);
+            res.status(200).json({
+                status: 'success',
+                data: schedule,
+                message: 'Schedule updated successfully',
+            });
+        }
+        catch (error) {
+            next(error);
+        }
+    }
+    /**
+     * DELETE /api/v1/schedules/:scheduleId
+     * Delete schedule
+     */
+    async delete(req, res, next) {
+        try {
+            const scheduleId = parseInt(req.params.scheduleId, 10);
+            const customerId = req.user.customerId;
+            await this.scheduleService.delete(scheduleId, customerId);
+            res.status(200).json({
+                status: 'success',
+                message: 'Schedule deleted successfully',
+            });
+        }
+        catch (error) {
+            next(error);
+        }
+    }
+    /**
+     * POST /api/v1/schedules/:scheduleId/assignments
+     * Create schedule assignment
+     *
+     * Expected body (one of the following patterns):
+     * { "assignmentType": "Customer", "targetCustomerId": 1 }
+     * { "assignmentType": "Site", "targetSiteId": 1 }
+     * { "assignmentType": "Player", "targetPlayerId": 1 }
+     */
+    async createAssignment(req, res, next) {
+        try {
+            const scheduleId = parseInt(req.params.scheduleId, 10);
+            const customerId = req.user.customerId;
+            const assignment = await this.scheduleService.createAssignment(scheduleId, customerId, {
+                scheduleId,
+                assignmentType: req.body.assignmentType,
+                targetCustomerId: req.body.targetCustomerId,
+                targetSiteId: req.body.targetSiteId,
+                targetPlayerId: req.body.targetPlayerId,
+            });
+            res.status(201).json({
+                status: 'success',
+                data: assignment,
+                message: 'Schedule assignment created successfully',
+            });
+        }
+        catch (error) {
+            next(error);
+        }
+    }
+    /**
+     * DELETE /api/v1/schedules/:scheduleId/assignments/:assignmentId
+     * Delete schedule assignment
+     */
+    async deleteAssignment(req, res, next) {
+        try {
+            const scheduleId = parseInt(req.params.scheduleId, 10);
+            const assignmentId = parseInt(req.params.assignmentId, 10);
+            const customerId = req.user.customerId;
+            await this.scheduleService.deleteAssignment(scheduleId, assignmentId, customerId);
+            res.status(200).json({
+                status: 'success',
+                message: 'Schedule assignment deleted successfully',
+            });
+        }
+        catch (error) {
+            next(error);
+        }
+    }
+}
+exports.ScheduleController = ScheduleController;
+//# sourceMappingURL=ScheduleController.js.map

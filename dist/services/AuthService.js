@@ -171,23 +171,29 @@ class AuthService {
      */
     generateTokens(user) {
         const accessToken = this.generateAccessToken(user);
-        const refreshToken = jsonwebtoken_1.default.sign({
+        const payload = {
             userId: user.userId,
             customerId: user.customerId,
-        }, environment_1.env.JWT_REFRESH_SECRET, { expiresIn: environment_1.env.JWT_REFRESH_EXPIRES_IN });
+        };
+        const refreshToken = jsonwebtoken_1.default.sign(payload, environment_1.env.JWT_REFRESH_SECRET, {
+            expiresIn: environment_1.env.JWT_REFRESH_EXPIRES_IN,
+        });
         return { accessToken, refreshToken };
     }
     /**
      * Generate JWT access token
      */
     generateAccessToken(user) {
-        return jsonwebtoken_1.default.sign({
+        const payload = {
             userId: user.userId,
             customerId: user.customerId,
             email: user.email,
             role: user.role,
             assignedSiteId: user.assignedSiteId,
-        }, environment_1.env.JWT_SECRET, { expiresIn: environment_1.env.JWT_EXPIRES_IN });
+        };
+        return jsonwebtoken_1.default.sign(payload, environment_1.env.JWT_SECRET, {
+            expiresIn: environment_1.env.JWT_EXPIRES_IN,
+        });
     }
     /**
      * Remove sensitive data from user object
