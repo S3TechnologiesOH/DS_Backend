@@ -22,6 +22,10 @@ import { swaggerSpec } from './config/swagger';
 export const createApp = (): Application => {
   const app: Application = express();
 
+  // Trust proxy - Required for Azure App Service and other reverse proxies
+  // This allows Express to properly read X-Forwarded-* headers
+  app.set('trust proxy', 1);
+
   // Security middleware
   app.use(helmet());
 
