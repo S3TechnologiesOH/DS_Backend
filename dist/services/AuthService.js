@@ -23,17 +23,30 @@ class AuthService {
         this.customerRepository = customerRepository;
     }
     /**
-     * User login with email, password, and subdomain
+     * User login with email and password (subdomain optional, extracted from email domain if not provided)
      *
      * Flow:
-     * 1. Find customer by subdomain
-     * 2. Find user by email within that customer
-     * 3. Verify password
-     * 4. Generate JWT tokens
+     * 1. Extract subdomain from email domain or use provided subdomain
+     * 2. Find customer by subdomain
+     * 3. Find user by email within that customer
+     * 4. Verify password
+     * 5. Generate JWT tokens
      */
     async login(data) {
-        // 1. Find customer by subdomain
-        const customer = await this.customerRepository.findBySubdomain(data.subdomain);
+        // 1. Extract subdomain from email domain if not provided
+        let subdomain = data.subdomain;
+        if (!subdomain) {
+            // Extract from email: user@company.com -> company
+            const emailParts = data.email.split('@');
+            if (emailParts.length !== 2) {
+                throw new errors_1.ValidationError('Invalid email format');
+            }
+            const domain = emailParts[1];
+            // Remove TLD: company.com -> company
+            subdomain = domain.split('.')[0];
+        }
+        // 2. Find customer by subdomain
+        const customer = await this.customerRepository.findBySubdomain(subdomain);
         if (!customer || !customer.isActive) {
             throw new errors_1.UnauthorizedError('Invalid credentials');
         }

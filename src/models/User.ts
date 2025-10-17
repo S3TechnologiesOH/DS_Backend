@@ -43,7 +43,7 @@ export interface UpdateUserDto {
 export interface UserLoginDto {
   email: string;
   password: string;
-  subdomain: string;
+  subdomain?: string; // Optional - will be extracted from email domain if not provided
 }
 
 export interface UserRegisterDto {

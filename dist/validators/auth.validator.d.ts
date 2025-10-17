@@ -8,7 +8,7 @@ export declare const loginSchema: z.ZodObject<{
     body: z.ZodObject<{
         email: z.ZodString;
         password: z.ZodString;
-        subdomain: z.ZodString;
+        subdomain: z.ZodOptional<z.ZodString>;
     }, "strip", z.ZodTypeAny, {
         password?: string;
         email?: string;

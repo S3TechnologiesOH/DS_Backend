@@ -453,7 +453,7 @@
       "post": {
         "tags": ["Authentication"],
         "summary": "User login",
-        "description": "Authenticate a user with subdomain, email, and password to receive JWT tokens",
+        "description": "Authenticate a user with email and password. Subdomain is optional and will be extracted from the email domain if not provided (e.g., user@mys3tech.com -> mys3tech)",
         "security": [],
         "requestBody": {
           "required": true,
@@ -461,22 +461,23 @@
             "application/json": {
               "schema": {
                 "type": "object",
-                "required": ["subdomain", "email", "password"],
+                "required": ["email", "password"],
                 "properties": {
-                  "subdomain": {
-                    "type": "string",
-                    "description": "Organization identifier",
-                    "example": "mycompany"
-                  },
                   "email": {
                     "type": "string",
                     "format": "email",
-                    "example": "admin@mycompany.com"
+                    "description": "User email address. Subdomain will be automatically extracted from the email domain",
+                    "example": "catwell@mys3tech.com"
                   },
                   "password": {
                     "type": "string",
                     "format": "password",
-                    "example": "Admin123!"
+                    "example": "#S3Protection"
+                  },
+                  "subdomain": {
+                    "type": "string",
+                    "description": "Optional organization identifier. If not provided, it will be extracted from the email domain",
+                    "example": "mys3tech"
                   }
                 }
               }
