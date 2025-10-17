@@ -41,7 +41,10 @@
       "Bash(cat:*)",
       "Bash(timeout 15 az webapp log tail:*)",
       "Bash(unzip:*)",
-      "Bash(find:*)"
+      "Bash(find:*)",
+      "Bash(az webapp deployment:*)",
+      "Bash(gh api:*)",
+      "Bash(python -c \"import sys, json; data = json.load(sys.stdin); print(''''✅ /auth/register found!'''' if ''''/api/v1/auth/register'''' in data[''''paths''''] else ''''❌ Not found yet'''')\")"
     ],
     "deny": [],
     "ask": []

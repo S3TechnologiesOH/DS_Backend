@@ -1025,8 +1025,8 @@ const options: swaggerJsdoc.Options = {
   },
   // Path to route files with JSDoc comments
   apis: [
-    './src/routes/*.ts',
-    './src/routes/*.js', // Include compiled JS for production
+    './src/routes/*.ts',      // Development: TypeScript source files
+    './dist/routes/*.js',     // Production: Compiled JavaScript files
   ],
 };
 

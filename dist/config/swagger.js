@@ -1028,8 +1028,8 @@ const options = {
     },
     // Path to route files with JSDoc comments
     apis: [
-        './src/routes/*.ts',
-        './src/routes/*.js', // Include compiled JS for production
+        './src/routes/*.ts', // Development: TypeScript source files
+        './dist/routes/*.js', // Production: Compiled JavaScript files
     ],
 };
 exports.swaggerSpec = (0, swagger_jsdoc_1.default)(options);
