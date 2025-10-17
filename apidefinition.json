@@ -1,0 +1,1276 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Digital Signage Platform API",
+    "description": "Multi-tenant TypeScript backend API for managing digital signage content across customers, sites, and players. This API provides comprehensive endpoints for content management, scheduling, analytics, and device management.",
+    "version": "1.0.0",
+    "contact": {
+      "name": "API Support",
+      "email": "support@example.com"
+    }
+  },
+  "servers": [
+    {
+      "url": "https://digital-signage-backend.azurewebsites.net/api/v1",
+      "description": "Production server"
+    },
+    {
+      "url": "http://localhost:3000/api/v1",
+      "description": "Local development server"
+    }
+  ],
+  "tags": [
+    {
+      "name": "Authentication",
+      "description": "User authentication and authorization endpoints"
+    },
+    {
+      "name": "Player Authentication",
+      "description": "Player device authentication using activation codes"
+    },
+    {
+      "name": "Content",
+      "description": "Media content management (images, videos, HTML, URLs, PDFs)"
+    },
+    {
+      "name": "Customers",
+      "description": "Multi-tenant customer organization management"
+    },
+    {
+      "name": "Sites",
+      "description": "Physical location management"
+    },
+    {
+      "name": "Players",
+      "description": "Digital signage device management"
+    },
+    {
+      "name": "Player Devices",
+      "description": "Endpoints called by player devices (not CMS users)"
+    },
+    {
+      "name": "Playlists",
+      "description": "Content playlist management"
+    },
+    {
+      "name": "Schedules",
+      "description": "Content scheduling with hierarchical assignments"
+    },
+    {
+      "name": "Analytics",
+      "description": "Analytics, reporting, and proof-of-play tracking"
+    },
+    {
+      "name": "Users",
+      "description": "User account management"
+    },
+    {
+      "name": "Webhooks",
+      "description": "Webhook management for event notifications"
+    }
+  ],
+  "components": {
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT",
+        "description": "JWT token for user authentication. Obtain via /auth/login or /auth/register"
+      },
+      "playerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT",
+        "description": "JWT token for player device authentication. Obtain via /player-auth/activate"
+      }
+    },
+    "schemas": {
+      "Error": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string",
+            "example": "error"
+          },
+          "message": {
+            "type": "string",
+            "example": "An error occurred"
+          },
+          "errors": {
+            "type": "array",
+            "items": {
+              "type": "object"
+            }
+          }
+        }
+      },
+      "User": {
+        "type": "object",
+        "properties": {
+          "userId": {
+            "type": "integer"
+          },
+          "email": {
+            "type": "string",
+            "format": "email"
+          },
+          "firstName": {
+            "type": "string"
+          },
+          "lastName": {
+            "type": "string"
+          },
+          "role": {
+            "type": "string",
+            "enum": ["Admin", "Editor", "Viewer", "SiteManager"]
+          },
+          "customerId": {
+            "type": "integer"
+          },
+          "assignedSiteId": {
+            "type": "integer",
+            "nullable": true
+          },
+          "isActive": {
+            "type": "boolean"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "Customer": {
+        "type": "object",
+        "properties": {
+          "customerId": {
+            "type": "integer"
+          },
+          "name": {
+            "type": "string"
+          },
+          "subdomain": {
+            "type": "string"
+          },
+          "subscriptionTier": {
+            "type": "string",
+            "enum": ["Free", "Pro", "Enterprise"]
+          },
+          "contactEmail": {
+            "type": "string",
+            "format": "email"
+          },
+          "contactPhone": {
+            "type": "string"
+          },
+          "isActive": {
+            "type": "boolean"
+          },
+          "maxSites": {
+            "type": "integer"
+          },
+          "maxPlayers": {
+            "type": "integer"
+          },
+          "maxStorageGB": {
+            "type": "integer"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "Site": {
+        "type": "object",
+        "properties": {
+          "siteId": {
+            "type": "integer"
+          },
+          "customerId": {
+            "type": "integer"
+          },
+          "name": {
+            "type": "string"
+          },
+          "siteCode": {
+            "type": "string"
+          },
+          "address": {
+            "type": "string"
+          },
+          "city": {
+            "type": "string"
+          },
+          "state": {
+            "type": "string"
+          },
+          "country": {
+            "type": "string"
+          },
+          "postalCode": {
+            "type": "string"
+          },
+          "latitude": {
+            "type": "number",
+            "format": "float"
+          },
+          "longitude": {
+            "type": "number",
+            "format": "float"
+          },
+          "timeZone": {
+            "type": "string"
+          },
+          "isActive": {
+            "type": "boolean"
+          },
+          "openingHours": {
+            "type": "string"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "Player": {
+        "type": "object",
+        "properties": {
+          "playerId": {
+            "type": "integer"
+          },
+          "customerId": {
+            "type": "integer"
+          },
+          "siteId": {
+            "type": "integer"
+          },
+          "name": {
+            "type": "string"
+          },
+          "playerCode": {
+            "type": "string"
+          },
+          "macAddress": {
+            "type": "string"
+          },
+          "serialNumber": {
+            "type": "string"
+          },
+          "location": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string",
+            "enum": ["Online", "Offline", "Error"]
+          },
+          "screenResolution": {
+            "type": "string"
+          },
+          "orientation": {
+            "type": "string",
+            "enum": ["Landscape", "Portrait"]
+          },
+          "ipAddress": {
+            "type": "string"
+          },
+          "playerVersion": {
+            "type": "string"
+          },
+          "osVersion": {
+            "type": "string"
+          },
+          "lastHeartbeat": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "isActive": {
+            "type": "boolean"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "Content": {
+        "type": "object",
+        "properties": {
+          "contentId": {
+            "type": "integer"
+          },
+          "customerId": {
+            "type": "integer"
+          },
+          "name": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string",
+            "enum": ["Image", "Video", "HTML", "URL", "PDF"]
+          },
+          "fileUrl": {
+            "type": "string"
+          },
+          "thumbnailUrl": {
+            "type": "string"
+          },
+          "fileSizeBytes": {
+            "type": "integer"
+          },
+          "mimeType": {
+            "type": "string"
+          },
+          "duration": {
+            "type": "integer",
+            "description": "Display duration in seconds"
+          },
+          "tags": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string",
+            "enum": ["Active", "Inactive", "Processing"]
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "Playlist": {
+        "type": "object",
+        "properties": {
+          "playlistId": {
+            "type": "integer"
+          },
+          "customerId": {
+            "type": "integer"
+          },
+          "name": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "isActive": {
+            "type": "boolean"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "items": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "playlistItemId": {
+                  "type": "integer"
+                },
+                "contentId": {
+                  "type": "integer"
+                },
+                "displayOrder": {
+                  "type": "integer"
+                },
+                "duration": {
+                  "type": "integer"
+                },
+                "transitionType": {
+                  "type": "string",
+                  "enum": ["Fade", "Slide", "None"]
+                },
+                "transitionDuration": {
+                  "type": "integer"
+                }
+              }
+            }
+          }
+        }
+      },
+      "Schedule": {
+        "type": "object",
+        "properties": {
+          "scheduleId": {
+            "type": "integer"
+          },
+          "customerId": {
+            "type": "integer"
+          },
+          "name": {
+            "type": "string"
+          },
+          "playlistId": {
+            "type": "integer"
+          },
+          "priority": {
+            "type": "integer",
+            "description": "Higher priority schedules override lower ones"
+          },
+          "startDate": {
+            "type": "string",
+            "format": "date"
+          },
+          "endDate": {
+            "type": "string",
+            "format": "date"
+          },
+          "startTime": {
+            "type": "string",
+            "example": "09:00:00"
+          },
+          "endTime": {
+            "type": "string",
+            "example": "17:00:00"
+          },
+          "daysOfWeek": {
+            "type": "string",
+            "example": "Mon,Tue,Wed,Thu,Fri"
+          },
+          "isActive": {
+            "type": "boolean"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      }
+    }
+  },
+  "paths": {
+    "/auth/login": {
+      "post": {
+        "tags": ["Authentication"],
+        "summary": "User login",
+        "description": "Authenticate a user with subdomain, email, and password to receive JWT tokens",
+        "security": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["subdomain", "email", "password"],
+                "properties": {
+                  "subdomain": {
+                    "type": "string",
+                    "description": "Organization identifier",
+                    "example": "mycompany"
+                  },
+                  "email": {
+                    "type": "string",
+                    "format": "email",
+                    "example": "admin@mycompany.com"
+                  },
+                  "password": {
+                    "type": "string",
+                    "format": "password",
+                    "example": "Admin123!"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Login successful",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "success"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "user": {
+                          "$ref": "#/components/schemas/User"
+                        },
+                        "accessToken": {
+                          "type": "string",
+                          "description": "JWT access token - use this in Authorization header"
+                        },
+                        "refreshToken": {
+                          "type": "string",
+                          "description": "JWT refresh token - use to get new access tokens"
+                        },
+                        "expiresIn": {
+                          "type": "integer",
+                          "description": "Access token expiration time in seconds",
+                          "example": 3600
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Invalid credentials",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/auth/register": {
+      "post": {
+        "tags": ["Authentication"],
+        "summary": "Register new user",
+        "description": "Create a new customer organization and admin user",
+        "security": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["subdomain", "email", "password", "firstName", "lastName"],
+                "properties": {
+                  "subdomain": {
+                    "type": "string",
+                    "description": "Unique organization identifier (lowercase, alphanumeric, hyphens)",
+                    "example": "mycompany"
+                  },
+                  "email": {
+                    "type": "string",
+                    "format": "email",
+                    "example": "admin@mycompany.com"
+                  },
+                  "password": {
+                    "type": "string",
+                    "format": "password",
+                    "minLength": 8,
+                    "description": "Strong password (8+ chars, uppercase, lowercase, number)",
+                    "example": "Admin123!"
+                  },
+                  "firstName": {
+                    "type": "string",
+                    "example": "John"
+                  },
+                  "lastName": {
+                    "type": "string",
+                    "example": "Doe"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Registration successful",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "success"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "user": {
+                          "$ref": "#/components/schemas/User"
+                        },
+                        "accessToken": {
+                          "type": "string"
+                        },
+                        "refreshToken": {
+                          "type": "string"
+                        },
+                        "expiresIn": {
+                          "type": "integer",
+                          "example": 3600
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Validation error or user/customer already exists"
+          }
+        }
+      }
+    },
+    "/auth/refresh": {
+      "post": {
+        "tags": ["Authentication"],
+        "summary": "Refresh access token",
+        "description": "Get a new access token using a valid refresh token",
+        "security": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["refreshToken"],
+                "properties": {
+                  "refreshToken": {
+                    "type": "string",
+                    "description": "Valid refresh token received from login or register"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Token refresh successful",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "success"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "accessToken": {
+                          "type": "string"
+                        },
+                        "expiresIn": {
+                          "type": "integer",
+                          "example": 3600
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Invalid or expired refresh token"
+          }
+        }
+      }
+    },
+    "/auth/me": {
+      "get": {
+        "tags": ["Authentication"],
+        "summary": "Get current user",
+        "description": "Retrieve authenticated user information",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "User information retrieved successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "success"
+                    },
+                    "data": {
+                      "$ref": "#/components/schemas/User"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized - Invalid or missing token"
+          }
+        }
+      }
+    },
+    "/auth/logout": {
+      "post": {
+        "tags": ["Authentication"],
+        "summary": "User logout",
+        "description": "Revoke the current user's refresh token",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Logout successful"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        }
+      }
+    },
+    "/player-auth/activate": {
+      "post": {
+        "tags": ["Player Authentication"],
+        "summary": "Activate player device",
+        "description": "Activate a player using activation code generated in CMS",
+        "security": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["playerCode", "activationCode"],
+                "properties": {
+                  "playerCode": {
+                    "type": "string",
+                    "description": "Unique player code from CMS",
+                    "example": "NYC-001-ENT"
+                  },
+                  "activationCode": {
+                    "type": "string",
+                    "description": "6-character activation code from CMS",
+                    "example": "ABC123"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Player activated successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "success"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "playerId": {
+                          "type": "integer"
+                        },
+                        "customerId": {
+                          "type": "integer"
+                        },
+                        "siteId": {
+                          "type": "integer"
+                        },
+                        "accessToken": {
+                          "type": "string",
+                          "description": "Use this token for player device API calls"
+                        },
+                        "refreshToken": {
+                          "type": "string"
+                        },
+                        "expiresIn": {
+                          "type": "integer",
+                          "example": 3600
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Invalid or expired activation code"
+          },
+          "404": {
+            "description": "Player not found"
+          }
+        }
+      }
+    },
+    "/content": {
+      "get": {
+        "tags": ["Content"],
+        "summary": "List all content",
+        "description": "Get all content items for the authenticated user's customer with pagination and filtering",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "page",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "default": 1
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "default": 20
+            }
+          },
+          {
+            "name": "type",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "enum": ["Image", "Video", "HTML", "URL", "PDF"]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Content list retrieved successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "success"
+                    },
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/Content"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        }
+      }
+    },
+    "/content/upload": {
+      "post": {
+        "tags": ["Content"],
+        "summary": "Upload new content",
+        "description": "Upload a new media file (image, video, PDF) to Azure Blob Storage. Requires Admin or Editor role.",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "required": ["file", "name", "type"],
+                "properties": {
+                  "file": {
+                    "type": "string",
+                    "format": "binary",
+                    "description": "Media file to upload (max 100MB)"
+                  },
+                  "name": {
+                    "type": "string",
+                    "example": "Spring Sale Banner"
+                  },
+                  "type": {
+                    "type": "string",
+                    "enum": ["Image", "Video", "HTML", "URL", "PDF"]
+                  },
+                  "duration": {
+                    "type": "integer",
+                    "description": "Display duration in seconds",
+                    "example": 10
+                  },
+                  "tags": {
+                    "type": "string",
+                    "example": "promotion,seasonal"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Content uploaded successfully"
+          },
+          "400": {
+            "description": "Validation error or file too large"
+          },
+          "403": {
+            "description": "Forbidden - Requires Admin or Editor role"
+          }
+        }
+      }
+    },
+    "/customers": {
+      "get": {
+        "tags": ["Customers"],
+        "summary": "List all customers",
+        "description": "Get all customers (Admin can see all, others see only their own)",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Customer list retrieved successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "success"
+                    },
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/Customer"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/sites": {
+      "get": {
+        "tags": ["Sites"],
+        "summary": "List all sites",
+        "description": "Get all sites for the authenticated user's customer",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "page",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "default": 1
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "default": 20
+            }
+          },
+          {
+            "name": "search",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            },
+            "description": "Search by site name or code"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Sites list retrieved successfully"
+          }
+        }
+      }
+    },
+    "/players": {
+      "get": {
+        "tags": ["Players"],
+        "summary": "List all players",
+        "description": "Get all players for the authenticated user's customer",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "siteId",
+            "in": "query",
+            "schema": {
+              "type": "integer"
+            },
+            "description": "Filter by site ID"
+          },
+          {
+            "name": "status",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "enum": ["Online", "Offline", "Error"]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Players list retrieved successfully"
+          }
+        }
+      }
+    },
+    "/players/{playerId}/heartbeat": {
+      "post": {
+        "tags": ["Players"],
+        "summary": "Send player heartbeat",
+        "description": "Update player status and record that device is online (called by player devices)",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "playerId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["status"],
+                "properties": {
+                  "status": {
+                    "type": "string",
+                    "enum": ["Online", "Offline", "Error"]
+                  },
+                  "ipAddress": {
+                    "type": "string"
+                  },
+                  "playerVersion": {
+                    "type": "string"
+                  },
+                  "osVersion": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Heartbeat recorded successfully"
+          }
+        }
+      }
+    },
+    "/playlists": {
+      "get": {
+        "tags": ["Playlists"],
+        "summary": "List all playlists",
+        "description": "Get all playlists for the authenticated user's customer",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Playlists list retrieved successfully"
+          }
+        }
+      }
+    },
+    "/schedules": {
+      "get": {
+        "tags": ["Schedules"],
+        "summary": "List all schedules",
+        "description": "Get all schedules for the authenticated user's customer",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Schedules list retrieved successfully"
+          }
+        }
+      }
+    },
+    "/analytics/summary": {
+      "get": {
+        "tags": ["Analytics"],
+        "summary": "Get analytics summary",
+        "description": "Get analytics summary for date range with optional filters",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "startDate",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "format": "date"
+            },
+            "description": "Start date (YYYY-MM-DD). Defaults to 30 days ago."
+          },
+          {
+            "name": "endDate",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "format": "date"
+            },
+            "description": "End date (YYYY-MM-DD). Defaults to today."
+          },
+          {
+            "name": "siteId",
+            "in": "query",
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "playerId",
+            "in": "query",
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Analytics summary retrieved successfully"
+          }
+        }
+      }
+    },
+    "/analytics/proof-of-play": {
+      "post": {
+        "tags": ["Analytics"],
+        "summary": "Record proof of play",
+        "description": "Called by digital signage players when content playback starts",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["playerId", "contentId"],
+                "properties": {
+                  "playerId": {
+                    "type": "integer"
+                  },
+                  "contentId": {
+                    "type": "integer"
+                  },
+                  "playlistId": {
+                    "type": "integer",
+                    "description": "Optional playlist ID"
+                  },
+                  "scheduleId": {
+                    "type": "integer",
+                    "description": "Optional schedule ID"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Proof of play recorded successfully"
+          }
+        }
+      }
+    },
+    "/users": {
+      "get": {
+        "tags": ["Users"],
+        "summary": "List all users",
+        "description": "Retrieve all users for the authenticated customer",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "role",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "enum": ["Admin", "Editor", "Viewer", "SiteManager"]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Users retrieved successfully"
+          }
+        }
+      }
+    },
+    "/webhooks": {
+      "get": {
+        "tags": ["Webhooks"],
+        "summary": "List all webhooks",
+        "description": "Retrieve all webhooks for the authenticated user's customer",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Webhooks retrieved successfully"
+          }
+        }
+      }
+    }
+  }
+}
