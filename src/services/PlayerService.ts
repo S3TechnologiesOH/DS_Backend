@@ -201,12 +201,12 @@ export class PlayerService {
   async generateActivationCode(
     playerId: number,
     customerId: number
-  ): Promise<{ activationCode: string }> {
+  ): Promise<{ activationCode: string; expiresAt: Date }> {
     // Verify player exists and belongs to customer
     await this.getById(playerId, customerId);
 
-    // Generate new activation code
-    const activationCode = await this.playerRepository.generateActivationCode(
+    // Generate new activation code with expiration
+    const result = await this.playerRepository.generateActivationCode(
       playerId,
       customerId
     );
@@ -214,8 +214,9 @@ export class PlayerService {
     logger.info('Activation code generated', {
       playerId,
       customerId,
+      expiresAt: result.expiresAt,
     });
 
-    return { activationCode };
+    return result;
   }
 }

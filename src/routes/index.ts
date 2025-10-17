@@ -7,6 +7,7 @@
 
 import { Router } from 'express';
 import authRoutes from './auth.routes';
+import playerAuthRoutes from './player-auth.routes';
 import contentRoutes from './content.routes';
 import customerRoutes from './customer.routes';
 import siteRoutes from './site.routes';
@@ -22,6 +23,7 @@ const router = Router();
 
 // Mount route modules
 router.use('/auth', authRoutes);
+router.use('/player-auth', playerAuthRoutes);
 router.use('/content', contentRoutes);
 router.use('/customers', customerRoutes);
 router.use('/sites', siteRoutes);

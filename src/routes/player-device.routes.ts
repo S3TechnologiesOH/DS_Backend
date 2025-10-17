@@ -18,7 +18,8 @@ import { SiteRepository } from '../repositories/SiteRepository';
 import { ScheduleRepository } from '../repositories/ScheduleRepository';
 import { PlaylistRepository } from '../repositories/PlaylistRepository';
 import { ContentRepository } from '../repositories/ContentRepository';
-import { authenticate } from '../middleware/authenticate';
+import { ProofOfPlayRepository } from '../repositories/ProofOfPlayRepository';
+import { authenticatePlayer } from '../middleware/authenticate';
 import { asyncHandler } from '../middleware/asyncHandler';
 import { validateRequest } from '../middleware/validateRequest';
 import { z } from 'zod';
@@ -31,11 +32,12 @@ const siteRepository = new SiteRepository();
 const scheduleRepository = new ScheduleRepository();
 const playlistRepository = new PlaylistRepository();
 const contentRepository = new ContentRepository();
+const proofOfPlayRepository = new ProofOfPlayRepository();
 const playerService = new PlayerService(playerRepository, siteRepository);
 const playerController = new PlayerController(playerService);
 
 // All player device routes require authentication (using player JWT tokens)
-router.use(authenticate);
+router.use(authenticatePlayer);
 
 // Validation schemas
 const heartbeatSchema = z.object({
@@ -52,6 +54,19 @@ const logSchema = z.object({
     level: z.enum(['info', 'warn', 'error', 'debug']),
     message: z.string().min(1).max(1000),
     metadata: z.record(z.any()).optional(),
+  }),
+});
+
+const proofOfPlaySchema = z.object({
+  params: z.object({
+    playerId: z.string().regex(/^\d+$/),
+  }),
+  body: z.object({
+    contentId: z.number().int().positive(),
+    playlistId: z.number().int().positive().optional(),
+    scheduleId: z.number().int().positive().optional(),
+    playedAt: z.string().datetime(),
+    duration: z.number().int().positive().optional(),
   }),
 });
 
@@ -376,6 +391,95 @@ router.post(
     res.status(201).json({
       status: 'success',
       message: 'Log recorded',
+    });
+  }),
+);
+
+/**
+ * @swagger
+ * /api/v1/player-devices/{playerId}/proof-of-play:
+ *   post:
+ *     summary: Submit proof of play
+ *     description: Record that a content item was displayed on the player
+ *     tags: [Player Devices]
+ *     security:
+ *       - playerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: playerId
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         description: Player ID
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - contentId
+ *               - playedAt
+ *             properties:
+ *               contentId:
+ *                 type: integer
+ *                 example: 101
+ *                 description: ID of content that was played
+ *               playlistId:
+ *                 type: integer
+ *                 example: 5
+ *                 description: ID of playlist (if part of playlist)
+ *               scheduleId:
+ *                 type: integer
+ *                 example: 10
+ *                 description: ID of schedule (if part of schedule)
+ *               playedAt:
+ *                 type: string
+ *                 format: date-time
+ *                 example: 2025-01-17T14:30:00.000Z
+ *                 description: When content started playing
+ *               duration:
+ *                 type: integer
+ *                 example: 10
+ *                 description: Actual duration played in seconds
+ *     responses:
+ *       201:
+ *         description: Proof of play recorded successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 status:
+ *                   type: string
+ *                   example: success
+ *                 message:
+ *                   type: string
+ *                   example: Proof of play recorded
+ *       400:
+ *         $ref: '#/components/responses/BadRequest'
+ *       401:
+ *         $ref: '#/components/responses/Unauthorized'
+ */
+router.post(
+  '/:playerId/proof-of-play',
+  validateRequest(proofOfPlaySchema),
+  asyncHandler(async (req, res) => {
+    const { playerId } = req.params;
+    const { contentId, playlistId, scheduleId, playedAt, duration } = req.body;
+
+    await proofOfPlayRepository.create({
+      playerId: Number(playerId),
+      contentId,
+      playlistId,
+      scheduleId,
+      playedAt: new Date(playedAt),
+      duration,
+    });
+
+    res.status(201).json({
+      status: 'success',
+      message: 'Proof of play recorded',
     });
   }),
 );

@@ -9,21 +9,20 @@ import { Request } from 'express';
 declare global {
   namespace Express {
     interface Request {
-      // User authentication (CMS users)
+      // User authentication (CMS users) or Player authentication (display devices)
       user?: {
-        userId: number;
-        customerId: number;
-        email: string;
-        role: 'Admin' | 'Editor' | 'Viewer' | 'SiteManager';
+        // CMS User fields
+        userId?: number;
+        email?: string;
+        role: 'Admin' | 'Editor' | 'Viewer' | 'SiteManager' | 'Player';
         assignedSiteId?: number | null;
-      };
 
-      // Player authentication (display devices)
-      player?: {
-        playerId: number;
+        // Player fields (when role === 'Player')
+        playerId?: number;
+        siteId?: number;
+
+        // Common fields
         customerId: number;
-        siteId: number;
-        playerName: string;
       };
 
       // File upload information
@@ -35,8 +34,4 @@ declare global {
 
 export interface AuthRequest extends Request {
   user: NonNullable<Request['user']>;
-}
-
-export interface PlayerAuthRequest extends Request {
-  player: NonNullable<Request['player']>;
 }

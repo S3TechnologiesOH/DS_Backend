@@ -23,7 +23,7 @@ interface PlayerJwtPayload {
   playerId: number;
   customerId: number;
   siteId: number;
-  playerName: string;
+  type: 'player';
 }
 
 /**
@@ -96,12 +96,17 @@ export const authenticatePlayer = asyncHandler(
     try {
       const decoded = jwt.verify(token, env.PLAYER_JWT_SECRET) as PlayerJwtPayload;
 
-      // Attach player info to request
-      req.player = {
+      // Verify token type
+      if (decoded.type !== 'player') {
+        throw new UnauthorizedError('Invalid player token type');
+      }
+
+      // Attach player info to request (as user with Player role)
+      req.user = {
         playerId: decoded.playerId,
         customerId: decoded.customerId,
         siteId: decoded.siteId,
-        playerName: decoded.playerName,
+        role: 'Player',
       };
 
       next();

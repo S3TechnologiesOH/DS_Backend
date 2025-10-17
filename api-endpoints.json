@@ -1,0 +1,1070 @@
+{
+  "apiVersion": "v1",
+  "baseUrl": "/api/v1",
+  "description": "Digital Signage Platform Backend API - Complete endpoint reference",
+  "endpoints": {
+    "authentication": {
+      "prefix": "/auth",
+      "endpoints": [
+        {
+          "method": "POST",
+          "path": "/auth/login",
+          "description": "User login - Authenticate and receive JWT tokens",
+          "authentication": false,
+          "authorization": null,
+          "requestBody": {
+            "email": "string (required)",
+            "password": "string (required)"
+          },
+          "responses": ["200", "401"]
+        },
+        {
+          "method": "POST",
+          "path": "/auth/register",
+          "description": "User registration - Create first admin user",
+          "authentication": false,
+          "authorization": null,
+          "requestBody": {
+            "email": "string (required)",
+            "password": "string (required)",
+            "firstName": "string (required)",
+            "lastName": "string (required)"
+          },
+          "responses": ["201", "400"]
+        },
+        {
+          "method": "POST",
+          "path": "/auth/refresh",
+          "description": "Refresh access token using refresh token",
+          "authentication": false,
+          "authorization": null,
+          "requestBody": {
+            "refreshToken": "string (required)"
+          },
+          "responses": ["200", "401"]
+        },
+        {
+          "method": "GET",
+          "path": "/auth/me",
+          "description": "Get current authenticated user information",
+          "authentication": true,
+          "authorization": null,
+          "responses": ["200", "401"]
+        },
+        {
+          "method": "POST",
+          "path": "/auth/logout",
+          "description": "User logout",
+          "authentication": true,
+          "authorization": null,
+          "responses": ["200", "401"]
+        }
+      ]
+    },
+    "users": {
+      "prefix": "/users",
+      "endpoints": [
+        {
+          "method": "GET",
+          "path": "/users",
+          "description": "List all users for authenticated customer",
+          "authentication": true,
+          "authorization": null,
+          "queryParams": {
+            "role": "string (optional) - Filter by role",
+            "isActive": "boolean (optional) - Filter by active status",
+            "assignedSiteId": "integer (optional) - Filter by assigned site"
+          },
+          "responses": ["200", "401"]
+        },
+        {
+          "method": "GET",
+          "path": "/users/:userId",
+          "description": "Get user by ID",
+          "authentication": true,
+          "authorization": null,
+          "pathParams": {
+            "userId": "integer (required)"
+          },
+          "responses": ["200", "401", "404"]
+        },
+        {
+          "method": "POST",
+          "path": "/users",
+          "description": "Create new user account",
+          "authentication": true,
+          "authorization": ["Admin"],
+          "requestBody": {
+            "email": "string (required)",
+            "password": "string (required) - Min 8 chars",
+            "firstName": "string (required)",
+            "lastName": "string (required)",
+            "role": "enum (required) - Admin|Editor|Viewer|SiteManager",
+            "assignedSiteId": "integer (optional) - Required for SiteManager"
+          },
+          "responses": ["201", "400", "401", "403"]
+        },
+        {
+          "method": "PATCH",
+          "path": "/users/:userId",
+          "description": "Update user information",
+          "authentication": true,
+          "authorization": ["Admin"],
+          "pathParams": {
+            "userId": "integer (required)"
+          },
+          "requestBody": {
+            "email": "string (optional)",
+            "firstName": "string (optional)",
+            "lastName": "string (optional)",
+            "role": "enum (optional)",
+            "isActive": "boolean (optional)",
+            "assignedSiteId": "integer (optional)"
+          },
+          "responses": ["200", "400", "401", "403", "404"]
+        },
+        {
+          "method": "DELETE",
+          "path": "/users/:userId",
+          "description": "Soft delete a user (cannot delete self)",
+          "authentication": true,
+          "authorization": ["Admin"],
+          "pathParams": {
+            "userId": "integer (required)"
+          },
+          "responses": ["200", "401", "403", "404"]
+        },
+        {
+          "method": "POST",
+          "path": "/users/:userId/reset-password",
+          "description": "Reset user password",
+          "authentication": true,
+          "authorization": ["Admin"],
+          "pathParams": {
+            "userId": "integer (required)"
+          },
+          "requestBody": {
+            "newPassword": "string (required) - Min 8 chars"
+          },
+          "responses": ["200", "400", "401", "403", "404"]
+        }
+      ]
+    },
+    "customers": {
+      "prefix": "/customers",
+      "endpoints": [
+        {
+          "method": "GET",
+          "path": "/customers",
+          "description": "List all customers (Admin sees all, others see own)",
+          "authentication": true,
+          "authorization": null,
+          "responses": ["200", "401"]
+        },
+        {
+          "method": "GET",
+          "path": "/customers/:customerId",
+          "description": "Get customer by ID",
+          "authentication": true,
+          "authorization": null,
+          "pathParams": {
+            "customerId": "integer (required)"
+          },
+          "responses": ["200", "403", "404"]
+        },
+        {
+          "method": "GET",
+          "path": "/customers/:customerId/limits",
+          "description": "Get customer resource limits and current usage",
+          "authentication": true,
+          "authorization": null,
+          "pathParams": {
+            "customerId": "integer (required)"
+          },
+          "responses": ["200", "403"]
+        },
+        {
+          "method": "POST",
+          "path": "/customers",
+          "description": "Create new customer organization",
+          "authentication": true,
+          "authorization": ["Admin"],
+          "requestBody": {
+            "name": "string (required)",
+            "subdomain": "string (required) - Unique subdomain",
+            "subscriptionTier": "enum (optional) - Free|Pro|Enterprise",
+            "contactEmail": "string (required)",
+            "contactPhone": "string (optional)",
+            "maxSites": "integer (optional)",
+            "maxPlayers": "integer (optional)",
+            "maxStorageGB": "integer (optional)"
+          },
+          "responses": ["201", "400", "403"]
+        },
+        {
+          "method": "PATCH",
+          "path": "/customers/:customerId",
+          "description": "Update customer details",
+          "authentication": true,
+          "authorization": ["Admin"],
+          "pathParams": {
+            "customerId": "integer (required)"
+          },
+          "requestBody": {
+            "name": "string (optional)",
+            "subdomain": "string (optional)",
+            "isActive": "boolean (optional)",
+            "subscriptionTier": "enum (optional)",
+            "contactEmail": "string (optional)",
+            "contactPhone": "string (optional)",
+            "maxSites": "integer (optional)",
+            "maxPlayers": "integer (optional)",
+            "maxStorageGB": "integer (optional)"
+          },
+          "responses": ["200", "400", "403", "404"]
+        }
+      ]
+    },
+    "sites": {
+      "prefix": "/sites",
+      "endpoints": [
+        {
+          "method": "GET",
+          "path": "/sites",
+          "description": "List all sites for authenticated customer",
+          "authentication": true,
+          "authorization": null,
+          "queryParams": {
+            "page": "integer (optional) - Default 1",
+            "limit": "integer (optional) - Default 20",
+            "isActive": "boolean (optional) - Filter by active status",
+            "search": "string (optional) - Search by name or code"
+          },
+          "responses": ["200", "401"]
+        },
+        {
+          "method": "GET",
+          "path": "/sites/:siteId",
+          "description": "Get site by ID",
+          "authentication": true,
+          "authorization": null,
+          "pathParams": {
+            "siteId": "integer (required)"
+          },
+          "responses": ["200", "403", "404"]
+        },
+        {
+          "method": "POST",
+          "path": "/sites",
+          "description": "Create new physical location",
+          "authentication": true,
+          "authorization": ["Admin"],
+          "requestBody": {
+            "name": "string (required)",
+            "siteCode": "string (required) - Unique site code",
+            "address": "string (optional)",
+            "city": "string (optional)",
+            "state": "string (optional)",
+            "country": "string (optional)",
+            "postalCode": "string (optional)",
+            "latitude": "number (optional)",
+            "longitude": "number (optional)",
+            "timeZone": "string (optional)",
+            "openingHours": "string (optional)"
+          },
+          "responses": ["201", "400", "403"]
+        },
+        {
+          "method": "PATCH",
+          "path": "/sites/:siteId",
+          "description": "Update site details",
+          "authentication": true,
+          "authorization": ["Admin", "SiteManager"],
+          "pathParams": {
+            "siteId": "integer (required)"
+          },
+          "requestBody": {
+            "name": "string (optional)",
+            "siteCode": "string (optional)",
+            "address": "string (optional)",
+            "city": "string (optional)",
+            "state": "string (optional)",
+            "country": "string (optional)",
+            "postalCode": "string (optional)",
+            "latitude": "number (optional)",
+            "longitude": "number (optional)",
+            "timeZone": "string (optional)",
+            "isActive": "boolean (optional)",
+            "openingHours": "string (optional)"
+          },
+          "responses": ["200", "400", "403", "404"]
+        },
+        {
+          "method": "DELETE",
+          "path": "/sites/:siteId",
+          "description": "Delete site and all associated data",
+          "authentication": true,
+          "authorization": ["Admin"],
+          "pathParams": {
+            "siteId": "integer (required)"
+          },
+          "responses": ["200", "403", "404"]
+        }
+      ]
+    },
+    "players": {
+      "prefix": "/players",
+      "endpoints": [
+        {
+          "method": "GET",
+          "path": "/players",
+          "description": "List all players with pagination and filtering",
+          "authentication": true,
+          "authorization": null,
+          "queryParams": {
+            "page": "integer (optional) - Default 1",
+            "limit": "integer (optional) - Default 20",
+            "siteId": "integer (optional) - Filter by site",
+            "status": "enum (optional) - Online|Offline|Error",
+            "search": "string (optional) - Search by name or code"
+          },
+          "responses": ["200", "401"]
+        },
+        {
+          "method": "GET",
+          "path": "/players/:playerId",
+          "description": "Get player by ID with all details",
+          "authentication": true,
+          "authorization": null,
+          "pathParams": {
+            "playerId": "integer (required)"
+          },
+          "responses": ["200", "403", "404"]
+        },
+        {
+          "method": "POST",
+          "path": "/players",
+          "description": "Create new player device at a site",
+          "authentication": true,
+          "authorization": ["Admin", "SiteManager"],
+          "requestBody": {
+            "siteId": "integer (required)",
+            "name": "string (required)",
+            "playerCode": "string (required) - Unique player code",
+            "macAddress": "string (optional)",
+            "serialNumber": "string (optional)",
+            "location": "string (optional)",
+            "screenResolution": "string (optional)",
+            "orientation": "enum (optional) - Landscape|Portrait"
+          },
+          "responses": ["201", "400", "403"]
+        },
+        {
+          "method": "PATCH",
+          "path": "/players/:playerId",
+          "description": "Update player details and metadata",
+          "authentication": true,
+          "authorization": ["Admin", "SiteManager"],
+          "pathParams": {
+            "playerId": "integer (required)"
+          },
+          "requestBody": {
+            "name": "string (optional)",
+            "playerCode": "string (optional)",
+            "macAddress": "string (optional)",
+            "serialNumber": "string (optional)",
+            "location": "string (optional)",
+            "screenResolution": "string (optional)",
+            "orientation": "enum (optional)",
+            "status": "enum (optional)",
+            "ipAddress": "string (optional)",
+            "playerVersion": "string (optional)",
+            "osVersion": "string (optional)",
+            "isActive": "boolean (optional)"
+          },
+          "responses": ["200", "400", "403", "404"]
+        },
+        {
+          "method": "DELETE",
+          "path": "/players/:playerId",
+          "description": "Delete a player device",
+          "authentication": true,
+          "authorization": ["Admin"],
+          "pathParams": {
+            "playerId": "integer (required)"
+          },
+          "responses": ["200", "403", "404"]
+        },
+        {
+          "method": "POST",
+          "path": "/players/:playerId/heartbeat",
+          "description": "Update player status (called by player devices)",
+          "authentication": true,
+          "authorization": null,
+          "pathParams": {
+            "playerId": "integer (required)"
+          },
+          "requestBody": {
+            "status": "enum (required) - Online|Offline|Error",
+            "ipAddress": "string (optional)",
+            "playerVersion": "string (optional)",
+            "osVersion": "string (optional)"
+          },
+          "responses": ["200", "400", "404"]
+        },
+        {
+          "method": "POST",
+          "path": "/players/:playerId/activation-code",
+          "description": "Generate 6-character activation code for device setup",
+          "authentication": true,
+          "authorization": ["Admin", "SiteManager"],
+          "pathParams": {
+            "playerId": "integer (required)"
+          },
+          "responses": ["200", "403", "404"]
+        }
+      ]
+    },
+    "playerDevices": {
+      "prefix": "/player-devices",
+      "description": "Endpoints specifically for player device software (not CMS users)",
+      "endpoints": [
+        {
+          "method": "POST",
+          "path": "/player-devices/:playerId/heartbeat",
+          "description": "Player device heartbeat with diagnostics",
+          "authentication": true,
+          "authType": "Player JWT",
+          "pathParams": {
+            "playerId": "integer (required)"
+          },
+          "requestBody": {
+            "status": "enum (required) - Online|Offline|Error",
+            "ipAddress": "string (optional)",
+            "playerVersion": "string (optional)",
+            "osVersion": "string (optional)"
+          },
+          "responses": ["200", "400", "401"]
+        },
+        {
+          "method": "GET",
+          "path": "/player-devices/:playerId/schedule",
+          "description": "Get current active schedule with playlist content",
+          "authentication": true,
+          "authType": "Player JWT",
+          "pathParams": {
+            "playerId": "integer (required)"
+          },
+          "responses": ["200", "401", "404"]
+        },
+        {
+          "method": "GET",
+          "path": "/player-devices/:playerId/content",
+          "description": "Get all content for offline caching",
+          "authentication": true,
+          "authType": "Player JWT",
+          "pathParams": {
+            "playerId": "integer (required)"
+          },
+          "responses": ["200", "401", "404"]
+        },
+        {
+          "method": "POST",
+          "path": "/player-devices/:playerId/logs",
+          "description": "Submit player logs for centralized monitoring",
+          "authentication": true,
+          "authType": "Player JWT",
+          "pathParams": {
+            "playerId": "integer (required)"
+          },
+          "requestBody": {
+            "level": "enum (required) - info|warn|error|debug",
+            "message": "string (required) - Max 1000 chars",
+            "metadata": "object (optional) - Additional context"
+          },
+          "responses": ["201", "400", "401"]
+        }
+      ]
+    },
+    "content": {
+      "prefix": "/content",
+      "endpoints": [
+        {
+          "method": "GET",
+          "path": "/content",
+          "description": "List all content items with pagination",
+          "authentication": true,
+          "authorization": null,
+          "queryParams": {
+            "page": "integer (optional) - Default 1",
+            "limit": "integer (optional) - Default 20",
+            "type": "enum (optional) - Image|Video|HTML|URL|PDF"
+          },
+          "responses": ["200", "401"]
+        },
+        {
+          "method": "GET",
+          "path": "/content/storage/usage",
+          "description": "Get storage usage statistics",
+          "authentication": true,
+          "authorization": null,
+          "responses": ["200", "401"]
+        },
+        {
+          "method": "GET",
+          "path": "/content/:contentId",
+          "description": "Get content by ID",
+          "authentication": true,
+          "authorization": null,
+          "pathParams": {
+            "contentId": "integer (required)"
+          },
+          "responses": ["200", "401", "404"]
+        },
+        {
+          "method": "POST",
+          "path": "/content/upload",
+          "description": "Upload new media file to Azure Blob Storage (max 100MB)",
+          "authentication": true,
+          "authorization": ["Admin", "Editor"],
+          "contentType": "multipart/form-data",
+          "requestBody": {
+            "file": "binary (required) - Media file",
+            "name": "string (required)",
+            "type": "enum (required) - Image|Video|HTML|URL|PDF",
+            "duration": "integer (optional) - Display duration in seconds",
+            "tags": "string (optional) - Comma-separated tags"
+          },
+          "responses": ["201", "400", "401", "403"]
+        },
+        {
+          "method": "PATCH",
+          "path": "/content/:contentId",
+          "description": "Update content metadata",
+          "authentication": true,
+          "authorization": ["Admin", "Editor"],
+          "pathParams": {
+            "contentId": "integer (required)"
+          },
+          "requestBody": {
+            "name": "string (optional)",
+            "duration": "integer (optional)",
+            "tags": "string (optional)"
+          },
+          "responses": ["200", "400", "401", "403", "404"]
+        },
+        {
+          "method": "DELETE",
+          "path": "/content/:contentId",
+          "description": "Delete content",
+          "authentication": true,
+          "authorization": ["Admin"],
+          "pathParams": {
+            "contentId": "integer (required)"
+          },
+          "responses": ["200", "401", "403", "404"]
+        }
+      ]
+    },
+    "playlists": {
+      "prefix": "/playlists",
+      "endpoints": [
+        {
+          "method": "GET",
+          "path": "/playlists",
+          "description": "List all playlists with pagination",
+          "authentication": true,
+          "authorization": null,
+          "queryParams": {
+            "page": "integer (optional) - Default 1",
+            "limit": "integer (optional) - Default 20",
+            "search": "string (optional) - Search by name",
+            "isActive": "boolean (optional) - Filter by active status"
+          },
+          "responses": ["200", "401"]
+        },
+        {
+          "method": "GET",
+          "path": "/playlists/:playlistId",
+          "description": "Get playlist by ID with all items",
+          "authentication": true,
+          "authorization": null,
+          "pathParams": {
+            "playlistId": "integer (required)"
+          },
+          "responses": ["200", "404"]
+        },
+        {
+          "method": "POST",
+          "path": "/playlists",
+          "description": "Create new playlist for organizing content",
+          "authentication": true,
+          "authorization": ["Admin", "Editor"],
+          "requestBody": {
+            "name": "string (required)",
+            "description": "string (optional)"
+          },
+          "responses": ["201", "400", "401", "403"]
+        },
+        {
+          "method": "PATCH",
+          "path": "/playlists/:playlistId",
+          "description": "Update playlist name, description, or active status",
+          "authentication": true,
+          "authorization": ["Admin", "Editor"],
+          "pathParams": {
+            "playlistId": "integer (required)"
+          },
+          "requestBody": {
+            "name": "string (optional)",
+            "description": "string (optional)",
+            "isActive": "boolean (optional)"
+          },
+          "responses": ["200", "400", "401", "403", "404"]
+        },
+        {
+          "method": "DELETE",
+          "path": "/playlists/:playlistId",
+          "description": "Delete playlist",
+          "authentication": true,
+          "authorization": ["Admin"],
+          "pathParams": {
+            "playlistId": "integer (required)"
+          },
+          "responses": ["200", "401", "403", "404"]
+        },
+        {
+          "method": "POST",
+          "path": "/playlists/:playlistId/items",
+          "description": "Add content item to playlist with display order",
+          "authentication": true,
+          "authorization": ["Admin", "Editor"],
+          "pathParams": {
+            "playlistId": "integer (required)"
+          },
+          "requestBody": {
+            "contentId": "integer (required)",
+            "displayOrder": "integer (required)",
+            "duration": "integer (optional) - Display duration in seconds",
+            "transitionType": "enum (optional) - Fade|Slide|None",
+            "transitionDuration": "integer (optional)"
+          },
+          "responses": ["201", "400", "401", "403", "404"]
+        },
+        {
+          "method": "PATCH",
+          "path": "/playlists/:playlistId/items/:itemId",
+          "description": "Update playlist item order, duration, or transitions",
+          "authentication": true,
+          "authorization": ["Admin", "Editor"],
+          "pathParams": {
+            "playlistId": "integer (required)",
+            "itemId": "integer (required)"
+          },
+          "requestBody": {
+            "displayOrder": "integer (optional)",
+            "duration": "integer (optional)",
+            "transitionType": "enum (optional)",
+            "transitionDuration": "integer (optional)"
+          },
+          "responses": ["200", "400", "401", "403", "404"]
+        },
+        {
+          "method": "DELETE",
+          "path": "/playlists/:playlistId/items/:itemId",
+          "description": "Remove content item from playlist",
+          "authentication": true,
+          "authorization": ["Admin", "Editor"],
+          "pathParams": {
+            "playlistId": "integer (required)",
+            "itemId": "integer (required)"
+          },
+          "responses": ["200", "401", "403", "404"]
+        }
+      ]
+    },
+    "schedules": {
+      "prefix": "/schedules",
+      "endpoints": [
+        {
+          "method": "GET",
+          "path": "/schedules",
+          "description": "List all schedules with pagination",
+          "authentication": true,
+          "authorization": null,
+          "queryParams": {
+            "page": "integer (optional) - Default 1",
+            "limit": "integer (optional) - Default 20",
+            "search": "string (optional) - Search by name",
+            "isActive": "boolean (optional) - Filter by active status",
+            "playlistId": "integer (optional) - Filter by playlist"
+          },
+          "responses": ["200", "401"]
+        },
+        {
+          "method": "GET",
+          "path": "/schedules/:scheduleId",
+          "description": "Get schedule by ID with all assignments",
+          "authentication": true,
+          "authorization": null,
+          "pathParams": {
+            "scheduleId": "integer (required)"
+          },
+          "responses": ["200", "404"]
+        },
+        {
+          "method": "POST",
+          "path": "/schedules",
+          "description": "Create new schedule for playing playlists at specific times",
+          "authentication": true,
+          "authorization": ["Admin", "SiteManager"],
+          "requestBody": {
+            "name": "string (required)",
+            "playlistId": "integer (required)",
+            "priority": "integer (optional) - Higher overrides lower",
+            "startDate": "date (optional) - YYYY-MM-DD",
+            "endDate": "date (optional) - YYYY-MM-DD",
+            "startTime": "time (optional) - HH:MM:SS",
+            "endTime": "time (optional) - HH:MM:SS",
+            "daysOfWeek": "string (optional) - e.g., Mon,Tue,Wed"
+          },
+          "responses": ["201", "400", "401", "403"]
+        },
+        {
+          "method": "PATCH",
+          "path": "/schedules/:scheduleId",
+          "description": "Update schedule details and timing",
+          "authentication": true,
+          "authorization": ["Admin", "SiteManager"],
+          "pathParams": {
+            "scheduleId": "integer (required)"
+          },
+          "requestBody": {
+            "name": "string (optional)",
+            "playlistId": "integer (optional)",
+            "priority": "integer (optional)",
+            "startDate": "date (optional)",
+            "endDate": "date (optional)",
+            "startTime": "time (optional)",
+            "endTime": "time (optional)",
+            "daysOfWeek": "string (optional)",
+            "isActive": "boolean (optional)"
+          },
+          "responses": ["200", "400", "401", "403", "404"]
+        },
+        {
+          "method": "DELETE",
+          "path": "/schedules/:scheduleId",
+          "description": "Delete schedule",
+          "authentication": true,
+          "authorization": ["Admin"],
+          "pathParams": {
+            "scheduleId": "integer (required)"
+          },
+          "responses": ["200", "401", "403", "404"]
+        },
+        {
+          "method": "POST",
+          "path": "/schedules/:scheduleId/assignments",
+          "description": "Assign schedule to customer, site, or player (hierarchical priority: Player > Site > Customer)",
+          "authentication": true,
+          "authorization": ["Admin", "SiteManager"],
+          "pathParams": {
+            "scheduleId": "integer (required)"
+          },
+          "requestBody": {
+            "assignmentType": "enum (required) - Customer|Site|Player",
+            "targetCustomerId": "integer (conditional) - Required if assignmentType=Customer",
+            "targetSiteId": "integer (conditional) - Required if assignmentType=Site",
+            "targetPlayerId": "integer (conditional) - Required if assignmentType=Player"
+          },
+          "responses": ["201", "400", "401", "403"]
+        },
+        {
+          "method": "DELETE",
+          "path": "/schedules/:scheduleId/assignments/:assignmentId",
+          "description": "Remove schedule assignment",
+          "authentication": true,
+          "authorization": ["Admin", "SiteManager"],
+          "pathParams": {
+            "scheduleId": "integer (required)",
+            "assignmentId": "integer (required)"
+          },
+          "responses": ["200", "401", "403", "404"]
+        }
+      ]
+    },
+    "analytics": {
+      "prefix": "/analytics",
+      "endpoints": [
+        {
+          "method": "GET",
+          "path": "/analytics/summary",
+          "description": "Get analytics summary for date range",
+          "authentication": true,
+          "authorization": null,
+          "queryParams": {
+            "startDate": "date (optional) - Default 30 days ago",
+            "endDate": "date (optional) - Default today",
+            "siteId": "integer (optional) - Filter by site",
+            "playerId": "integer (optional) - Filter by player",
+            "contentId": "integer (optional) - Filter by content",
+            "playlistId": "integer (optional) - Filter by playlist"
+          },
+          "responses": ["200", "400", "401"]
+        },
+        {
+          "method": "GET",
+          "path": "/analytics/content",
+          "description": "Get content analytics",
+          "authentication": true,
+          "authorization": null,
+          "queryParams": {
+            "startDate": "date (optional) - Default 30 days ago",
+            "endDate": "date (optional) - Default today"
+          },
+          "responses": ["200", "400", "401"]
+        },
+        {
+          "method": "GET",
+          "path": "/analytics/players",
+          "description": "Get player analytics",
+          "authentication": true,
+          "authorization": null,
+          "queryParams": {
+            "siteId": "integer (optional) - Filter by site"
+          },
+          "responses": ["200", "401"]
+        },
+        {
+          "method": "GET",
+          "path": "/analytics/sites",
+          "description": "Get site analytics",
+          "authentication": true,
+          "authorization": null,
+          "responses": ["200", "401"]
+        },
+        {
+          "method": "GET",
+          "path": "/analytics/playback-report",
+          "description": "Get playback report by date",
+          "authentication": true,
+          "authorization": null,
+          "queryParams": {
+            "startDate": "date (optional) - Default 30 days ago",
+            "endDate": "date (optional) - Default today"
+          },
+          "responses": ["200", "400", "401"]
+        },
+        {
+          "method": "GET",
+          "path": "/analytics/content-performance",
+          "description": "Get content performance metrics",
+          "authentication": true,
+          "authorization": null,
+          "queryParams": {
+            "startDate": "date (optional) - Default 30 days ago",
+            "endDate": "date (optional) - Default today"
+          },
+          "responses": ["200", "400", "401"]
+        },
+        {
+          "method": "POST",
+          "path": "/analytics/proof-of-play",
+          "description": "Record proof of play when content starts (called by players)",
+          "authentication": true,
+          "authorization": null,
+          "requestBody": {
+            "playerId": "integer (required)",
+            "contentId": "integer (required)",
+            "playlistId": "integer (optional)",
+            "scheduleId": "integer (optional)"
+          },
+          "responses": ["201", "400", "401"]
+        },
+        {
+          "method": "PATCH",
+          "path": "/analytics/proof-of-play/:proofOfPlayId",
+          "description": "Complete proof of play when content ends (called by players)",
+          "authentication": true,
+          "authorization": null,
+          "pathParams": {
+            "proofOfPlayId": "integer (required)"
+          },
+          "requestBody": {
+            "duration": "integer (required) - Playback duration in seconds"
+          },
+          "responses": ["200", "400", "401", "404"]
+        }
+      ]
+    },
+    "webhooks": {
+      "prefix": "/webhooks",
+      "endpoints": [
+        {
+          "method": "GET",
+          "path": "/webhooks",
+          "description": "List all webhooks for authenticated customer",
+          "authentication": true,
+          "authorization": null,
+          "responses": ["200", "401"]
+        },
+        {
+          "method": "GET",
+          "path": "/webhooks/:webhookId",
+          "description": "Get webhook by ID",
+          "authentication": true,
+          "authorization": null,
+          "pathParams": {
+            "webhookId": "integer (required)"
+          },
+          "responses": ["200", "401", "404"]
+        },
+        {
+          "method": "POST",
+          "path": "/webhooks",
+          "description": "Create webhook to receive event notifications",
+          "authentication": true,
+          "authorization": ["Admin", "Editor"],
+          "requestBody": {
+            "name": "string (required) - Max 100 chars",
+            "url": "string (required) - Must be HTTPS",
+            "events": "array (required) - List of event types to subscribe",
+            "secret": "string (optional) - Min 16 chars, auto-generated if not provided"
+          },
+          "responses": ["201", "400", "401"]
+        },
+        {
+          "method": "PATCH",
+          "path": "/webhooks/:webhookId",
+          "description": "Update webhook",
+          "authentication": true,
+          "authorization": ["Admin", "Editor"],
+          "pathParams": {
+            "webhookId": "integer (required)"
+          },
+          "requestBody": {
+            "name": "string (optional)",
+            "url": "string (optional)",
+            "events": "array (optional)",
+            "isActive": "boolean (optional)"
+          },
+          "responses": ["200", "400", "401", "404"]
+        },
+        {
+          "method": "DELETE",
+          "path": "/webhooks/:webhookId",
+          "description": "Delete webhook",
+          "authentication": true,
+          "authorization": ["Admin", "Editor"],
+          "pathParams": {
+            "webhookId": "integer (required)"
+          },
+          "responses": ["200", "401", "404"]
+        },
+        {
+          "method": "POST",
+          "path": "/webhooks/:webhookId/test",
+          "description": "Send test payload to webhook endpoint",
+          "authentication": true,
+          "authorization": ["Admin", "Editor"],
+          "pathParams": {
+            "webhookId": "integer (required)"
+          },
+          "responses": ["200", "401", "404"]
+        },
+        {
+          "method": "GET",
+          "path": "/webhooks/:webhookId/deliveries",
+          "description": "Get recent webhook delivery history",
+          "authentication": true,
+          "authorization": null,
+          "pathParams": {
+            "webhookId": "integer (required)"
+          },
+          "queryParams": {
+            "limit": "integer (optional) - Default 50, max 100"
+          },
+          "responses": ["200", "401", "404"]
+        }
+      ]
+    }
+  },
+  "webhookEvents": [
+    "player.online",
+    "player.offline",
+    "player.error",
+    "content.created",
+    "content.updated",
+    "content.deleted",
+    "playlist.created",
+    "playlist.updated",
+    "playlist.deleted",
+    "schedule.created",
+    "schedule.updated",
+    "schedule.deleted",
+    "site.created",
+    "site.updated",
+    "site.deleted"
+  ],
+  "roles": [
+    {
+      "name": "Admin",
+      "description": "Platform administrator with full access"
+    },
+    {
+      "name": "Editor",
+      "description": "Can create and modify content, playlists, and schedules"
+    },
+    {
+      "name": "Viewer",
+      "description": "Read-only access to content and analytics"
+    },
+    {
+      "name": "SiteManager",
+      "description": "Manages specific site(s) - players, schedules for assigned sites"
+    }
+  ],
+  "authentication": {
+    "type": "JWT Bearer Token",
+    "header": "Authorization: Bearer <token>",
+    "tokenExpiry": "Configurable via JWT_EXPIRES_IN",
+    "refreshToken": "Available via /auth/refresh endpoint",
+    "playerAuthentication": "Separate JWT tokens for player devices"
+  },
+  "pagination": {
+    "defaultPage": 1,
+    "defaultLimit": 20,
+    "queryParams": {
+      "page": "Page number",
+      "limit": "Items per page"
+    }
+  },
+  "multiTenancy": {
+    "note": "All queries are automatically filtered by CustomerId to ensure data isolation between customers",
+    "hierarchy": "Customer → Site → Player"
+  },
+  "scheduleResolution": {
+    "priority": "Player-specific > Site-specific > Customer-wide",
+    "description": "Higher priority schedules override lower priority ones"
+  },
+  "errorResponses": {
+    "400": "Bad Request - Validation error",
+    "401": "Unauthorized - Invalid or missing token",
+    "403": "Forbidden - Insufficient permissions",
+    "404": "Not Found - Resource does not exist",
+    "500": "Internal Server Error"
+  },
+  "responseFormat": {
+    "success": {
+      "status": "success",
+      "data": "Response data object or array",
+      "message": "Optional success message"
+    },
+    "error": {
+      "status": "error",
+      "message": "Error description",
+      "errors": "Optional detailed validation errors"
+    }
+  }
+}

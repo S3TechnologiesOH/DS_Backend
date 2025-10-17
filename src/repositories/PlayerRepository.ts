@@ -110,6 +110,40 @@ export class PlayerRepository extends BaseRepository {
   }
 
   /**
+   * Find player by player code (for activation)
+   */
+  async findByPlayerCode(playerCode: string): Promise<Player | null> {
+    const sql = `
+      SELECT
+        p.PlayerId as playerId,
+        p.SiteId as siteId,
+        p.Name as name,
+        p.PlayerCode as playerCode,
+        p.MacAddress as macAddress,
+        p.SerialNumber as serialNumber,
+        p.Location as location,
+        p.ScreenResolution as screenResolution,
+        p.Orientation as orientation,
+        p.Status as status,
+        p.LastHeartbeat as lastHeartbeat,
+        p.IpAddress as ipAddress,
+        p.PlayerVersion as playerVersion,
+        p.OsVersion as osVersion,
+        p.IsActive as isActive,
+        p.ActivationCode as activationCode,
+        p.ActivatedAt as activatedAt,
+        p.CreatedAt as createdAt,
+        p.UpdatedAt as updatedAt,
+        s.CustomerId as customerId
+      FROM Players p
+      INNER JOIN Sites s ON p.SiteId = s.SiteId
+      WHERE p.PlayerCode = @playerCode
+    `;
+
+    return this.queryOne<Player & { customerId: number }>(sql, { playerCode });
+  }
+
+  /**
    * Get all players for a site
    */
   async findBySiteId(siteId: number, customerId: number): Promise<Player[]> {
@@ -377,29 +411,54 @@ export class PlayerRepository extends BaseRepository {
   /**
    * Generate activation code for player
    */
-  async generateActivationCode(playerId: number, customerId: number): Promise<string> {
+  async generateActivationCode(playerId: number, customerId: number): Promise<{ activationCode: string; expiresAt: Date }> {
     // Generate 6-character alphanumeric code
     const code = Math.random().toString(36).substring(2, 8).toUpperCase();
 
+    // Set expiration to 24 hours from now
+    const expiresAt = new Date(Date.now() + 24 * 60 * 60 * 1000);
+
     const sql = `
       UPDATE p
-      SET ActivationCode = @code, UpdatedAt = GETUTCDATE()
-      OUTPUT INSERTED.ActivationCode as activationCode
+      SET
+        ActivationCode = @code,
+        ActivationCodeExpiresAt = @expiresAt,
+        UpdatedAt = GETUTCDATE()
+      OUTPUT
+        INSERTED.ActivationCode as activationCode,
+        INSERTED.ActivationCodeExpiresAt as expiresAt
       FROM Players p
       INNER JOIN Sites s ON p.SiteId = s.SiteId
       WHERE p.PlayerId = @playerId AND s.CustomerId = @customerId
     `;
 
-    const result = await this.insert<{ activationCode: string }>(sql, {
+    const result = await this.insert<{ activationCode: string; expiresAt: Date }>(sql, {
       playerId,
       customerId,
       code,
+      expiresAt,
     });
 
     if (!result) {
       throw new NotFoundError('Player not found');
     }
 
-    return result.activationCode;
+    return result;
+  }
+
+  /**
+   * Update activation fields (for player authentication service)
+   */
+  async updateActivation(playerId: number, data: { activatedAt: Date }): Promise<void> {
+    const sql = `
+      UPDATE Players
+      SET ActivatedAt = @activatedAt, UpdatedAt = GETUTCDATE()
+      WHERE PlayerId = @playerId
+    `;
+
+    await this.execute(sql, {
+      playerId,
+      activatedAt: data.activatedAt,
+    });
   }
 }
