@@ -11,7 +11,7 @@ exports.loginSchema = zod_1.z.object({
     body: zod_1.z.object({
         email: zod_1.z.string().email('Invalid email address'),
         password: zod_1.z.string().min(1, 'Password is required'),
-        subdomain: zod_1.z.string().min(1, 'Subdomain is required').optional(),
+        subdomain: zod_1.z.string().optional(),
     }),
 });
 exports.registerSchema = zod_1.z.object({
