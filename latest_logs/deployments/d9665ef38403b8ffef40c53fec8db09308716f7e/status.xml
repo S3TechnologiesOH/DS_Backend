@@ -1,0 +1,21 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<deployment>
+  <id>d9665ef38403b8ffef40c53fec8db09308716f7e</id>
+  <author>Christopher Atwell</author>
+  <deployer>GitHub</deployer>
+  <authorEmail>catwell@mys3tech.com</authorEmail>
+  <message>Add Swagger docs and update player auth models
+    
+    Added API endpoint validation and Swagger documentation summary markdown files. Updated Swagger config to include new response schemas and tags for player authentication. Exported PlayerToken and ProofOfPlay models in index.ts and removed their inline interfaces. Updated implementation summary to reference new documentation and clarify Swagger usage.</message>
+  <progress></progress>
+  <status>Success</status>
+  <statusText></statusText>
+  <lastSuccessEndTime>2025-10-17T13:47:51.8235315Z</lastSuccessEndTime>
+  <receivedTime>2025-10-17T13:45:09.7675682Z</receivedTime>
+  <startTime>2025-10-17T13:45:11.214247Z</startTime>
+  <endTime>2025-10-17T13:47:51.8235315Z</endTime>
+  <complete>True</complete>
+  <is_temp>False</is_temp>
+  <is_readonly>False</is_readonly>
+  <buildSummary />
+</deployment>

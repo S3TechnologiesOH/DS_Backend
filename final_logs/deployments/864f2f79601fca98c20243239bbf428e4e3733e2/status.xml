@@ -1,0 +1,27 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<deployment>
+  <id>864f2f79601fca98c20243239bbf428e4e3733e2</id>
+  <author>Christopher Atwell</author>
+  <deployer>GitHub</deployer>
+  <authorEmail>catwell@mys3tech.com</authorEmail>
+  <message>Fix: Use npx to run TypeScript compiler in build
+    
+    - Change from 'tsc' to 'npx tsc' in build script
+    - Azure's npm install doesn't add node_modules/.bin to PATH
+    - npx ensures tsc is found and executed correctly
+    
+    🤖 Generated with [Claude Code](https://claude.com/claude-code)
+    
+    Co-Authored-By: Claude &lt;noreply@anthropic.com&gt;</message>
+  <progress></progress>
+  <status>Failed</status>
+  <statusText></statusText>
+  <lastSuccessEndTime />
+  <receivedTime>2025-10-17T14:59:13.0860414Z</receivedTime>
+  <startTime>2025-10-17T14:59:14.5519034Z</startTime>
+  <endTime>2025-10-17T15:01:43.1837639Z</endTime>
+  <complete>True</complete>
+  <is_temp>False</is_temp>
+  <is_readonly>False</is_readonly>
+  <buildSummary />
+</deployment>

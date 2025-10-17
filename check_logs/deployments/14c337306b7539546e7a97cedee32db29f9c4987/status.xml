@@ -1,0 +1,21 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<deployment>
+  <id>14c337306b7539546e7a97cedee32db29f9c4987</id>
+  <author>Christopher Atwell</author>
+  <deployer>GitHub</deployer>
+  <authorEmail>catwell@mys3tech.com</authorEmail>
+  <message>Implement player authentication and proof-of-play
+    
+    Added player activation, authentication, and token refresh endpoints, including new models, repositories, services, controllers, and validators for player tokens and proof-of-play tracking. Updated authentication and authorization middleware to support player JWT tokens and unified user type definitions. Modified player device routes to require player authentication and added proof-of-play endpoint. Created and updated documentation files to reflect the new player authentication flow and API requirements.</message>
+  <progress></progress>
+  <status>Success</status>
+  <statusText></statusText>
+  <lastSuccessEndTime>2025-10-17T13:36:37.0564313Z</lastSuccessEndTime>
+  <receivedTime>2025-10-17T13:34:00.7301201Z</receivedTime>
+  <startTime>2025-10-17T13:34:02.6146638Z</startTime>
+  <endTime>2025-10-17T13:36:37.0564313Z</endTime>
+  <complete>True</complete>
+  <is_temp>False</is_temp>
+  <is_readonly>False</is_readonly>
+  <buildSummary />
+</deployment>

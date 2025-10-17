@@ -1,0 +1,21 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<deployment>
+  <id>6d7703112bed17a703efad917407f13265d51cec</id>
+  <author>Christopher Atwell</author>
+  <deployer>GitHub</deployer>
+  <authorEmail>catwell@mys3tech.com</authorEmail>
+  <message>Add analytics and webhook modules, extend Swagger spec
+    
+    Introduces Analytics and Webhook controllers, models, repositories, services, and routes. Expands Swagger OpenAPI specification with new schemas for User, Playlist, Schedule, Analytics, Webhook, and related entities, and adds /api-docs.json endpoint for OpenAPI JSON. Updates content schema and tags in Swagger, and registers new modules in the app and route index.</message>
+  <progress></progress>
+  <status>Success</status>
+  <statusText></statusText>
+  <lastSuccessEndTime>2025-10-15T13:50:42.9648632Z</lastSuccessEndTime>
+  <receivedTime>2025-10-15T13:48:02.6629248Z</receivedTime>
+  <startTime>2025-10-15T13:48:04.652964Z</startTime>
+  <endTime>2025-10-15T13:50:42.9648632Z</endTime>
+  <complete>True</complete>
+  <is_temp>False</is_temp>
+  <is_readonly>False</is_readonly>
+  <buildSummary />
+</deployment>

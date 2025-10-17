@@ -1,0 +1,27 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<deployment>
+  <id>86b1b8efd6bf6c6b55f48b66865678af67255762</id>
+  <author>Christopher Atwell</author>
+  <deployer>GitHub</deployer>
+  <authorEmail>catwell@mys3tech.com</authorEmail>
+  <message>Fix: Restore proper TypeScript build command
+    
+    - Change package.json build script from echo to 'tsc'
+    - This was preventing Azure from compiling latest TypeScript changes
+    - Deployments were using stale dist folder instead of fresh builds
+    
+    🤖 Generated with [Claude Code](https://claude.com/claude-code)
+    
+    Co-Authored-By: Claude &lt;noreply@anthropic.com&gt;</message>
+  <progress></progress>
+  <status>Failed</status>
+  <statusText></statusText>
+  <lastSuccessEndTime />
+  <receivedTime>2025-10-17T14:52:51.0192308Z</receivedTime>
+  <startTime>2025-10-17T14:52:52.6192405Z</startTime>
+  <endTime>2025-10-17T14:55:10.6601363Z</endTime>
+  <complete>True</complete>
+  <is_temp>False</is_temp>
+  <is_readonly>False</is_readonly>
+  <buildSummary />
+</deployment>

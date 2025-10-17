@@ -1,0 +1,21 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<deployment>
+  <id>7d3b2179f729a5efe578f63fba38b3a5484936aa</id>
+  <author>Christopher Atwell</author>
+  <deployer>GitHub</deployer>
+  <authorEmail>catwell@mys3tech.com</authorEmail>
+  <message>Add API docs, Swagger guide, controllers, and services
+    
+    Introduces comprehensive API documentation (API_DOCUMENTATION.md), a Swagger/OpenAPI implementation guide (SWAGGER_GUIDE.md), and database schema documentation in bookstacks. Adds new controllers, services, repositories, and routes for customers, players, playlists, schedules, and sites. Updates Swagger config with additional schemas and improves app.ts to serve OpenAPI JSON. Also updates development rules and CLAUDE.md to require documentation updates for major changes.</message>
+  <progress></progress>
+  <status>Success</status>
+  <statusText></statusText>
+  <lastSuccessEndTime>2025-10-15T13:11:40.9215648Z</lastSuccessEndTime>
+  <receivedTime>2025-10-15T13:06:31.0406548Z</receivedTime>
+  <startTime>2025-10-15T13:06:33.1831394Z</startTime>
+  <endTime>2025-10-15T13:11:40.9215648Z</endTime>
+  <complete>True</complete>
+  <is_temp>False</is_temp>
+  <is_readonly>False</is_readonly>
+  <buildSummary />
+</deployment>

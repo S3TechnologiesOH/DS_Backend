@@ -1,0 +1,28 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<deployment>
+  <id>ebb291508404f45e70650e5f8a639358b225ca84</id>
+  <author>Christopher Atwell</author>
+  <deployer>GitHub</deployer>
+  <authorEmail>catwell@mys3tech.com</authorEmail>
+  <message>Fix: Use correct TypeScript package in build command
+    
+    - Change from 'npx tsc' which installs wrong package (tsc@2.0.4)
+    - Use 'node_modules/.bin/tsc' to run installed typescript
+    - Fallback to 'npx typescript' if node_modules version fails
+    - This ensures correct TypeScript compiler (5.3.3) is used
+    
+    🤖 Generated with [Claude Code](https://claude.com/claude-code)
+    
+    Co-Authored-By: Claude &lt;noreply@anthropic.com&gt;</message>
+  <progress></progress>
+  <status>Failed</status>
+  <statusText></statusText>
+  <lastSuccessEndTime />
+  <receivedTime>2025-10-17T15:04:00.010643Z</receivedTime>
+  <startTime>2025-10-17T15:04:01.5050058Z</startTime>
+  <endTime>2025-10-17T15:06:17.0230021Z</endTime>
+  <complete>True</complete>
+  <is_temp>False</is_temp>
+  <is_readonly>False</is_readonly>
+  <buildSummary />
+</deployment>

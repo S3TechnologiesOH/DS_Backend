@@ -1,0 +1,21 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<deployment>
+  <id>18f4ed3848dac6bd419ace653e2007a59af3f139</id>
+  <author>Christopher Atwell</author>
+  <deployer>GitHub</deployer>
+  <authorEmail>catwell@mys3tech.com</authorEmail>
+  <message>Update allowed commands and gitignore for Azure
+    
+    Added Azure-related commands to the allowed list in settings.local.json and included azure-app-settings.json in .gitignore to prevent it from being tracked.</message>
+  <progress></progress>
+  <status>Success</status>
+  <statusText></statusText>
+  <lastSuccessEndTime>2025-10-14T18:21:39.9472427Z</lastSuccessEndTime>
+  <receivedTime>2025-10-14T18:21:27.3800527Z</receivedTime>
+  <startTime>2025-10-14T18:21:28.932584Z</startTime>
+  <endTime>2025-10-14T18:21:39.9472427Z</endTime>
+  <complete>True</complete>
+  <is_temp>False</is_temp>
+  <is_readonly>False</is_readonly>
+  <buildSummary />
+</deployment>

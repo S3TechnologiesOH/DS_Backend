@@ -1,0 +1,29 @@
+<step title="BackgroundTrace" date="2025-10-17T14:06:55.075" instance="37c775" url="/deploy" method="POST" >
+  <step title="Creating temporary deployment - FetchDeploymentManager" date="2025-10-17T14:06:55.360" /><!-- duration: 4ms -->
+  <step title="Creating temporary deployment" date="2025-10-17T14:06:55.391" /><!-- duration: 98ms -->
+  <step title="Performing fetch based deployment" date="2025-10-17T14:06:55.918" >
+    <step title="Deployment timer started" date="2025-10-17T14:07:00.350" >
+      <step title="DeploymentManager.Deploy(id:f805da052391a22eb8e6d7f1462347e03d9377b9)" date="2025-10-17T14:07:00.361" >
+        <step title="Collecting changeset information" date="2025-10-17T14:07:00.432" /><!-- duration: 199ms -->
+        <step title="Updating submodules" date="2025-10-17T14:07:00.643" /><!-- duration: 1241ms -->
+        <step title="Determining deployment builder" date="2025-10-17T14:07:02.386" >
+          <step title="Builder is OryxBuilder" date="2025-10-17T14:07:02.444" /><!-- duration: 12ms -->
+        </step><!-- duration: 98ms -->
+        <step title="PreDeployment: context.CleanOutputPath False" date="2025-10-17T14:07:02.586" >
+          <step title="PreDeployment: context.OutputPath /home/site/wwwroot" date="2025-10-17T14:07:02.737" >
+            <step title="Building" date="2025-10-17T14:07:02.913" >
+              <step title="Executing external process" date="2025-10-17T14:07:03.403" type="process" path="bash" arguments="-c &quot;oryx build /home/site/repository -o /home/site/wwwroot --platform nodejs --platform-version 22 -p virtualenv_name= --log-file /tmp/build-debug.log  -i /tmp/8de0d867227d450 -p compress_node_modules=tar-gz | tee /tmp/oryx-build.log ; exit $PIPESTATUS &quot;" /><!-- duration: 159718ms -->
+              <step title="Using GenericDeploymentLogParser" date="2025-10-17T14:09:44.227" /><!-- duration: 9ms -->
+              <step title="Triggering recycle (preview mode disabled)." date="2025-10-17T14:09:47.283" /><!-- duration: 31ms -->
+              <step title="Modified file to trigger a restart of the app container." date="2025-10-17T14:09:47.485" /><!-- duration: 103ms -->
+              <step title="Skip function trigger and logicapp sync because function is not enabled." date="2025-10-17T14:09:47.788" /><!-- duration: 13ms -->
+            </step><!-- duration: 166619ms -->
+          </step><!-- duration: 166827ms -->
+          <step title="Cleaning up temp files" date="2025-10-17T14:09:49.568" /><!-- duration: 6212ms -->
+          <step title="Cleaning up temp files" date="2025-10-17T14:09:55.793" /><!-- duration: 542ms -->
+          <step title="Reloading status file with latest updates" date="2025-10-17T14:09:56.579" >
+            <step title="WebHooksManager.PublishEventAsync: PostDeployment" date="2025-10-17T14:09:56.588" /><!-- duration: 363ms -->
+          </step><!-- duration: 401ms -->
+          <step title="Cleaning up temporary deployment - fetch deployment was successful" date="2025-10-17T14:09:57.143" /><!-- duration: 21ms -->
+        </step><!-- duration: 175155ms -->
+      </step><!-- duration: 177890ms -->

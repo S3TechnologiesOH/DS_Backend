@@ -1,0 +1,21 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<deployment>
+  <id>fdf3fd48115ffd681ccda3985bfc2aa231006876</id>
+  <author>Christopher Atwell</author>
+  <deployer>GitHub</deployer>
+  <authorEmail>catwell@mys3tech.com</authorEmail>
+  <message>Add CMS authentication guides and update settings
+    
+    Added CMS_AUTHENTICATION_GUIDE.md and QUICK_START_CMS_AUTH.md with detailed instructions for authentication and frontend integration. Updated .claude/settings.local.json to allow additional Bash commands for webapp and deployment management.</message>
+  <progress></progress>
+  <status>Success</status>
+  <statusText></statusText>
+  <lastSuccessEndTime>2025-10-17T14:37:59.3169499Z</lastSuccessEndTime>
+  <receivedTime>2025-10-17T14:34:49.204203Z</receivedTime>
+  <startTime>2025-10-17T14:34:50.8261012Z</startTime>
+  <endTime>2025-10-17T14:37:59.3169499Z</endTime>
+  <complete>True</complete>
+  <is_temp>False</is_temp>
+  <is_readonly>False</is_readonly>
+  <buildSummary />
+</deployment>

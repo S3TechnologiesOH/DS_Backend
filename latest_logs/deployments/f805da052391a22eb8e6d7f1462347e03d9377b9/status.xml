@@ -1,0 +1,25 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<deployment>
+  <id>f805da052391a22eb8e6d7f1462347e03d9377b9</id>
+  <author>Christopher Atwell</author>
+  <deployer>GitHub</deployer>
+  <authorEmail>catwell@mys3tech.com</authorEmail>
+  <message>Fix: Enable trust proxy for Azure App Service
+    
+    - Add app.set('trust proxy', 1) to fix 403 errors
+    - Resolves express-rate-limit X-Forwarded-For header issue
+    - Required for Azure App Service reverse proxy configuration
+    
+    Fixes ERR_ERL_UNEXPECTED_X_FORWARDED_FOR error in production</message>
+  <progress></progress>
+  <status>Success</status>
+  <statusText></statusText>
+  <lastSuccessEndTime>2025-10-17T14:09:48.3730365Z</lastSuccessEndTime>
+  <receivedTime>2025-10-17T14:07:00.5598927Z</receivedTime>
+  <startTime>2025-10-17T14:07:02.212412Z</startTime>
+  <endTime>2025-10-17T14:09:48.3730365Z</endTime>
+  <complete>True</complete>
+  <is_temp>False</is_temp>
+  <is_readonly>False</is_readonly>
+  <buildSummary />
+</deployment>
