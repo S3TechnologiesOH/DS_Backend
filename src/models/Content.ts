@@ -4,8 +4,12 @@
  * Media files and content library (customer-level).
  */
 
+// Import Express to ensure Multer types are available
+import 'express';
+
 export type ContentType = 'Image' | 'Video' | 'HTML' | 'URL' | 'PDF';
 export type ContentStatus = 'Processing' | 'Ready' | 'Failed';
+export type MulterFile = Express.Multer.File;
 
 export interface Content {
   contentId: number;
@@ -57,5 +61,5 @@ export interface UploadContentDto {
   description?: string;
   contentType: ContentType;
   tags?: string;
-  file: Express.Multer.File;
+  file: MulterFile;
 }

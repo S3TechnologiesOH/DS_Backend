@@ -10,6 +10,8 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.ContentService = void 0;
+// Import Express to ensure Multer types are available
+require("express");
 const errors_1 = require("../utils/errors");
 const helpers_1 = require("../utils/helpers");
 const logger_1 = __importDefault(require("../utils/logger"));

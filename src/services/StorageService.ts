@@ -5,10 +5,14 @@
  * This service demonstrates how to interact with Azure Blob Storage for media files.
  */
 
+// Import Express to ensure Multer types are available
+import 'express';
 import { getContainerClient } from '../config/azure';
 import { sanitizeFilename, getFileExtension } from '../utils/helpers';
 import logger from '../utils/logger';
 import { InternalServerError } from '../utils/errors';
+
+type MulterFile = Express.Multer.File;
 
 export interface UploadResult {
   fileUrl: string;
@@ -26,7 +30,7 @@ export class StorageService {
    * const result = await storageService.uploadFile(file, customerId, 'content');
    */
   async uploadFile(
-    file: Express.Multer.File,
+    file: MulterFile,
     customerId: number,
     folder: string = 'content'
   ): Promise<UploadResult> {

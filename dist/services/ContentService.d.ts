@@ -4,9 +4,11 @@
  * Business logic for content management including file upload to Azure Blob Storage.
  * Demonstrates complete flow: file upload � storage � database.
  */
+import 'express';
 import { ContentRepository } from '../repositories/ContentRepository';
 import { StorageService } from './StorageService';
 import { Content, UpdateContentDto, ContentType } from '../models';
+type MulterFile = Express.Multer.File;
 export declare class ContentService {
     private readonly contentRepository;
     private readonly storageService;
@@ -39,7 +41,7 @@ export declare class ContentService {
      * 3. Save metadata to database
      * 4. Return content record
      */
-    uploadContent(file: Express.Multer.File, customerId: number, uploadedBy: number, metadata: {
+    uploadContent(file: MulterFile, customerId: number, uploadedBy: number, metadata: {
         name: string;
         description?: string;
         contentType: ContentType;
@@ -68,4 +70,5 @@ export declare class ContentService {
      */
     private validateFile;
 }
+export {};
 //# sourceMappingURL=ContentService.d.ts.map

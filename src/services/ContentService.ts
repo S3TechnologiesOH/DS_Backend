@@ -2,15 +2,19 @@
  * Content Service
  *
  * Business logic for content management including file upload to Azure Blob Storage.
- * Demonstrates complete flow: file upload ’ storage ’ database.
+ * Demonstrates complete flow: file upload ï¿½ storage ï¿½ database.
  */
 
+// Import Express to ensure Multer types are available
+import 'express';
 import { ContentRepository } from '../repositories/ContentRepository';
 import { StorageService } from './StorageService';
 import { Content, CreateContentDto, UpdateContentDto, ContentType } from '../models';
 import { NotFoundError, ValidationError } from '../utils/errors';
 import { parsePaginationParams } from '../utils/helpers';
 import logger from '../utils/logger';
+
+type MulterFile = Express.Multer.File;
 
 export class ContentService {
   constructor(
@@ -79,7 +83,7 @@ export class ContentService {
    * 4. Return content record
    */
   async uploadContent(
-    file: Express.Multer.File,
+    file: MulterFile,
     customerId: number,
     uploadedBy: number,
     metadata: {
@@ -212,7 +216,7 @@ export class ContentService {
   /**
    * Validate uploaded file
    */
-  private validateFile(file: Express.Multer.File, contentType: ContentType): void {
+  private validateFile(file: MulterFile, contentType: ContentType): void {
     const maxSizes: Record<ContentType, number> = {
       Image: 10 * 1024 * 1024, // 10MB
       Video: 100 * 1024 * 1024, // 100MB

@@ -4,6 +4,8 @@
  * Handles file uploads/downloads to Azure Blob Storage.
  * This service demonstrates how to interact with Azure Blob Storage for media files.
  */
+import 'express';
+type MulterFile = Express.Multer.File;
 export interface UploadResult {
     fileUrl: string;
     fileName: string;
@@ -18,7 +20,7 @@ export declare class StorageService {
      * const file = req.file; // From multer middleware
      * const result = await storageService.uploadFile(file, customerId, 'content');
      */
-    uploadFile(file: Express.Multer.File, customerId: number, folder?: string): Promise<UploadResult>;
+    uploadFile(file: MulterFile, customerId: number, folder?: string): Promise<UploadResult>;
     /**
      * Delete file from Azure Blob Storage
      */
@@ -37,4 +39,5 @@ export declare class StorageService {
      */
     extractBlobName(fileUrl: string): string;
 }
+export {};
 //# sourceMappingURL=StorageService.d.ts.map
