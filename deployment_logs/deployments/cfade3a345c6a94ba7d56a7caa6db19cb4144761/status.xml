@@ -1,0 +1,27 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<deployment>
+  <id>cfade3a345c6a94ba7d56a7caa6db19cb4144761</id>
+  <author>Christopher Atwell</author>
+  <deployer>GitHub</deployer>
+  <authorEmail>catwell@mys3tech.com</authorEmail>
+  <message>Fix: Update Swagger API path for production deployment
+    
+    - Change Swagger JSDoc path from './src/routes/*.js' to './dist/routes/*.js'
+    - This fixes Swagger UI not showing endpoints in Azure production
+    - In production, app runs from dist folder, not src folder
+    
+    🤖 Generated with [Claude Code](https://claude.com/claude-code)
+    
+    Co-Authored-By: Claude &lt;noreply@anthropic.com&gt;</message>
+  <progress></progress>
+  <status>Failed</status>
+  <statusText>Deployment has been stopped due to SCM container restart. The restart can happen due to a management operation on site. Do not perform a management operation and a deployment operation in quick succession. Adding a small delay can help avoid any conflicts.</statusText>
+  <lastSuccessEndTime />
+  <receivedTime>2025-10-17T14:47:14.8165247Z</receivedTime>
+  <startTime>2025-10-17T14:47:16.9112994Z</startTime>
+  <endTime>2025-10-17T14:48:49.1787267Z</endTime>
+  <complete>True</complete>
+  <is_temp>False</is_temp>
+  <is_readonly>False</is_readonly>
+  <buildSummary />
+</deployment>

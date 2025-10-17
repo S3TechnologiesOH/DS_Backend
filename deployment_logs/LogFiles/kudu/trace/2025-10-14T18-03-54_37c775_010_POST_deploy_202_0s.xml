@@ -1,0 +1,16 @@
+<step title="Incoming Request" date="2025-10-14T18:03:54.358" instance="37c775" url="/deploy?scmType=ExternalGit&amp;isAsync=true" method="POST" type="request" pid="821,1,18" Host="digital-signage-backend-fxeuazanh7cqd7d7.scm.eastus-01.azurewebsites.net" User-Agent="Azure-WebSites-Controller/105.0.7.86" Authorization="Bas..." Expect="100-continue" Content-Length="86" x-ms-request-id="c4341cb9-d73c-4759-9f5b-49d255b3a178" X-ARR-LOG-ID="c4341cb9-d73c-4759-9f5b-49d255b3a178" CLIENT-IP="40.71.11.169:19910" X-SITE-DEPLOYMENT-ID="Digital-Signage-Backend" WAS-DEFAULT-HOSTNAME="digital-signage-backend-fxeuazanh7cqd7d7.scm.eastus-01.azurewebsites.net" X-MS-PLATFORM-INTERNAL="True" X-Forwarded-Proto="https" X-AppService-Proto="https" X-Forwarded-TlsVersion="1.3" X-WAWS-Unencoded-URL="/deploy?scmType=ExternalGit&amp;isAsync=true" X-Client-IP="40.71.11.169" X-Client-Port="19910" >
+  <step title="Cleanup Xml Logs" date="2025-10-14T18:03:54.363" /><!-- duration: 10ms -->
+  <step title="FetchHandler" date="2025-10-14T18:03:54.398" >
+    <step title="Executing external process" date="2025-10-14T18:03:54.439" type="process" path="git" arguments="rev-parse --git-dir" /><!-- duration: 52ms -->
+    <step title="Executing external process" date="2025-10-14T18:03:54.495" type="process" path="git" arguments="rev-parse --git-dir" /><!-- duration: 15ms -->
+    <step title="Executing external process" date="2025-10-14T18:03:54.514" type="process" path="git" arguments="log -n 1 main --" /><!-- duration: 64ms -->
+    <step title="Start deployment in the background" date="2025-10-14T18:03:54.583" >
+      <step title="Executing external process" date="2025-10-14T18:03:54.594" type="process" path="git" arguments="rev-parse --git-dir" /><!-- duration: 24ms -->
+      <step title="Executing external process" date="2025-10-14T18:03:54.623" type="process" path="git" arguments="rev-parse --git-dir" /><!-- duration: 13ms -->
+      <step title="Executing external process" date="2025-10-14T18:03:54.639" type="process" path="git" arguments="log -n 1 main --" /><!-- duration: 21ms -->
+      <step title="Acquiring Deployment Lock" date="2025-10-14T18:03:54.665" /><!-- duration: 4ms -->
+      <step title="Acquired Deployment Lock" date="2025-10-14T18:03:54.697" /><!-- duration: 5ms -->
+    </step><!-- duration: 227ms -->
+  </step><!-- duration: 417ms -->
+  <step title="Outgoing response" date="2025-10-14T18:03:54.825" type="response" statusCode="202" statusText="Accepted" /><!-- duration: 4ms -->
+</step><!-- duration: 475ms -->

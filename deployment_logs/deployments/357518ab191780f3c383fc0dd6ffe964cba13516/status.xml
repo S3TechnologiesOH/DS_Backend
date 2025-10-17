@@ -1,0 +1,27 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<deployment>
+  <id>357518ab191780f3c383fc0dd6ffe964cba13516</id>
+  <author>Christopher Atwell</author>
+  <deployer>GitHub</deployer>
+  <authorEmail>catwell@mys3tech.com</authorEmail>
+  <message>Re-enable Oryx build with dummy build script
+    
+    - Re-enable SCM_DO_BUILD_DURING_DEPLOYMENT so Oryx runs npm install
+    - Change build script to skip TypeScript compilation since dist folder is pre-built
+    - This ensures node_modules are properly installed on Azure while using the committed dist folder
+    
+    🤖 Generated with [Claude Code](https://claude.com/claude-code)
+    
+    Co-Authored-By: Claude &lt;noreply@anthropic.com&gt;</message>
+  <progress></progress>
+  <status>Success</status>
+  <statusText></statusText>
+  <lastSuccessEndTime>2025-10-14T18:30:48.9159774Z</lastSuccessEndTime>
+  <receivedTime>2025-10-14T18:28:44.9495084Z</receivedTime>
+  <startTime>2025-10-14T18:28:46.4314622Z</startTime>
+  <endTime>2025-10-14T18:30:48.9159774Z</endTime>
+  <complete>True</complete>
+  <is_temp>False</is_temp>
+  <is_readonly>False</is_readonly>
+  <buildSummary />
+</deployment>

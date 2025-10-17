@@ -1,0 +1,21 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<deployment>
+  <id>86e3d9a77e79f4896d7953a6d6c84b6ba5a666cb</id>
+  <author>Christopher Atwell</author>
+  <deployer>GitHub</deployer>
+  <authorEmail>catwell@mys3tech.com</authorEmail>
+  <message>Add player device authentication and token support
+    
+    Introduces player device authentication endpoints, models, repositories, and validators. Updates Swagger documentation with new response schemas and tags for player authentication and device operations. Also sets 'trust proxy' in Express app for reverse proxy support.</message>
+  <progress></progress>
+  <status>Failed</status>
+  <statusText>Deployment has been stopped due to SCM container restart. The restart can happen due to a management operation on site. Do not perform a management operation and a deployment operation in quick succession. Adding a small delay can help avoid any conflicts.</statusText>
+  <lastSuccessEndTime />
+  <receivedTime>2025-10-17T14:39:09.7071899Z</receivedTime>
+  <startTime>2025-10-17T14:44:42.680157Z</startTime>
+  <endTime>2025-10-17T14:45:51.9510327Z</endTime>
+  <complete>True</complete>
+  <is_temp>False</is_temp>
+  <is_readonly>False</is_readonly>
+  <buildSummary />
+</deployment>

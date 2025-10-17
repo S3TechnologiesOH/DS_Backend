@@ -1,0 +1,21 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<deployment>
+  <id>bbdd2ffd1f473ec9907b35e3a20033e83362788a</id>
+  <author>Christopher Atwell</author>
+  <deployer>GitHub</deployer>
+  <authorEmail>catwell@mys3tech.com</authorEmail>
+  <message>Add Swagger API docs and OpenAPI config
+    
+    Integrated Swagger UI for API documentation at /api-docs, added OpenAPI configuration and JSDoc comments to route files for Auth and Content endpoints. Updated dependencies and environment settings to support documentation. Also updated DB_PASSWORD in Azure app settings.</message>
+  <progress></progress>
+  <status>Success</status>
+  <statusText></statusText>
+  <lastSuccessEndTime>2025-10-15T13:05:51.3942921Z</lastSuccessEndTime>
+  <receivedTime>2025-10-14T19:42:30.0540536Z</receivedTime>
+  <startTime>2025-10-15T13:03:19.2667017Z</startTime>
+  <endTime>2025-10-15T13:05:51.3942921Z</endTime>
+  <complete>True</complete>
+  <is_temp>False</is_temp>
+  <is_readonly>False</is_readonly>
+  <buildSummary />
+</deployment>
