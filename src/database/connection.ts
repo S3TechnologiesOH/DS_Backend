@@ -12,28 +12,42 @@ import { DatabaseError } from '../utils/errors';
 let pool: ConnectionPool | null = null;
 
 /**
- * Initialize database connection pool
+ * Initialize database connection pool with retry logic
  */
-export const initializeDatabase = async (): Promise<ConnectionPool> => {
-  try {
-    if (pool) {
-      logger.info('Database connection pool already exists');
-      return pool;
-    }
-
-    logger.info('Initializing database connection pool...');
-    pool = await sql.connect(databaseConfig);
-
-    pool.on('error', (err) => {
-      logger.error('Database pool error', { error: err });
-    });
-
-    logger.info('Database connection pool initialized successfully');
+export const initializeDatabase = async (maxRetries = 5, retryDelay = 3000): Promise<ConnectionPool> => {
+  if (pool) {
+    logger.info('Database connection pool already exists');
     return pool;
-  } catch (error) {
-    logger.error('Failed to initialize database connection pool', { error });
-    throw new DatabaseError('Failed to connect to database');
   }
+
+  let lastError: any;
+
+  for (let attempt = 1; attempt <= maxRetries; attempt++) {
+    try {
+      logger.info(`Initializing database connection pool (attempt ${attempt}/${maxRetries})...`);
+      pool = await sql.connect(databaseConfig);
+
+      pool.on('error', (err) => {
+        logger.error('Database pool error', { error: err });
+      });
+
+      logger.info('Database connection pool initialized successfully');
+      return pool;
+    } catch (error) {
+      lastError = error;
+      logger.warn(`Database connection attempt ${attempt} failed`, { error });
+
+      if (attempt < maxRetries) {
+        logger.info(`Retrying in ${retryDelay}ms...`);
+        await new Promise(resolve => setTimeout(resolve, retryDelay));
+        // Exponential backoff: increase delay for next retry
+        retryDelay = Math.min(retryDelay * 1.5, 15000);
+      }
+    }
+  }
+
+  logger.error('Failed to initialize database connection pool after all retries', { error: lastError });
+  throw new DatabaseError('Failed to connect to database after multiple attempts');
 };
 
 /**

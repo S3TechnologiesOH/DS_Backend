@@ -11,8 +11,12 @@
   },
   "servers": [
     {
+      "url": "https://api.engages3.s3protection.com/api/v1",
+      "description": "Production server (Custom Domain)"
+    },
+    {
       "url": "https://digital-signage-backend.azurewebsites.net/api/v1",
-      "description": "Production server"
+      "description": "Production server (Azure Default)"
     },
     {
       "url": "http://localhost:3000/api/v1",

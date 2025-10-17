@@ -16,26 +16,37 @@ const logger_1 = __importDefault(require("../utils/logger"));
 const errors_1 = require("../utils/errors");
 let pool = null;
 /**
- * Initialize database connection pool
+ * Initialize database connection pool with retry logic
  */
-const initializeDatabase = async () => {
-    try {
-        if (pool) {
-            logger_1.default.info('Database connection pool already exists');
-            return pool;
-        }
-        logger_1.default.info('Initializing database connection pool...');
-        pool = await mssql_1.default.connect(database_1.databaseConfig);
-        pool.on('error', (err) => {
-            logger_1.default.error('Database pool error', { error: err });
-        });
-        logger_1.default.info('Database connection pool initialized successfully');
+const initializeDatabase = async (maxRetries = 5, retryDelay = 3000) => {
+    if (pool) {
+        logger_1.default.info('Database connection pool already exists');
         return pool;
     }
-    catch (error) {
-        logger_1.default.error('Failed to initialize database connection pool', { error });
-        throw new errors_1.DatabaseError('Failed to connect to database');
+    let lastError;
+    for (let attempt = 1; attempt <= maxRetries; attempt++) {
+        try {
+            logger_1.default.info(`Initializing database connection pool (attempt ${attempt}/${maxRetries})...`);
+            pool = await mssql_1.default.connect(database_1.databaseConfig);
+            pool.on('error', (err) => {
+                logger_1.default.error('Database pool error', { error: err });
+            });
+            logger_1.default.info('Database connection pool initialized successfully');
+            return pool;
+        }
+        catch (error) {
+            lastError = error;
+            logger_1.default.warn(`Database connection attempt ${attempt} failed`, { error });
+            if (attempt < maxRetries) {
+                logger_1.default.info(`Retrying in ${retryDelay}ms...`);
+                await new Promise(resolve => setTimeout(resolve, retryDelay));
+                // Exponential backoff: increase delay for next retry
+                retryDelay = Math.min(retryDelay * 1.5, 15000);
+            }
+        }
     }
+    logger_1.default.error('Failed to initialize database connection pool after all retries', { error: lastError });
+    throw new errors_1.DatabaseError('Failed to connect to database after multiple attempts');
 };
 exports.initializeDatabase = initializeDatabase;
 /**

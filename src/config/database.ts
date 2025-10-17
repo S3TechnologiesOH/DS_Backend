@@ -17,12 +17,17 @@ export const databaseConfig: SqlConfig = {
     encrypt: env.DB_ENCRYPT,
     trustServerCertificate: env.NODE_ENV === 'development',
     enableArithAbort: true,
-    requestTimeout: 30000,
+    requestTimeout: 60000, // Increased to 60 seconds for Azure SQL
+    connectTimeout: 30000, // Connection timeout
+    instanceName: undefined, // Explicitly set for Azure SQL
+    useUTC: true, // Use UTC timestamps
+    abortTransactionOnError: true,
   },
   pool: {
     max: 10,
-    min: 0,
+    min: 2, // Keep at least 2 connections alive for Azure SQL
     idleTimeoutMillis: 30000,
+    acquireTimeoutMillis: 30000, // Timeout for acquiring connection from pool
   },
-  connectionTimeout: 15000,
+  connectionTimeout: 30000, // Increased from 15s to 30s for Azure
 };

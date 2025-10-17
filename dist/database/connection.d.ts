@@ -5,9 +5,9 @@
  */
 import sql, { ConnectionPool } from 'mssql';
 /**
- * Initialize database connection pool
+ * Initialize database connection pool with retry logic
  */
-export declare const initializeDatabase: () => Promise<ConnectionPool>;
+export declare const initializeDatabase: (maxRetries?: number, retryDelay?: number) => Promise<ConnectionPool>;
 /**
  * Get existing database connection pool
  */
