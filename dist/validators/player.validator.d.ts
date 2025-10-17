@@ -246,32 +246,32 @@ export declare const listPlayersSchema: z.ZodObject<{
         search: z.ZodOptional<z.ZodString>;
     }, "strip", z.ZodTypeAny, {
         status?: "Online" | "Offline" | "Error";
+        siteId?: number;
         search?: string;
         limit?: number;
         page?: number;
-        siteId?: number;
     }, {
         status?: "Online" | "Offline" | "Error";
+        siteId?: string;
         search?: string;
         limit?: string;
         page?: string;
-        siteId?: string;
     }>;
 }, "strip", z.ZodTypeAny, {
     query?: {
         status?: "Online" | "Offline" | "Error";
+        siteId?: number;
         search?: string;
         limit?: number;
         page?: number;
-        siteId?: number;
     };
 }, {
     query?: {
         status?: "Online" | "Offline" | "Error";
+        siteId?: string;
         search?: string;
         limit?: string;
         page?: string;
-        siteId?: string;
     };
 }>;
 //# sourceMappingURL=player.validator.d.ts.map

@@ -170,34 +170,34 @@ export declare const listContentSchema: z.ZodObject<{
         tags: z.ZodOptional<z.ZodString>;
     }, "strip", z.ZodTypeAny, {
         status?: "Processing" | "Ready" | "Failed";
-        contentType?: "Image" | "Video" | "HTML" | "URL" | "PDF";
         search?: string;
         limit?: number;
+        contentType?: "Image" | "Video" | "HTML" | "URL" | "PDF";
         tags?: string;
         page?: number;
     }, {
         status?: "Processing" | "Ready" | "Failed";
-        contentType?: "Image" | "Video" | "HTML" | "URL" | "PDF";
         search?: string;
         limit?: string;
+        contentType?: "Image" | "Video" | "HTML" | "URL" | "PDF";
         tags?: string;
         page?: string;
     }>;
 }, "strip", z.ZodTypeAny, {
     query?: {
         status?: "Processing" | "Ready" | "Failed";
-        contentType?: "Image" | "Video" | "HTML" | "URL" | "PDF";
         search?: string;
         limit?: number;
+        contentType?: "Image" | "Video" | "HTML" | "URL" | "PDF";
         tags?: string;
         page?: number;
     };
 }, {
     query?: {
         status?: "Processing" | "Ready" | "Failed";
-        contentType?: "Image" | "Video" | "HTML" | "URL" | "PDF";
         search?: string;
         limit?: string;
+        contentType?: "Image" | "Video" | "HTML" | "URL" | "PDF";
         tags?: string;
         page?: string;
     };

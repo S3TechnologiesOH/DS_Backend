@@ -11,6 +11,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = require("express");
 const auth_routes_1 = __importDefault(require("./auth.routes"));
+const player_auth_routes_1 = __importDefault(require("./player-auth.routes"));
 const content_routes_1 = __importDefault(require("./content.routes"));
 const customer_routes_1 = __importDefault(require("./customer.routes"));
 const site_routes_1 = __importDefault(require("./site.routes"));
@@ -24,6 +25,7 @@ const player_device_routes_1 = __importDefault(require("./player-device.routes")
 const router = (0, express_1.Router)();
 // Mount route modules
 router.use('/auth', auth_routes_1.default);
+router.use('/player-auth', player_auth_routes_1.default);
 router.use('/content', content_routes_1.default);
 router.use('/customers', customer_routes_1.default);
 router.use('/sites', site_routes_1.default);

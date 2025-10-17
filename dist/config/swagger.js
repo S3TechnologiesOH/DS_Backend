@@ -860,6 +860,72 @@ const options = {
                         },
                     },
                 },
+                PlayerActivationResponse: {
+                    type: 'object',
+                    properties: {
+                        playerId: {
+                            type: 'integer',
+                            example: 42,
+                            description: 'ID of the activated player',
+                        },
+                        customerId: {
+                            type: 'integer',
+                            example: 1,
+                            description: 'Customer ID the player belongs to',
+                        },
+                        siteId: {
+                            type: 'integer',
+                            example: 5,
+                            description: 'Site ID where player is located',
+                        },
+                        accessToken: {
+                            type: 'string',
+                            example: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...',
+                            description: 'JWT access token (expires in 1 hour)',
+                        },
+                        refreshToken: {
+                            type: 'string',
+                            example: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...',
+                            description: 'JWT refresh token (expires in 30 days)',
+                        },
+                        expiresIn: {
+                            type: 'integer',
+                            example: 3600,
+                            description: 'Access token expiration time in seconds',
+                        },
+                    },
+                },
+                PlayerTokenRefreshResponse: {
+                    type: 'object',
+                    properties: {
+                        accessToken: {
+                            type: 'string',
+                            example: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...',
+                            description: 'New JWT access token',
+                        },
+                        expiresIn: {
+                            type: 'integer',
+                            example: 3600,
+                            description: 'Token expiration time in seconds',
+                        },
+                    },
+                },
+                ActivationCodeResponse: {
+                    type: 'object',
+                    properties: {
+                        activationCode: {
+                            type: 'string',
+                            example: 'ABC123',
+                            description: '6-character activation code',
+                        },
+                        expiresAt: {
+                            type: 'string',
+                            format: 'date-time',
+                            example: '2025-01-18T14:30:00.000Z',
+                            description: 'When the activation code expires (24 hours)',
+                        },
+                    },
+                },
             },
             responses: {
                 BadRequest: {
@@ -912,7 +978,15 @@ const options = {
         tags: [
             {
                 name: 'Auth',
-                description: 'Authentication endpoints for users and players',
+                description: 'Authentication endpoints for CMS users',
+            },
+            {
+                name: 'Player Authentication',
+                description: 'Authentication endpoints for player devices',
+            },
+            {
+                name: 'Player Devices',
+                description: 'Operational endpoints for player devices (schedule, heartbeat, proof-of-play)',
             },
             {
                 name: 'Customers',
@@ -924,7 +998,7 @@ const options = {
             },
             {
                 name: 'Players',
-                description: 'Player device management',
+                description: 'Player device management (CMS)',
             },
             {
                 name: 'Content',

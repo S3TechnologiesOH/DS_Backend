@@ -68,6 +68,7 @@ export declare class PlayerService {
      */
     generateActivationCode(playerId: number, customerId: number): Promise<{
         activationCode: string;
+        expiresAt: Date;
     }>;
 }
 //# sourceMappingURL=PlayerService.d.ts.map

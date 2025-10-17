@@ -28,4 +28,6 @@ __exportStar(require("./Playlist"), exports);
 __exportStar(require("./Schedule"), exports);
 __exportStar(require("./Analytics"), exports);
 __exportStar(require("./Webhook"), exports);
+__exportStar(require("./PlayerToken"), exports);
+__exportStar(require("./ProofOfPlay"), exports);
 //# sourceMappingURL=index.js.map

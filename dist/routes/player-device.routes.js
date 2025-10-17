@@ -19,6 +19,7 @@ const SiteRepository_1 = require("../repositories/SiteRepository");
 const ScheduleRepository_1 = require("../repositories/ScheduleRepository");
 const PlaylistRepository_1 = require("../repositories/PlaylistRepository");
 const ContentRepository_1 = require("../repositories/ContentRepository");
+const ProofOfPlayRepository_1 = require("../repositories/ProofOfPlayRepository");
 const authenticate_1 = require("../middleware/authenticate");
 const asyncHandler_1 = require("../middleware/asyncHandler");
 const validateRequest_1 = require("../middleware/validateRequest");
@@ -30,10 +31,11 @@ const siteRepository = new SiteRepository_1.SiteRepository();
 const scheduleRepository = new ScheduleRepository_1.ScheduleRepository();
 const playlistRepository = new PlaylistRepository_1.PlaylistRepository();
 const contentRepository = new ContentRepository_1.ContentRepository();
+const proofOfPlayRepository = new ProofOfPlayRepository_1.ProofOfPlayRepository();
 const playerService = new PlayerService_1.PlayerService(playerRepository, siteRepository);
 const playerController = new PlayerController_1.PlayerController(playerService);
 // All player device routes require authentication (using player JWT tokens)
-router.use(authenticate_1.authenticate);
+router.use(authenticate_1.authenticatePlayer);
 // Validation schemas
 const heartbeatSchema = zod_1.z.object({
     body: zod_1.z.object({
@@ -48,6 +50,18 @@ const logSchema = zod_1.z.object({
         level: zod_1.z.enum(['info', 'warn', 'error', 'debug']),
         message: zod_1.z.string().min(1).max(1000),
         metadata: zod_1.z.record(zod_1.z.any()).optional(),
+    }),
+});
+const proofOfPlaySchema = zod_1.z.object({
+    params: zod_1.z.object({
+        playerId: zod_1.z.string().regex(/^\d+$/),
+    }),
+    body: zod_1.z.object({
+        contentId: zod_1.z.number().int().positive(),
+        playlistId: zod_1.z.number().int().positive().optional(),
+        scheduleId: zod_1.z.number().int().positive().optional(),
+        playedAt: zod_1.z.string().datetime(),
+        duration: zod_1.z.number().int().positive().optional(),
     }),
 });
 /**
@@ -338,6 +352,88 @@ router.post('/:playerId/logs', (0, validateRequest_1.validateRequest)(logSchema)
     res.status(201).json({
         status: 'success',
         message: 'Log recorded',
+    });
+}));
+/**
+ * @swagger
+ * /api/v1/player-devices/{playerId}/proof-of-play:
+ *   post:
+ *     summary: Submit proof of play
+ *     description: Record that a content item was displayed on the player
+ *     tags: [Player Devices]
+ *     security:
+ *       - playerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: playerId
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         description: Player ID
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - contentId
+ *               - playedAt
+ *             properties:
+ *               contentId:
+ *                 type: integer
+ *                 example: 101
+ *                 description: ID of content that was played
+ *               playlistId:
+ *                 type: integer
+ *                 example: 5
+ *                 description: ID of playlist (if part of playlist)
+ *               scheduleId:
+ *                 type: integer
+ *                 example: 10
+ *                 description: ID of schedule (if part of schedule)
+ *               playedAt:
+ *                 type: string
+ *                 format: date-time
+ *                 example: 2025-01-17T14:30:00.000Z
+ *                 description: When content started playing
+ *               duration:
+ *                 type: integer
+ *                 example: 10
+ *                 description: Actual duration played in seconds
+ *     responses:
+ *       201:
+ *         description: Proof of play recorded successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 status:
+ *                   type: string
+ *                   example: success
+ *                 message:
+ *                   type: string
+ *                   example: Proof of play recorded
+ *       400:
+ *         $ref: '#/components/responses/BadRequest'
+ *       401:
+ *         $ref: '#/components/responses/Unauthorized'
+ */
+router.post('/:playerId/proof-of-play', (0, validateRequest_1.validateRequest)(proofOfPlaySchema), (0, asyncHandler_1.asyncHandler)(async (req, res) => {
+    const { playerId } = req.params;
+    const { contentId, playlistId, scheduleId, playedAt, duration } = req.body;
+    await proofOfPlayRepository.create({
+        playerId: Number(playerId),
+        contentId,
+        playlistId,
+        scheduleId,
+        playedAt: new Date(playedAt),
+        duration,
+    });
+    res.status(201).json({
+        status: 'success',
+        message: 'Proof of play recorded',
     });
 }));
 exports.default = router;

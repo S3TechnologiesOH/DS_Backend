@@ -6,7 +6,7 @@
  */
 import { Response, NextFunction } from 'express';
 import { AuthRequest } from '../types/express';
-type UserRole = 'Admin' | 'Editor' | 'Viewer' | 'SiteManager';
+type UserRole = 'Admin' | 'Editor' | 'Viewer' | 'SiteManager' | 'Player';
 /**
  * Authorize user based on role(s)
  */

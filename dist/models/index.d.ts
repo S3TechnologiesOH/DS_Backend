@@ -12,18 +12,8 @@ export * from './Playlist';
 export * from './Schedule';
 export * from './Analytics';
 export * from './Webhook';
-export interface ProofOfPlay {
-    proofOfPlayId: number;
-    playerId: number;
-    contentId: number;
-    playlistId: number | null;
-    scheduleId: number | null;
-    playbackStartTime: Date;
-    playbackEndTime: Date | null;
-    duration: number | null;
-    isCompleted: boolean;
-    createdAt: Date;
-}
+export * from './PlayerToken';
+export * from './ProofOfPlay';
 export interface PlayerLog {
     logId: number;
     playerId: number;
@@ -31,14 +21,6 @@ export interface PlayerLog {
     message: string;
     eventType: string | null;
     eventData: string | null;
-    createdAt: Date;
-}
-export interface PlayerToken {
-    tokenId: number;
-    playerId: number;
-    token: string;
-    expiresAt: Date;
-    revokedAt: Date | null;
     createdAt: Date;
 }
 export interface UserSession {

@@ -148,13 +148,14 @@ class PlayerService {
     async generateActivationCode(playerId, customerId) {
         // Verify player exists and belongs to customer
         await this.getById(playerId, customerId);
-        // Generate new activation code
-        const activationCode = await this.playerRepository.generateActivationCode(playerId, customerId);
+        // Generate new activation code with expiration
+        const result = await this.playerRepository.generateActivationCode(playerId, customerId);
         logger_1.default.info('Activation code generated', {
             playerId,
             customerId,
+            expiresAt: result.expiresAt,
         });
-        return { activationCode };
+        return result;
     }
 }
 exports.PlayerService = PlayerService;

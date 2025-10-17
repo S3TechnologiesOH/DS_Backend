@@ -25,6 +25,9 @@ const swagger_1 = require("./config/swagger");
  */
 const createApp = () => {
     const app = (0, express_1.default)();
+    // Trust proxy - Required for Azure App Service and other reverse proxies
+    // This allows Express to properly read X-Forwarded-* headers
+    app.set('trust proxy', 1);
     // Security middleware
     app.use((0, helmet_1.default)());
     // CORS configuration

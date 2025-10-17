@@ -20,9 +20,11 @@ export interface Player {
     osVersion: string | null;
     isActive: boolean;
     activationCode: string | null;
+    activationCodeExpiresAt: Date | null;
     activatedAt: Date | null;
     createdAt: Date;
     updatedAt: Date;
+    customerId?: number;
 }
 export interface CreatePlayerDto {
     siteId: number;

@@ -21,6 +21,10 @@ export declare class PlayerRepository extends BaseRepository {
         offset?: number;
     }): Promise<Player[]>;
     /**
+     * Find player by player code (for activation)
+     */
+    findByPlayerCode(playerCode: string): Promise<Player | null>;
+    /**
      * Get all players for a site
      */
     findBySiteId(siteId: number, customerId: number): Promise<Player[]>;
@@ -56,6 +60,15 @@ export declare class PlayerRepository extends BaseRepository {
     /**
      * Generate activation code for player
      */
-    generateActivationCode(playerId: number, customerId: number): Promise<string>;
+    generateActivationCode(playerId: number, customerId: number): Promise<{
+        activationCode: string;
+        expiresAt: Date;
+    }>;
+    /**
+     * Update activation fields (for player authentication service)
+     */
+    updateActivation(playerId: number, data: {
+        activatedAt: Date;
+    }): Promise<void>;
 }
 //# sourceMappingURL=PlayerRepository.d.ts.map

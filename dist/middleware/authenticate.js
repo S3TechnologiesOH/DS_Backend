@@ -69,12 +69,16 @@ exports.authenticatePlayer = (0, asyncHandler_1.asyncHandler)(async (req, _res, 
     }
     try {
         const decoded = jsonwebtoken_1.default.verify(token, environment_1.env.PLAYER_JWT_SECRET);
-        // Attach player info to request
-        req.player = {
+        // Verify token type
+        if (decoded.type !== 'player') {
+            throw new errors_1.UnauthorizedError('Invalid player token type');
+        }
+        // Attach player info to request (as user with Player role)
+        req.user = {
             playerId: decoded.playerId,
             customerId: decoded.customerId,
             siteId: decoded.siteId,
-            playerName: decoded.playerName,
+            role: 'Player',
         };
         next();
     }

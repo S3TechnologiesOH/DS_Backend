@@ -1,0 +1,1 @@
+{"version":3,"file":"002_add_activation_expiry.d.ts","sourceRoot":"","sources":["../../../src/database/migrations/002_add_activation_expiry.ts"],"names":[],"mappings":"AAAA;;;;GAIG;AAIH,eAAO,MAAM,IAAI,0CAA0C,CAAC;AAE5D,eAAO,MAAM,EAAE,QAAa,OAAO,CAAC,IAAI,CAUvC,CAAC;AAEF,eAAO,MAAM,IAAI,QAAa,OAAO,CAAC,IAAI,CAUzC,CAAC"}
