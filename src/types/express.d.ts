@@ -34,4 +34,9 @@ declare global {
 
 export interface AuthRequest extends Request {
   user: NonNullable<Request['user']>;
+  body: any;
+  query: any;
+  params: any;
+  file?: Express.Multer.File;
+  files?: Express.Multer.File[];
 }
