@@ -27,7 +27,21 @@
       "Bash(az webapp deployment source sync:*)",
       "Bash(npm install:*)",
       "Bash(npm run dev)",
-      "Bash(awk:*)"
+      "Bash(awk:*)",
+      "Bash(curl -v https://digital-signage-backend.azurewebsites.net/api/v1/auth/login)",
+      "Bash(az webapp config access-restriction show:*)",
+      "Bash(az webapp show:*)",
+      "Bash(timeout 10 az webapp log:*)",
+      "Bash(az webapp deployment source show:*)",
+      "Bash(timeout 20 az webapp log tail:*)",
+      "Bash(curl:*)",
+      "Bash(az webapp config show:*)",
+      "Bash(az webapp config access-restriction remove:*)",
+      "Bash(az webapp config:*)",
+      "Bash(cat:*)",
+      "Bash(timeout 15 az webapp log tail:*)",
+      "Bash(unzip:*)",
+      "Bash(find:*)"
     ],
     "deny": [],
     "ask": []

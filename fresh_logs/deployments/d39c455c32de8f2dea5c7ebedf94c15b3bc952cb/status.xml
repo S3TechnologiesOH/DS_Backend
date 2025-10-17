@@ -1,0 +1,25 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<deployment>
+  <id>d39c455c32de8f2dea5c7ebedf94c15b3bc952cb</id>
+  <author>Christopher Atwell</author>
+  <deployer>GitHub</deployer>
+  <authorEmail>catwell@mys3tech.com</authorEmail>
+  <message>Disable Oryx build during deployment
+    
+    Set SCM_DO_BUILD_DURING_DEPLOYMENT=false since the compiled dist folder is already committed to the repository. This prevents Azure from trying to run tsc during deployment.
+    
+    🤖 Generated with [Claude Code](https://claude.com/claude-code)
+    
+    Co-Authored-By: Claude &lt;noreply@anthropic.com&gt;</message>
+  <progress></progress>
+  <status>Success</status>
+  <statusText></statusText>
+  <lastSuccessEndTime>2025-10-14T18:14:04.2747205Z</lastSuccessEndTime>
+  <receivedTime>2025-10-14T18:13:43.3422227Z</receivedTime>
+  <startTime>2025-10-14T18:13:44.8764653Z</startTime>
+  <endTime>2025-10-14T18:14:04.2747205Z</endTime>
+  <complete>True</complete>
+  <is_temp>False</is_temp>
+  <is_readonly>False</is_readonly>
+  <buildSummary />
+</deployment>
