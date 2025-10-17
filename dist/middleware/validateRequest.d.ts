@@ -9,5 +9,5 @@ import { AnyZodObject } from 'zod';
 /**
  * Validate request using Zod schema
  */
-export declare const validateRequest: (schema: AnyZodObject) => (req: Request, res: Response, next: NextFunction) => void;
+export declare const validateRequest: (schema: AnyZodObject) => (req: Request<import("express-serve-static-core").ParamsDictionary, any, any, import("qs").ParsedQs, Record<string, any>>, res: Response<any, Record<string, any>>, next: NextFunction) => void;
 //# sourceMappingURL=validateRequest.d.ts.map
