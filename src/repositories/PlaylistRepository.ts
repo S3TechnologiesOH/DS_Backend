@@ -58,21 +58,22 @@ export class PlaylistRepository extends BaseRepository {
       SELECT
         pi.PlaylistItemId as playlistItemId,
         pi.PlaylistId as playlistId,
-        pi.ContentId as contentId,
+        pi.LayoutId as layoutId,
         pi.DisplayOrder as displayOrder,
         pi.Duration as duration,
         pi.TransitionType as transitionType,
         pi.TransitionDuration as transitionDuration,
         pi.CreatedAt as createdAt,
-        c.Name as contentName,
-        c.ContentType as contentType
+        l.Name as layoutName,
+        l.Width as layoutWidth,
+        l.Height as layoutHeight
       FROM PlaylistItems pi
-      INNER JOIN Content c ON pi.ContentId = c.ContentId
+      INNER JOIN Layouts l ON pi.LayoutId = l.LayoutId
       WHERE pi.PlaylistId = @playlistId
       ORDER BY pi.DisplayOrder ASC;
     `;
 
-    const result = await this.queryMultipleResultSets<[Playlist, PlaylistItem & { contentName: string; contentType: string }]>(
+    const result = await this.queryMultipleResultSets<[Playlist, PlaylistItem & { layoutName: string; layoutWidth: number; layoutHeight: number }]>(
       sql,
       { playlistId, customerId }
     );
@@ -82,19 +83,20 @@ export class PlaylistRepository extends BaseRepository {
     }
 
     const playlist = result.recordsets[0][0] as Playlist;
-    const itemsData = result.recordsets[1] as Array<PlaylistItem & { contentName: string; contentType: string }>;
+    const itemsData = result.recordsets[1] as Array<PlaylistItem & { layoutName: string; layoutWidth: number; layoutHeight: number }>;
     const items = itemsData.map(item => ({
       playlistItemId: item.playlistItemId,
       playlistId: item.playlistId,
-      contentId: item.contentId,
+      layoutId: item.layoutId,
       displayOrder: item.displayOrder,
       duration: item.duration,
       transitionType: item.transitionType,
       transitionDuration: item.transitionDuration,
       createdAt: item.createdAt,
-      content: {
-        name: item.contentName,
-        contentType: item.contentType,
+      layout: {
+        name: item.layoutName,
+        width: item.layoutWidth,
+        height: item.layoutHeight,
       },
     }));
 
@@ -251,23 +253,23 @@ export class PlaylistRepository extends BaseRepository {
   async addItem(data: AddPlaylistItemDto): Promise<PlaylistItem> {
     const sql = `
       INSERT INTO PlaylistItems (
-        PlaylistId, ContentId, DisplayOrder, Duration, TransitionType, TransitionDuration
+        PlaylistId, LayoutId, DisplayOrder, Duration, TransitionType, TransitionDuration
       )
       OUTPUT
         INSERTED.PlaylistItemId as playlistItemId,
         INSERTED.PlaylistId as playlistId,
-        INSERTED.ContentId as contentId,
+        INSERTED.LayoutId as layoutId,
         INSERTED.DisplayOrder as displayOrder,
         INSERTED.Duration as duration,
         INSERTED.TransitionType as transitionType,
         INSERTED.TransitionDuration as transitionDuration,
         INSERTED.CreatedAt as createdAt
-      VALUES (@playlistId, @contentId, @displayOrder, @duration, @transitionType, @transitionDuration)
+      VALUES (@playlistId, @layoutId, @displayOrder, @duration, @transitionType, @transitionDuration)
     `;
 
     return this.insert<PlaylistItem>(sql, {
       playlistId: data.playlistId,
-      contentId: data.contentId,
+      layoutId: data.layoutId,
       displayOrder: data.displayOrder,
       duration: data.duration || null,
       transitionType: data.transitionType || 'None',
@@ -309,7 +311,7 @@ export class PlaylistRepository extends BaseRepository {
       OUTPUT
         INSERTED.PlaylistItemId as playlistItemId,
         INSERTED.PlaylistId as playlistId,
-        INSERTED.ContentId as contentId,
+        INSERTED.LayoutId as layoutId,
         INSERTED.DisplayOrder as displayOrder,
         INSERTED.Duration as duration,
         INSERTED.TransitionType as transitionType,
@@ -351,7 +353,7 @@ export class PlaylistRepository extends BaseRepository {
       SELECT
         PlaylistItemId as playlistItemId,
         PlaylistId as playlistId,
-        ContentId as contentId,
+        LayoutId as layoutId,
         DisplayOrder as displayOrder,
         Duration as duration,
         TransitionType as transitionType,

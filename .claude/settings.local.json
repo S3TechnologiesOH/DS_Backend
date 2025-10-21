@@ -47,7 +47,9 @@
       "Bash(python -c \"import sys, json; data = json.load(sys.stdin); print(''''✅ /auth/register found!'''' if ''''/api/v1/auth/register'''' in data[''''paths''''] else ''''❌ Not found yet'''')\")",
       "Bash(/dev/null)",
       "Bash(xargs:*)",
-      "Bash(npx typescript --version)"
+      "Bash(npx typescript --version)",
+      "Bash(npm run migrate:*)",
+      "Bash(git log:*)"
     ],
     "deny": [],
     "ask": []

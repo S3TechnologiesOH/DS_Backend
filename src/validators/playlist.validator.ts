@@ -43,7 +43,7 @@ export const addPlaylistItemSchema = z.object({
     playlistId: z.string().regex(/^\d+$/, 'Invalid playlist ID').transform(Number),
   }),
   body: z.object({
-    contentId: z.number().int().positive('Invalid content ID'),
+    layoutId: z.number().int().positive('Invalid layout ID'),
     displayOrder: z.number().int().nonnegative('Display order must be non-negative'),
     duration: z.number().int().positive().optional(),
     transitionType: z.enum(transitionTypes).optional(),
