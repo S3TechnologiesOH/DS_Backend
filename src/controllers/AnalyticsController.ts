@@ -18,14 +18,14 @@ export class AnalyticsController {
   async getSummary(req: AuthRequest, res: Response, next: NextFunction): Promise<void> {
     try {
       const customerId = req.user.customerId;
-      const { startDate, endDate, siteId, playerId, contentId, playlistId } = req.query;
+      const { startDate, endDate, siteId, playerId, layoutId, playlistId } = req.query;
 
       const summary = await this.analyticsService.getSummary(customerId, {
         startDate: startDate as string,
         endDate: endDate as string,
         siteId: siteId ? parseInt(siteId as string, 10) : undefined,
         playerId: playerId ? parseInt(playerId as string, 10) : undefined,
-        contentId: contentId ? parseInt(contentId as string, 10) : undefined,
+        layoutId: layoutId ? parseInt(layoutId as string, 10) : undefined,
         playlistId: playlistId ? parseInt(playlistId as string, 10) : undefined,
       });
 
@@ -155,11 +155,11 @@ export class AnalyticsController {
    */
   async recordProofOfPlay(req: AuthRequest, res: Response, next: NextFunction): Promise<void> {
     try {
-      const { playerId, contentId, playlistId, scheduleId } = req.body;
+      const { playerId, layoutId, playlistId, scheduleId } = req.body;
 
       const proofOfPlay = await this.analyticsService.recordProofOfPlay({
         playerId,
-        contentId,
+        layoutId,
         playlistId,
         scheduleId,
       });
