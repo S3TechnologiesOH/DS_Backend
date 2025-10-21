@@ -8,6 +8,7 @@ export * from './Site';
 export * from './Player';
 export * from './User';
 export * from './Content';
+export * from './Layout';
 export * from './Playlist';
 export * from './Schedule';
 export * from './Analytics';

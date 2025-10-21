@@ -6,6 +6,6 @@
  *   name: Webhooks
  *   description: Webhook management and event delivery endpoints
  */
-declare const router: import("express-serve-static-core").Router;
+declare const router: any;
 export default router;
 //# sourceMappingURL=webhook.routes.d.ts.map

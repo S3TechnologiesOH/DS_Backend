@@ -15,10 +15,10 @@ const helpers_1 = require("../utils/helpers");
 const logger_1 = __importDefault(require("../utils/logger"));
 class PlaylistService {
     playlistRepository;
-    contentRepository;
-    constructor(playlistRepository, contentRepository) {
+    layoutRepository;
+    constructor(playlistRepository, layoutRepository) {
         this.playlistRepository = playlistRepository;
-        this.contentRepository = contentRepository;
+        this.layoutRepository = layoutRepository;
     }
     /**
      * Get playlist by ID
@@ -113,17 +113,17 @@ class PlaylistService {
     async addItem(data, customerId) {
         // Validate playlist exists and belongs to customer
         await this.getById(data.playlistId, customerId);
-        // Validate content exists and belongs to customer
-        const content = await this.contentRepository.findById(data.contentId, customerId);
-        if (!content) {
-            throw new errors_1.NotFoundError('Content not found');
+        // Validate layout exists and belongs to customer
+        const layout = await this.layoutRepository.findById(data.layoutId, customerId);
+        if (!layout) {
+            throw new errors_1.NotFoundError('Layout not found');
         }
         // Validate display order is non-negative
         if (data.displayOrder < 0) {
             throw new errors_1.ValidationError('Display order must be non-negative');
         }
         const item = await this.playlistRepository.addItem(data);
-        logger_1.default.info(`Added content ${data.contentId} to playlist ${data.playlistId}`);
+        logger_1.default.info(`Added layout ${data.layoutId} to playlist ${data.playlistId}`);
         return item;
     }
     /**

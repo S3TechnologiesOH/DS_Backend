@@ -18,6 +18,7 @@ const PlayerRepository_1 = require("../repositories/PlayerRepository");
 const SiteRepository_1 = require("../repositories/SiteRepository");
 const ScheduleRepository_1 = require("../repositories/ScheduleRepository");
 const PlaylistRepository_1 = require("../repositories/PlaylistRepository");
+const LayoutRepository_1 = require("../repositories/LayoutRepository");
 const ContentRepository_1 = require("../repositories/ContentRepository");
 const ProofOfPlayRepository_1 = require("../repositories/ProofOfPlayRepository");
 const authenticate_1 = require("../middleware/authenticate");
@@ -30,6 +31,7 @@ const playerRepository = new PlayerRepository_1.PlayerRepository();
 const siteRepository = new SiteRepository_1.SiteRepository();
 const scheduleRepository = new ScheduleRepository_1.ScheduleRepository();
 const playlistRepository = new PlaylistRepository_1.PlaylistRepository();
+const layoutRepository = new LayoutRepository_1.LayoutRepository();
 const contentRepository = new ContentRepository_1.ContentRepository();
 const proofOfPlayRepository = new ProofOfPlayRepository_1.ProofOfPlayRepository();
 const playerService = new PlayerService_1.PlayerService(playerRepository, siteRepository);
@@ -57,7 +59,7 @@ const proofOfPlaySchema = zod_1.z.object({
         playerId: zod_1.z.string().regex(/^\d+$/),
     }),
     body: zod_1.z.object({
-        contentId: zod_1.z.number().int().positive(),
+        layoutId: zod_1.z.number().int().positive(),
         playlistId: zod_1.z.number().int().positive().optional(),
         scheduleId: zod_1.z.number().int().positive().optional(),
         playedAt: zod_1.z.string().datetime(),
@@ -206,9 +208,9 @@ router.get('/:playerId/schedule', (0, asyncHandler_1.asyncHandler)(async (req, r
         });
         return;
     }
-    // Get full content details for each playlist item
-    const contentPromises = playlist.items.map(item => contentRepository.findById(item.contentId, req.user.customerId));
-    const content = await Promise.all(contentPromises);
+    // Get full layout details for each playlist item (including all layers)
+    const layoutPromises = playlist.items.map(item => layoutRepository.findByIdWithLayers(item.layoutId, req.user.customerId));
+    const layouts = await Promise.all(layoutPromises);
     res.json({
         status: 'success',
         data: {
@@ -218,7 +220,7 @@ router.get('/:playerId/schedule', (0, asyncHandler_1.asyncHandler)(async (req, r
                 name: playlist.name,
                 description: playlist.description,
             },
-            content: content.filter(c => c !== null),
+            layouts: layouts.filter(l => l !== null),
         },
     });
 }));
@@ -377,13 +379,13 @@ router.post('/:playerId/logs', (0, validateRequest_1.validateRequest)(logSchema)
  *           schema:
  *             type: object
  *             required:
- *               - contentId
+ *               - layoutId
  *               - playedAt
  *             properties:
- *               contentId:
+ *               layoutId:
  *                 type: integer
  *                 example: 101
- *                 description: ID of content that was played
+ *                 description: ID of layout that was played
  *               playlistId:
  *                 type: integer
  *                 example: 5
@@ -422,10 +424,10 @@ router.post('/:playerId/logs', (0, validateRequest_1.validateRequest)(logSchema)
  */
 router.post('/:playerId/proof-of-play', (0, validateRequest_1.validateRequest)(proofOfPlaySchema), (0, asyncHandler_1.asyncHandler)(async (req, res) => {
     const { playerId } = req.params;
-    const { contentId, playlistId, scheduleId, playedAt, duration } = req.body;
+    const { layoutId, playlistId, scheduleId, playedAt, duration } = req.body;
     await proofOfPlayRepository.create({
         playerId: Number(playerId),
-        contentId,
+        layoutId,
         playlistId,
         scheduleId,
         playedAt: new Date(playedAt),

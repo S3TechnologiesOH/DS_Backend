@@ -2,7 +2,7 @@
 /**
  * Proof of Play Repository
  *
- * Data access layer for tracking content playback events.
+ * Data access layer for tracking layout playback events.
  */
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.ProofOfPlayRepository = void 0;
@@ -15,7 +15,7 @@ class ProofOfPlayRepository extends BaseRepository_1.BaseRepository {
         return {
             proofOfPlayId: row.ProofOfPlayId,
             playerId: row.PlayerId,
-            contentId: row.ContentId,
+            layoutId: row.LayoutId,
             playlistId: row.PlaylistId,
             scheduleId: row.ScheduleId,
             playbackStartTime: row.PlaybackStartTime,
@@ -32,7 +32,7 @@ class ProofOfPlayRepository extends BaseRepository_1.BaseRepository {
         const sql = `
       INSERT INTO ProofOfPlay (
         PlayerId,
-        ContentId,
+        LayoutId,
         PlaylistId,
         ScheduleId,
         PlaybackStartTime,
@@ -42,7 +42,7 @@ class ProofOfPlayRepository extends BaseRepository_1.BaseRepository {
       OUTPUT INSERTED.*
       VALUES (
         @playerId,
-        @contentId,
+        @layoutId,
         @playlistId,
         @scheduleId,
         @playedAt,
@@ -52,7 +52,7 @@ class ProofOfPlayRepository extends BaseRepository_1.BaseRepository {
     `;
         const row = await this.insert(sql, {
             playerId: data.playerId,
-            contentId: data.contentId,
+            layoutId: data.layoutId,
             playlistId: data.playlistId || null,
             scheduleId: data.scheduleId || null,
             playedAt: data.playedAt,
@@ -88,15 +88,15 @@ class ProofOfPlayRepository extends BaseRepository_1.BaseRepository {
         return rows.map(this.mapToModel.bind(this));
     }
     /**
-     * Get proof of play records for content
+     * Get proof of play records for layout
      */
-    async findByContentId(contentId, options) {
+    async findByLayoutId(layoutId, options) {
         let sql = `
       SELECT *
       FROM ProofOfPlay
-      WHERE ContentId = @contentId
+      WHERE LayoutId = @layoutId
     `;
-        const params = { contentId };
+        const params = { layoutId };
         if (options?.startDate) {
             sql += ' AND PlaybackStartTime >= @startDate';
             params.startDate = options.startDate;
@@ -115,15 +115,15 @@ class ProofOfPlayRepository extends BaseRepository_1.BaseRepository {
         return rows.map(this.mapToModel.bind(this));
     }
     /**
-     * Count playback events for a content item
+     * Count playback events for a layout
      */
-    async countByContentId(contentId, startDate, endDate) {
+    async countByLayoutId(layoutId, startDate, endDate) {
         let sql = `
       SELECT COUNT(*) as count
       FROM ProofOfPlay
-      WHERE ContentId = @contentId
+      WHERE LayoutId = @layoutId
     `;
-        const params = { contentId };
+        const params = { layoutId };
         if (startDate) {
             sql += ' AND PlaybackStartTime >= @startDate';
             params.startDate = startDate;

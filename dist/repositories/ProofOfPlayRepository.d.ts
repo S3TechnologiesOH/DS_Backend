@@ -1,7 +1,7 @@
 /**
  * Proof of Play Repository
  *
- * Data access layer for tracking content playback events.
+ * Data access layer for tracking layout playback events.
  */
 import { BaseRepository } from './BaseRepository';
 import { ProofOfPlay, CreateProofOfPlayDto } from '../models/ProofOfPlay';
@@ -24,17 +24,17 @@ export declare class ProofOfPlayRepository extends BaseRepository {
         offset?: number;
     }): Promise<ProofOfPlay[]>;
     /**
-     * Get proof of play records for content
+     * Get proof of play records for layout
      */
-    findByContentId(contentId: number, options?: {
+    findByLayoutId(layoutId: number, options?: {
         startDate?: Date;
         endDate?: Date;
         limit?: number;
         offset?: number;
     }): Promise<ProofOfPlay[]>;
     /**
-     * Count playback events for a content item
+     * Count playback events for a layout
      */
-    countByContentId(contentId: number, startDate?: Date, endDate?: Date): Promise<number>;
+    countByLayoutId(layoutId: number, startDate?: Date, endDate?: Date): Promise<number>;
 }
 //# sourceMappingURL=ProofOfPlayRepository.d.ts.map

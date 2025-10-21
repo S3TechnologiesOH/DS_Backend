@@ -156,6 +156,49 @@ export class PlaylistRepository extends BaseRepository {
   }
 
   /**
+   * Get all items for a playlist
+   */
+  async findItemsByPlaylistId(playlistId: number, customerId: number): Promise<Array<PlaylistItem & { layout: { name: string; width: number; height: number } }>> {
+    const sql = `
+      SELECT
+        pi.PlaylistItemId as playlistItemId,
+        pi.PlaylistId as playlistId,
+        pi.LayoutId as layoutId,
+        pi.DisplayOrder as displayOrder,
+        pi.Duration as duration,
+        pi.TransitionType as transitionType,
+        pi.TransitionDuration as transitionDuration,
+        pi.CreatedAt as createdAt,
+        l.Name as layoutName,
+        l.Width as layoutWidth,
+        l.Height as layoutHeight
+      FROM PlaylistItems pi
+      INNER JOIN Layouts l ON pi.LayoutId = l.LayoutId
+      INNER JOIN Playlists p ON pi.PlaylistId = p.PlaylistId
+      WHERE pi.PlaylistId = @playlistId AND p.CustomerId = @customerId
+      ORDER BY pi.DisplayOrder ASC
+    `;
+
+    const itemsData = await this.queryMany<PlaylistItem & { layoutName: string; layoutWidth: number; layoutHeight: number }>(sql, { playlistId, customerId });
+
+    return itemsData.map(item => ({
+      playlistItemId: item.playlistItemId,
+      playlistId: item.playlistId,
+      layoutId: item.layoutId,
+      displayOrder: item.displayOrder,
+      duration: item.duration,
+      transitionType: item.transitionType,
+      transitionDuration: item.transitionDuration,
+      createdAt: item.createdAt,
+      layout: {
+        name: item.layoutName,
+        width: item.layoutWidth,
+        height: item.layoutHeight,
+      },
+    }));
+  }
+
+  /**
    * Create new playlist
    */
   async create(data: CreatePlaylistDto): Promise<Playlist> {

@@ -11,7 +11,7 @@ export declare class AnalyticsRepository extends BaseRepository {
      */
     createProofOfPlay(data: {
         playerId: number;
-        contentId: number;
+        layoutId: number;
         playlistId?: number;
         scheduleId?: number;
         playbackStartTime: Date;
@@ -25,7 +25,7 @@ export declare class AnalyticsRepository extends BaseRepository {
      */
     getAnalyticsSummary(customerId: number, startDate: string, endDate: string): Promise<AnalyticsSummary>;
     /**
-     * Get content analytics
+     * Get layout analytics
      */
     getContentAnalytics(customerId: number, startDate: string, endDate: string, limit?: number): Promise<ContentAnalytics[]>;
     /**
@@ -41,7 +41,7 @@ export declare class AnalyticsRepository extends BaseRepository {
      */
     getPlaybackReport(customerId: number, startDate: string, endDate: string): Promise<PlaybackReport[]>;
     /**
-     * Get content performance metrics
+     * Get layout performance metrics
      */
     getContentPerformance(customerId: number, startDate: string, endDate: string, limit?: number): Promise<ContentPerformance[]>;
 }

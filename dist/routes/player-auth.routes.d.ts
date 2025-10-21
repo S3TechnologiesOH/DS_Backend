@@ -9,6 +9,6 @@
  *   name: Player Authentication
  *   description: Player device authentication endpoints
  */
-declare const router: import("express-serve-static-core").Router;
+declare const router: any;
 export default router;
 //# sourceMappingURL=player-auth.routes.d.ts.map

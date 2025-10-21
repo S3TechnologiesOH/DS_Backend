@@ -97,6 +97,23 @@ export class PlaylistService {
   }
 
   /**
+   * Get all items for a playlist
+   */
+  async getItems(playlistId: number, customerId: number): Promise<Array<PlaylistItem & { layout: { name: string; width: number; height: number } }>> {
+    // Verify playlist exists and belongs to customer
+    const playlist = await this.playlistRepository.findById(playlistId, customerId);
+    if (!playlist) {
+      throw new NotFoundError('Playlist not found');
+    }
+
+    const items = await this.playlistRepository.findItemsByPlaylistId(playlistId, customerId);
+
+    logger.info(`Retrieved ${items.length} items for playlist ${playlistId}`);
+
+    return items;
+  }
+
+  /**
    * Create new playlist
    */
   async create(data: CreatePlaylistDto): Promise<Playlist> {

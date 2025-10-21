@@ -124,6 +124,71 @@ router.get(
 
 /**
  * @swagger
+ * /playlists/{playlistId}/items:
+ *   get:
+ *     summary: Get all items in a playlist
+ *     description: Retrieve all layout items in a specific playlist
+ *     tags: [Playlists]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: playlistId
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         description: Playlist ID
+ *     responses:
+ *       200:
+ *         description: Playlist items retrieved successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 status:
+ *                   type: string
+ *                   example: success
+ *                 data:
+ *                   type: array
+ *                   items:
+ *                     type: object
+ *                     properties:
+ *                       playlistItemId:
+ *                         type: integer
+ *                       playlistId:
+ *                         type: integer
+ *                       layoutId:
+ *                         type: integer
+ *                       displayOrder:
+ *                         type: integer
+ *                       duration:
+ *                         type: integer
+ *                       transitionType:
+ *                         type: string
+ *                         enum: [Fade, Slide, None]
+ *                       transitionDuration:
+ *                         type: integer
+ *                       layout:
+ *                         type: object
+ *                         properties:
+ *                           name:
+ *                             type: string
+ *                           width:
+ *                             type: integer
+ *                           height:
+ *                             type: integer
+ *       404:
+ *         description: Playlist not found
+ */
+router.get(
+  '/:playlistId/items',
+  validateRequest(getPlaylistByIdSchema),
+  asyncHandler(playlistController.getItems.bind(playlistController))
+);
+
+/**
+ * @swagger
  * /playlists:
  *   post:
  *     summary: Create new playlist

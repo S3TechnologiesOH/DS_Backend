@@ -32,6 +32,6 @@ export declare abstract class BaseRepository {
     /**
      * Begin a transaction
      */
-    protected beginTransaction(): Promise<import("mssql").Transaction>;
+    protected beginTransaction(): Promise<any>;
 }
 //# sourceMappingURL=BaseRepository.d.ts.map

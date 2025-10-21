@@ -4,7 +4,6 @@
  * Check if authenticated user has required role(s) to access a resource.
  * MUST be used after authenticate middleware.
  */
-import { Response, NextFunction } from 'express';
 import { AuthRequest } from '../types/express';
 type UserRole = 'Admin' | 'Editor' | 'Viewer' | 'SiteManager' | 'Player';
 /**

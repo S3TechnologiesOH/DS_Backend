@@ -52,7 +52,7 @@ export interface AnalyticsFilter {
     endDate?: string;
     siteId?: number;
     playerId?: number;
-    contentId?: number;
+    layoutId?: number;
     playlistId?: number;
 }
 export interface AnalyticsSummary {

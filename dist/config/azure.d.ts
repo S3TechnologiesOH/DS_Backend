@@ -3,7 +3,6 @@
  *
  * Configuration for Azure Blob Storage service used for media files.
  */
-import { BlobServiceClient } from '@azure/storage-blob';
 /**
  * Initialize Azure Blob Storage client
  */
@@ -15,9 +14,9 @@ export declare const getBlobServiceClient: () => BlobServiceClient;
 /**
  * Get container client for media storage
  */
-export declare const getContainerClient: () => import("@azure/storage-blob").ContainerClient;
+export declare const getContainerClient: () => any;
 export declare const azureConfig: {
-    containerName: string;
-    connectionString: string;
+    containerName: any;
+    connectionString: any;
 };
 //# sourceMappingURL=azure.d.ts.map

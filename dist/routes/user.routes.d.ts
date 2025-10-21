@@ -6,6 +6,6 @@
  *   name: Users
  *   description: User management endpoints
  */
-declare const router: import("express-serve-static-core").Router;
+declare const router: any;
 export default router;
 //# sourceMappingURL=user.routes.d.ts.map

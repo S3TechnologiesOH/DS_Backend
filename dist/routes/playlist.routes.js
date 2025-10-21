@@ -10,7 +10,7 @@ const express_1 = require("express");
 const PlaylistController_1 = require("../controllers/PlaylistController");
 const PlaylistService_1 = require("../services/PlaylistService");
 const PlaylistRepository_1 = require("../repositories/PlaylistRepository");
-const ContentRepository_1 = require("../repositories/ContentRepository");
+const LayoutRepository_1 = require("../repositories/LayoutRepository");
 const validateRequest_1 = require("../middleware/validateRequest");
 const authenticate_1 = require("../middleware/authenticate");
 const authorize_1 = require("../middleware/authorize");
@@ -19,8 +19,8 @@ const playlist_validator_1 = require("../validators/playlist.validator");
 const router = (0, express_1.Router)();
 // Initialize dependencies
 const playlistRepository = new PlaylistRepository_1.PlaylistRepository();
-const contentRepository = new ContentRepository_1.ContentRepository();
-const playlistService = new PlaylistService_1.PlaylistService(playlistRepository, contentRepository);
+const layoutRepository = new LayoutRepository_1.LayoutRepository();
+const playlistService = new PlaylistService_1.PlaylistService(playlistRepository, layoutRepository);
 const playlistController = new PlaylistController_1.PlaylistController(playlistService);
 // All playlist routes require authentication
 router.use(authenticate_1.authenticate);

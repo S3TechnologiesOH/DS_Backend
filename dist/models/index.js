@@ -24,6 +24,7 @@ __exportStar(require("./Site"), exports);
 __exportStar(require("./Player"), exports);
 __exportStar(require("./User"), exports);
 __exportStar(require("./Content"), exports);
+__exportStar(require("./Layout"), exports);
 __exportStar(require("./Playlist"), exports);
 __exportStar(require("./Schedule"), exports);
 __exportStar(require("./Analytics"), exports);

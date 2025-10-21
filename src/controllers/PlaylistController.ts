@@ -64,6 +64,26 @@ export class PlaylistController {
   }
 
   /**
+   * GET /api/v1/playlists/:playlistId/items
+   * Get all items for a playlist
+   */
+  async getItems(req: AuthRequest, res: Response, next: NextFunction): Promise<void> {
+    try {
+      const playlistId = parseInt(req.params.playlistId, 10);
+      const customerId = req.user.customerId;
+
+      const items = await this.playlistService.getItems(playlistId, customerId);
+
+      res.status(200).json({
+        status: 'success',
+        data: items,
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  /**
    * POST /api/v1/playlists
    * Create new playlist
    *

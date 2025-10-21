@@ -24,7 +24,7 @@ class AnalyticsService {
             ...data,
             playbackStartTime: new Date(),
         });
-        logger_1.default.info(`Recorded proof of play for player ${data.playerId}, content ${data.contentId}`);
+        logger_1.default.info(`Recorded proof of play for player ${data.playerId}, layout ${data.layoutId}`);
         return proofOfPlay;
     }
     /**

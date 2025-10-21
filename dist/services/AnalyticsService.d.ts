@@ -13,7 +13,7 @@ export declare class AnalyticsService {
      */
     recordProofOfPlay(data: {
         playerId: number;
-        contentId: number;
+        layoutId: number;
         playlistId?: number;
         scheduleId?: number;
     }): Promise<ProofOfPlay>;
