@@ -66,7 +66,7 @@ export class PlaylistRepository extends BaseRepository {
         pi.CreatedAt as createdAt,
         c.Name as contentName,
         c.ContentType as contentType,
-        c.Url as contentUrl
+        c.FileUrl as contentUrl
       FROM PlaylistItems pi
       INNER JOIN Content c ON pi.ContentId = c.ContentId
       WHERE pi.PlaylistId = @playlistId
@@ -171,7 +171,7 @@ export class PlaylistRepository extends BaseRepository {
         pi.CreatedAt as createdAt,
         c.Name as contentName,
         c.ContentType as contentType,
-        c.Url as contentUrl
+        c.FileUrl as contentUrl
       FROM PlaylistItems pi
       INNER JOIN Content c ON pi.ContentId = c.ContentId
       INNER JOIN Playlists p ON pi.PlaylistId = p.PlaylistId
@@ -354,7 +354,7 @@ export class PlaylistRepository extends BaseRepository {
       OUTPUT
         INSERTED.PlaylistItemId as playlistItemId,
         INSERTED.PlaylistId as playlistId,
-        INSERTED.LayoutId as layoutId,
+        INSERTED.ContentId as contentId,
         INSERTED.DisplayOrder as displayOrder,
         INSERTED.Duration as duration,
         INSERTED.TransitionType as transitionType,
@@ -396,7 +396,7 @@ export class PlaylistRepository extends BaseRepository {
       SELECT
         PlaylistItemId as playlistItemId,
         PlaylistId as playlistId,
-        LayoutId as layoutId,
+        ContentId as contentId,
         DisplayOrder as displayOrder,
         Duration as duration,
         TransitionType as transitionType,
