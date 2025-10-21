@@ -21,6 +21,13 @@ export const up = async (): Promise<void> => {
   // ===== 1. FIX PLAYLIST ITEMS - Change from LayoutId back to ContentId =====
   console.log('Step 1: Fixing PlaylistItems to reference Content instead of Layouts...');
 
+  // IMPORTANT: Clear existing PlaylistItems data since it contains invalid LayoutIds
+  // that won't match ContentIds in the Content table
+  console.log('  - Clearing existing PlaylistItems data (incompatible with new schema)...');
+  await pool.request().query(`
+    DELETE FROM PlaylistItems;
+  `);
+
   // Drop the LayoutId foreign key
   await pool.request().query(`
     IF EXISTS (SELECT * FROM sys.foreign_keys WHERE name = 'FK_PlaylistItems_Layouts')
@@ -44,6 +51,14 @@ export const up = async (): Promise<void> => {
 
   // ===== 2. FIX SCHEDULES - Change from PlaylistId to LayoutId =====
   console.log('Step 2: Fixing Schedules to reference Layouts instead of Playlists...');
+
+  // IMPORTANT: Clear existing Schedules data since it contains invalid PlaylistIds
+  // that won't match LayoutIds in the Layouts table
+  console.log('  - Clearing existing Schedules data (incompatible with new schema)...');
+  await pool.request().query(`
+    DELETE FROM ScheduleAssignments;
+    DELETE FROM Schedules;
+  `);
 
   // Drop the PlaylistId foreign key
   await pool.request().query(`
