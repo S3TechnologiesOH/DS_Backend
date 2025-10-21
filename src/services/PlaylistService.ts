@@ -233,14 +233,4 @@ export class PlaylistService {
 
     logger.info(`Removed item ${itemId} from playlist ${playlistId}`);
   }
-
-  /**
-   * Get all items for a playlist
-   */
-  async getItems(playlistId: number, customerId: number): Promise<PlaylistItem[]> {
-    // Validate playlist exists and belongs to customer
-    await this.getById(playlistId, customerId);
-
-    return this.playlistRepository.getItems(playlistId);
-  }
 }
