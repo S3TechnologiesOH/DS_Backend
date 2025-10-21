@@ -1,7 +1,7 @@
 /**
  * Proof of Play Repository
  *
- * Data access layer for tracking content playback events.
+ * Data access layer for tracking layout playback events.
  */
 
 import { BaseRepository } from './BaseRepository';
@@ -10,7 +10,7 @@ import { ProofOfPlay, CreateProofOfPlayDto } from '../models/ProofOfPlay';
 interface ProofOfPlayRow {
   ProofOfPlayId: number;
   PlayerId: number;
-  ContentId: number;
+  LayoutId: number;
   PlaylistId: number | null;
   ScheduleId: number | null;
   PlaybackStartTime: Date;
@@ -28,7 +28,7 @@ export class ProofOfPlayRepository extends BaseRepository {
     return {
       proofOfPlayId: row.ProofOfPlayId,
       playerId: row.PlayerId,
-      contentId: row.ContentId,
+      layoutId: row.LayoutId,
       playlistId: row.PlaylistId,
       scheduleId: row.ScheduleId,
       playbackStartTime: row.PlaybackStartTime,
@@ -46,7 +46,7 @@ export class ProofOfPlayRepository extends BaseRepository {
     const sql = `
       INSERT INTO ProofOfPlay (
         PlayerId,
-        ContentId,
+        LayoutId,
         PlaylistId,
         ScheduleId,
         PlaybackStartTime,
@@ -56,7 +56,7 @@ export class ProofOfPlayRepository extends BaseRepository {
       OUTPUT INSERTED.*
       VALUES (
         @playerId,
-        @contentId,
+        @layoutId,
         @playlistId,
         @scheduleId,
         @playedAt,
@@ -67,7 +67,7 @@ export class ProofOfPlayRepository extends BaseRepository {
 
     const row = await this.insert<ProofOfPlayRow>(sql, {
       playerId: data.playerId,
-      contentId: data.contentId,
+      layoutId: data.layoutId,
       playlistId: data.playlistId || null,
       scheduleId: data.scheduleId || null,
       playedAt: data.playedAt,
@@ -120,10 +120,10 @@ export class ProofOfPlayRepository extends BaseRepository {
   }
 
   /**
-   * Get proof of play records for content
+   * Get proof of play records for layout
    */
-  async findByContentId(
-    contentId: number,
+  async findByLayoutId(
+    layoutId: number,
     options?: {
       startDate?: Date;
       endDate?: Date;
@@ -134,10 +134,10 @@ export class ProofOfPlayRepository extends BaseRepository {
     let sql = `
       SELECT *
       FROM ProofOfPlay
-      WHERE ContentId = @contentId
+      WHERE LayoutId = @layoutId
     `;
 
-    const params: Record<string, unknown> = { contentId };
+    const params: Record<string, unknown> = { layoutId };
 
     if (options?.startDate) {
       sql += ' AND PlaybackStartTime >= @startDate';
@@ -162,20 +162,20 @@ export class ProofOfPlayRepository extends BaseRepository {
   }
 
   /**
-   * Count playback events for a content item
+   * Count playback events for a layout
    */
-  async countByContentId(
-    contentId: number,
+  async countByLayoutId(
+    layoutId: number,
     startDate?: Date,
     endDate?: Date
   ): Promise<number> {
     let sql = `
       SELECT COUNT(*) as count
       FROM ProofOfPlay
-      WHERE ContentId = @contentId
+      WHERE LayoutId = @layoutId
     `;
 
-    const params: Record<string, unknown> = { contentId };
+    const params: Record<string, unknown> = { layoutId };
 
     if (startDate) {
       sql += ' AND PlaybackStartTime >= @startDate';

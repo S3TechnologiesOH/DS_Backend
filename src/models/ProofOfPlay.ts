@@ -1,14 +1,14 @@
 /**
  * Proof of Play Model
  *
- * Tracks when and where content was displayed on player devices.
+ * Tracks when and where layouts were displayed on player devices.
  * Used for analytics and reporting.
  */
 
 export interface ProofOfPlay {
   proofOfPlayId: number;
   playerId: number;
-  contentId: number;
+  layoutId: number;
   playlistId: number | null;
   scheduleId: number | null;
   playbackStartTime: Date;
@@ -20,7 +20,7 @@ export interface ProofOfPlay {
 
 export interface CreateProofOfPlayDto {
   playerId: number;
-  contentId: number;
+  layoutId: number;
   playlistId?: number;
   scheduleId?: number;
   playedAt: Date;

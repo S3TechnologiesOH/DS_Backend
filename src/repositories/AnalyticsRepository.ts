@@ -21,17 +21,17 @@ export class AnalyticsRepository extends BaseRepository {
    */
   async createProofOfPlay(data: {
     playerId: number;
-    contentId: number;
+    layoutId: number;
     playlistId?: number;
     scheduleId?: number;
     playbackStartTime: Date;
   }): Promise<ProofOfPlay> {
     const sql = `
-      INSERT INTO ProofOfPlay (PlayerId, ContentId, PlaylistId, ScheduleId, PlaybackStartTime, IsCompleted)
+      INSERT INTO ProofOfPlay (PlayerId, LayoutId, PlaylistId, ScheduleId, PlaybackStartTime, IsCompleted)
       OUTPUT
         INSERTED.ProofOfPlayId as proofOfPlayId,
         INSERTED.PlayerId as playerId,
-        INSERTED.ContentId as contentId,
+        INSERTED.LayoutId as layoutId,
         INSERTED.PlaylistId as playlistId,
         INSERTED.ScheduleId as scheduleId,
         INSERTED.PlaybackStartTime as playbackStartTime,
@@ -39,12 +39,12 @@ export class AnalyticsRepository extends BaseRepository {
         INSERTED.Duration as duration,
         INSERTED.IsCompleted as isCompleted,
         INSERTED.CreatedAt as createdAt
-      VALUES (@playerId, @contentId, @playlistId, @scheduleId, @playbackStartTime, 0)
+      VALUES (@playerId, @layoutId, @playlistId, @scheduleId, @playbackStartTime, 0)
     `;
 
     return this.insert<ProofOfPlay>(sql, {
       playerId: data.playerId,
-      contentId: data.contentId,
+      layoutId: data.layoutId,
       playlistId: data.playlistId || null,
       scheduleId: data.scheduleId || null,
       playbackStartTime: data.playbackStartTime,
@@ -79,7 +79,7 @@ export class AnalyticsRepository extends BaseRepository {
         COUNT(*) as totalPlays,
         ISNULL(SUM(Duration), 0) as totalDuration,
         ISNULL(AVG(Duration), 0) as averagePlayDuration,
-        COUNT(DISTINCT ContentId) as uniqueContent,
+        COUNT(DISTINCT LayoutId) as uniqueContent,
         COUNT(DISTINCT PlayerId) as uniquePlayers
       FROM ProofOfPlay pop
       INNER JOIN Players p ON pop.PlayerId = p.PlayerId
@@ -107,7 +107,7 @@ export class AnalyticsRepository extends BaseRepository {
   }
 
   /**
-   * Get content analytics
+   * Get layout analytics
    */
   async getContentAnalytics(
     customerId: number,
@@ -117,19 +117,19 @@ export class AnalyticsRepository extends BaseRepository {
   ): Promise<ContentAnalytics[]> {
     const sql = `
       SELECT TOP (@limit)
-        c.ContentId as contentId,
-        c.Name as contentName,
-        c.ContentType as contentType,
+        l.LayoutId as contentId,
+        l.Name as contentName,
+        'Layout' as contentType,
         COUNT(*) as totalPlays,
         ISNULL(SUM(pop.Duration), 0) as totalDuration,
         COUNT(DISTINCT pop.PlayerId) as uniquePlayers,
         MAX(pop.PlaybackStartTime) as lastPlayedAt
-      FROM Content c
-      LEFT JOIN ProofOfPlay pop ON c.ContentId = pop.ContentId
+      FROM Layouts l
+      LEFT JOIN ProofOfPlay pop ON l.LayoutId = pop.LayoutId
         AND pop.PlaybackStartTime >= @startDate
         AND pop.PlaybackStartTime < DATEADD(day, 1, @endDate)
-      WHERE c.CustomerId = @customerId
-      GROUP BY c.ContentId, c.Name, c.ContentType
+      WHERE l.CustomerId = @customerId
+      GROUP BY l.LayoutId, l.Name
       ORDER BY totalPlays DESC
     `;
 
@@ -215,7 +215,7 @@ export class AnalyticsRepository extends BaseRepository {
       SELECT
         CONVERT(varchar, pop.PlaybackStartTime, 23) as date,
         COUNT(*) as totalPlays,
-        COUNT(DISTINCT pop.ContentId) as uniqueContent,
+        COUNT(DISTINCT pop.LayoutId) as uniqueContent,
         COUNT(DISTINCT pop.PlayerId) as uniquePlayers,
         ISNULL(SUM(pop.Duration), 0) as totalDuration
       FROM ProofOfPlay pop
@@ -231,7 +231,7 @@ export class AnalyticsRepository extends BaseRepository {
   }
 
   /**
-   * Get content performance metrics
+   * Get layout performance metrics
    */
   async getContentPerformance(
     customerId: number,
@@ -241,8 +241,8 @@ export class AnalyticsRepository extends BaseRepository {
   ): Promise<ContentPerformance[]> {
     const sql = `
       SELECT TOP (@limit)
-        c.ContentId as contentId,
-        c.Name as contentName,
+        l.LayoutId as contentId,
+        l.Name as contentName,
         COUNT(pop.ProofOfPlayId) as playCount,
         ISNULL(AVG(pop.Duration), 0) as averageDuration,
         CASE
@@ -250,12 +250,12 @@ export class AnalyticsRepository extends BaseRepository {
           ELSE (SUM(CASE WHEN pop.IsCompleted = 1 THEN 1 ELSE 0 END) * 100.0 / COUNT(pop.ProofOfPlayId))
         END as completionRate,
         COUNT(pop.ProofOfPlayId) as engagementScore
-      FROM Content c
-      LEFT JOIN ProofOfPlay pop ON c.ContentId = pop.ContentId
+      FROM Layouts l
+      LEFT JOIN ProofOfPlay pop ON l.LayoutId = pop.LayoutId
         AND pop.PlaybackStartTime >= @startDate
         AND pop.PlaybackStartTime < DATEADD(day, 1, @endDate)
-      WHERE c.CustomerId = @customerId
-      GROUP BY c.ContentId, c.Name
+      WHERE l.CustomerId = @customerId
+      GROUP BY l.LayoutId, l.Name
       HAVING COUNT(pop.ProofOfPlayId) > 0
       ORDER BY engagementScore DESC
     `;

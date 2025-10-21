@@ -17,7 +17,7 @@ import { PlayerRepository } from '../repositories/PlayerRepository';
 import { SiteRepository } from '../repositories/SiteRepository';
 import { ScheduleRepository } from '../repositories/ScheduleRepository';
 import { PlaylistRepository } from '../repositories/PlaylistRepository';
-import { ContentRepository } from '../repositories/ContentRepository';
+import { LayoutRepository } from '../repositories/LayoutRepository';
 import { ProofOfPlayRepository } from '../repositories/ProofOfPlayRepository';
 import { authenticatePlayer } from '../middleware/authenticate';
 import { asyncHandler } from '../middleware/asyncHandler';
@@ -31,7 +31,7 @@ const playerRepository = new PlayerRepository();
 const siteRepository = new SiteRepository();
 const scheduleRepository = new ScheduleRepository();
 const playlistRepository = new PlaylistRepository();
-const contentRepository = new ContentRepository();
+const layoutRepository = new LayoutRepository();
 const proofOfPlayRepository = new ProofOfPlayRepository();
 const playerService = new PlayerService(playerRepository, siteRepository);
 const playerController = new PlayerController(playerService);
@@ -227,11 +227,11 @@ router.get(
       return;
     }
 
-    // Get full content details for each playlist item
-    const contentPromises = playlist.items.map(item =>
-      contentRepository.findById(item.contentId, req.user!.customerId)
+    // Get full layout details for each playlist item (including all layers)
+    const layoutPromises = playlist.items.map(item =>
+      layoutRepository.findByIdWithLayers(item.layoutId, req.user!.customerId)
     );
-    const content = await Promise.all(contentPromises);
+    const layouts = await Promise.all(layoutPromises);
 
     res.json({
       status: 'success',
@@ -242,7 +242,7 @@ router.get(
           name: playlist.name,
           description: playlist.description,
         },
-        content: content.filter(c => c !== null),
+        layouts: layouts.filter(l => l !== null),
       },
     });
   }),

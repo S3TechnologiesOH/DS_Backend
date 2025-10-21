@@ -164,7 +164,7 @@ export class PlaylistController {
       const item = await this.playlistService.addItem(
         {
           playlistId,
-          contentId: req.body.contentId,
+          layoutId: req.body.layoutId,
           displayOrder: req.body.displayOrder,
           duration: req.body.duration,
           transitionType: req.body.transitionType,

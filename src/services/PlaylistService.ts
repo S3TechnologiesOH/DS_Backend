@@ -6,7 +6,7 @@
  */
 
 import { PlaylistRepository } from '../repositories/PlaylistRepository';
-import { ContentRepository } from '../repositories/ContentRepository';
+import { LayoutRepository } from '../repositories/LayoutRepository';
 import {
   Playlist,
   PlaylistItem,
@@ -23,7 +23,7 @@ import logger from '../utils/logger';
 export class PlaylistService {
   constructor(
     private readonly playlistRepository: PlaylistRepository,
-    private readonly contentRepository: ContentRepository
+    private readonly layoutRepository: LayoutRepository
   ) {}
 
   /**
@@ -153,10 +153,10 @@ export class PlaylistService {
     // Validate playlist exists and belongs to customer
     await this.getById(data.playlistId, customerId);
 
-    // Validate content exists and belongs to customer
-    const content = await this.contentRepository.findById(data.contentId, customerId);
-    if (!content) {
-      throw new NotFoundError('Content not found');
+    // Validate layout exists and belongs to customer
+    const layout = await this.layoutRepository.findById(data.layoutId, customerId);
+    if (!layout) {
+      throw new NotFoundError('Layout not found');
     }
 
     // Validate display order is non-negative
@@ -166,7 +166,7 @@ export class PlaylistService {
 
     const item = await this.playlistRepository.addItem(data);
 
-    logger.info(`Added content ${data.contentId} to playlist ${data.playlistId}`);
+    logger.info(`Added layout ${data.layoutId} to playlist ${data.playlistId}`);
 
     return item;
   }

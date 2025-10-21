@@ -9,7 +9,7 @@ import { Router } from 'express';
 import { PlaylistController } from '../controllers/PlaylistController';
 import { PlaylistService } from '../services/PlaylistService';
 import { PlaylistRepository } from '../repositories/PlaylistRepository';
-import { ContentRepository } from '../repositories/ContentRepository';
+import { LayoutRepository } from '../repositories/LayoutRepository';
 import { validateRequest } from '../middleware/validateRequest';
 import { authenticate } from '../middleware/authenticate';
 import { authorize } from '../middleware/authorize';
@@ -29,8 +29,8 @@ const router = Router();
 
 // Initialize dependencies
 const playlistRepository = new PlaylistRepository();
-const contentRepository = new ContentRepository();
-const playlistService = new PlaylistService(playlistRepository, contentRepository);
+const layoutRepository = new LayoutRepository();
+const playlistService = new PlaylistService(playlistRepository, layoutRepository);
 const playlistController = new PlaylistController(playlistService);
 
 // All playlist routes require authentication
