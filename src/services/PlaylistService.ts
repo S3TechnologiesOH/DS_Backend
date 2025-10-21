@@ -6,7 +6,7 @@
  */
 
 import { PlaylistRepository } from '../repositories/PlaylistRepository';
-import { LayoutRepository } from '../repositories/LayoutRepository';
+import { ContentRepository } from '../repositories/ContentRepository';
 import {
   Playlist,
   PlaylistItem,
@@ -23,7 +23,7 @@ import logger from '../utils/logger';
 export class PlaylistService {
   constructor(
     private readonly playlistRepository: PlaylistRepository,
-    private readonly layoutRepository: LayoutRepository
+    private readonly contentRepository: ContentRepository
   ) {}
 
   /**
@@ -99,7 +99,7 @@ export class PlaylistService {
   /**
    * Get all items for a playlist
    */
-  async getItems(playlistId: number, customerId: number): Promise<Array<PlaylistItem & { layout: { name: string; width: number; height: number } }>> {
+  async getItems(playlistId: number, customerId: number): Promise<Array<PlaylistItem & { content: { name: string; contentType: string; url: string } }>> {
     // Verify playlist exists and belongs to customer
     const playlist = await this.playlistRepository.findById(playlistId, customerId);
     if (!playlist) {
@@ -170,10 +170,10 @@ export class PlaylistService {
     // Validate playlist exists and belongs to customer
     await this.getById(data.playlistId, customerId);
 
-    // Validate layout exists and belongs to customer
-    const layout = await this.layoutRepository.findById(data.layoutId, customerId);
-    if (!layout) {
-      throw new NotFoundError('Layout not found');
+    // Validate content exists and belongs to customer
+    const content = await this.contentRepository.findById(data.contentId, customerId);
+    if (!content) {
+      throw new NotFoundError('Content not found');
     }
 
     // Validate display order is non-negative
@@ -183,7 +183,7 @@ export class PlaylistService {
 
     const item = await this.playlistRepository.addItem(data);
 
-    logger.info(`Added layout ${data.layoutId} to playlist ${data.playlistId}`);
+    logger.info(`Added content ${data.contentId} to playlist ${data.playlistId}`);
 
     return item;
   }

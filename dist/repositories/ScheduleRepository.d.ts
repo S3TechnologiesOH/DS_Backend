@@ -19,7 +19,7 @@ export declare class ScheduleRepository extends BaseRepository {
      */
     findByCustomerId(customerId: number, options?: {
         isActive?: boolean;
-        playlistId?: number;
+        layoutId?: number;
         search?: string;
         limit?: number;
         offset?: number;

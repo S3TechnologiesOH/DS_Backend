@@ -4,6 +4,7 @@
  * Catches all errors and formats them for client response.
  * NEVER expose stack traces or sensitive data to clients in production.
  */
+import { Request, Response, NextFunction } from 'express';
 import { AppError } from '../utils/errors';
 export declare const errorHandler: (err: Error | AppError, req: Request, res: Response, _next: NextFunction) => void;
 /**

@@ -10,7 +10,7 @@ const express_1 = require("express");
 const PlaylistController_1 = require("../controllers/PlaylistController");
 const PlaylistService_1 = require("../services/PlaylistService");
 const PlaylistRepository_1 = require("../repositories/PlaylistRepository");
-const LayoutRepository_1 = require("../repositories/LayoutRepository");
+const ContentRepository_1 = require("../repositories/ContentRepository");
 const validateRequest_1 = require("../middleware/validateRequest");
 const authenticate_1 = require("../middleware/authenticate");
 const authorize_1 = require("../middleware/authorize");
@@ -19,8 +19,8 @@ const playlist_validator_1 = require("../validators/playlist.validator");
 const router = (0, express_1.Router)();
 // Initialize dependencies
 const playlistRepository = new PlaylistRepository_1.PlaylistRepository();
-const layoutRepository = new LayoutRepository_1.LayoutRepository();
-const playlistService = new PlaylistService_1.PlaylistService(playlistRepository, layoutRepository);
+const contentRepository = new ContentRepository_1.ContentRepository();
+const playlistService = new PlaylistService_1.PlaylistService(playlistRepository, contentRepository);
 const playlistController = new PlaylistController_1.PlaylistController(playlistService);
 // All playlist routes require authentication
 router.use(authenticate_1.authenticate);
@@ -100,6 +100,66 @@ router.get('/', (0, validateRequest_1.validateRequest)(playlist_validator_1.list
  *         description: Playlist not found
  */
 router.get('/:playlistId', (0, validateRequest_1.validateRequest)(playlist_validator_1.getPlaylistByIdSchema), (0, asyncHandler_1.asyncHandler)(playlistController.getById.bind(playlistController)));
+/**
+ * @swagger
+ * /playlists/{playlistId}/items:
+ *   get:
+ *     summary: Get all items in a playlist
+ *     description: Retrieve all layout items in a specific playlist
+ *     tags: [Playlists]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: playlistId
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         description: Playlist ID
+ *     responses:
+ *       200:
+ *         description: Playlist items retrieved successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 status:
+ *                   type: string
+ *                   example: success
+ *                 data:
+ *                   type: array
+ *                   items:
+ *                     type: object
+ *                     properties:
+ *                       playlistItemId:
+ *                         type: integer
+ *                       playlistId:
+ *                         type: integer
+ *                       layoutId:
+ *                         type: integer
+ *                       displayOrder:
+ *                         type: integer
+ *                       duration:
+ *                         type: integer
+ *                       transitionType:
+ *                         type: string
+ *                         enum: [Fade, Slide, None]
+ *                       transitionDuration:
+ *                         type: integer
+ *                       layout:
+ *                         type: object
+ *                         properties:
+ *                           name:
+ *                             type: string
+ *                           width:
+ *                             type: integer
+ *                           height:
+ *                             type: integer
+ *       404:
+ *         description: Playlist not found
+ */
+router.get('/:playlistId/items', (0, validateRequest_1.validateRequest)(playlist_validator_1.getPlaylistByIdSchema), (0, asyncHandler_1.asyncHandler)(playlistController.getItems.bind(playlistController)));
 /**
  * @swagger
  * /playlists:

@@ -15,10 +15,10 @@ const helpers_1 = require("../utils/helpers");
 const logger_1 = __importDefault(require("../utils/logger"));
 class PlaylistService {
     playlistRepository;
-    layoutRepository;
-    constructor(playlistRepository, layoutRepository) {
+    contentRepository;
+    constructor(playlistRepository, contentRepository) {
         this.playlistRepository = playlistRepository;
-        this.layoutRepository = layoutRepository;
+        this.contentRepository = contentRepository;
     }
     /**
      * Get playlist by ID
@@ -71,6 +71,19 @@ class PlaylistService {
         };
     }
     /**
+     * Get all items for a playlist
+     */
+    async getItems(playlistId, customerId) {
+        // Verify playlist exists and belongs to customer
+        const playlist = await this.playlistRepository.findById(playlistId, customerId);
+        if (!playlist) {
+            throw new errors_1.NotFoundError('Playlist not found');
+        }
+        const items = await this.playlistRepository.findItemsByPlaylistId(playlistId, customerId);
+        logger_1.default.info(`Retrieved ${items.length} items for playlist ${playlistId}`);
+        return items;
+    }
+    /**
      * Create new playlist
      */
     async create(data) {
@@ -113,17 +126,17 @@ class PlaylistService {
     async addItem(data, customerId) {
         // Validate playlist exists and belongs to customer
         await this.getById(data.playlistId, customerId);
-        // Validate layout exists and belongs to customer
-        const layout = await this.layoutRepository.findById(data.layoutId, customerId);
-        if (!layout) {
-            throw new errors_1.NotFoundError('Layout not found');
+        // Validate content exists and belongs to customer
+        const content = await this.contentRepository.findById(data.contentId, customerId);
+        if (!content) {
+            throw new errors_1.NotFoundError('Content not found');
         }
         // Validate display order is non-negative
         if (data.displayOrder < 0) {
             throw new errors_1.ValidationError('Display order must be non-negative');
         }
         const item = await this.playlistRepository.addItem(data);
-        logger_1.default.info(`Added layout ${data.layoutId} to playlist ${data.playlistId}`);
+        logger_1.default.info(`Added content ${data.contentId} to playlist ${data.playlistId}`);
         return item;
     }
     /**
@@ -156,14 +169,6 @@ class PlaylistService {
         await this.getById(playlistId, customerId);
         await this.playlistRepository.removeItem(itemId, playlistId);
         logger_1.default.info(`Removed item ${itemId} from playlist ${playlistId}`);
-    }
-    /**
-     * Get all items for a playlist
-     */
-    async getItems(playlistId, customerId) {
-        // Validate playlist exists and belongs to customer
-        await this.getById(playlistId, customerId);
-        return this.playlistRepository.getItems(playlistId);
     }
 }
 exports.PlaylistService = PlaylistService;

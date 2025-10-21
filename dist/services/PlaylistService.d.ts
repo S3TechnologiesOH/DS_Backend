@@ -5,12 +5,12 @@
  * Handles validation, orchestration, and multi-tenancy filtering.
  */
 import { PlaylistRepository } from '../repositories/PlaylistRepository';
-import { LayoutRepository } from '../repositories/LayoutRepository';
+import { ContentRepository } from '../repositories/ContentRepository';
 import { Playlist, PlaylistItem, CreatePlaylistDto, UpdatePlaylistDto, AddPlaylistItemDto, UpdatePlaylistItemDto, PlaylistWithItems } from '../models';
 export declare class PlaylistService {
     private readonly playlistRepository;
-    private readonly layoutRepository;
-    constructor(playlistRepository: PlaylistRepository, layoutRepository: LayoutRepository);
+    private readonly contentRepository;
+    constructor(playlistRepository: PlaylistRepository, contentRepository: ContentRepository);
     /**
      * Get playlist by ID
      */
@@ -33,6 +33,16 @@ export declare class PlaylistService {
         page: number;
         limit: number;
     }>;
+    /**
+     * Get all items for a playlist
+     */
+    getItems(playlistId: number, customerId: number): Promise<Array<PlaylistItem & {
+        content: {
+            name: string;
+            contentType: string;
+            url: string;
+        };
+    }>>;
     /**
      * Create new playlist
      */
@@ -57,9 +67,5 @@ export declare class PlaylistService {
      * Remove item from playlist
      */
     removeItem(playlistId: number, itemId: number, customerId: number): Promise<void>;
-    /**
-     * Get all items for a playlist
-     */
-    getItems(playlistId: number, customerId: number): Promise<PlaylistItem[]>;
 }
 //# sourceMappingURL=PlaylistService.d.ts.map

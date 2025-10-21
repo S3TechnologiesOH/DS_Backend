@@ -2,14 +2,14 @@
  * Schedule Routes
  *
  * API endpoints for schedule management.
- * Schedules determine when and where playlists are played with hierarchical assignment.
+ * Schedules determine when and where layouts are played with hierarchical assignment.
  */
 
 import { Router } from 'express';
 import { ScheduleController } from '../controllers/ScheduleController';
 import { ScheduleService } from '../services/ScheduleService';
 import { ScheduleRepository } from '../repositories/ScheduleRepository';
-import { PlaylistRepository } from '../repositories/PlaylistRepository';
+import { LayoutRepository } from '../repositories/LayoutRepository';
 import { validateRequest } from '../middleware/validateRequest';
 import { authenticate } from '../middleware/authenticate';
 import { authorize } from '../middleware/authorize';
@@ -28,8 +28,8 @@ const router = Router();
 
 // Initialize dependencies
 const scheduleRepository = new ScheduleRepository();
-const playlistRepository = new PlaylistRepository();
-const scheduleService = new ScheduleService(scheduleRepository, playlistRepository);
+const layoutRepository = new LayoutRepository();
+const scheduleService = new ScheduleService(scheduleRepository, layoutRepository);
 const scheduleController = new ScheduleController(scheduleService);
 
 // All schedule routes require authentication
@@ -68,10 +68,10 @@ router.use(authenticate);
  *           type: boolean
  *         description: Filter by active status
  *       - in: query
- *         name: playlistId
+ *         name: layoutId
  *         schema:
  *           type: integer
- *         description: Filter by playlist ID
+ *         description: Filter by layout ID
  *     responses:
  *       200:
  *         description: Schedules list retrieved successfully
@@ -141,7 +141,7 @@ router.get(
  * /schedules:
  *   post:
  *     summary: Create new schedule
- *     description: Create a new schedule for playing playlists at specific times
+ *     description: Create a new schedule for playing layouts at specific times
  *     tags: [Schedules]
  *     security:
  *       - bearerAuth: []
@@ -153,12 +153,12 @@ router.get(
  *             type: object
  *             required:
  *               - name
- *               - playlistId
+ *               - layoutId
  *             properties:
  *               name:
  *                 type: string
  *                 example: Morning Schedule
- *               playlistId:
+ *               layoutId:
  *                 type: integer
  *                 example: 1
  *               priority:
@@ -218,7 +218,7 @@ router.post(
  *             properties:
  *               name:
  *                 type: string
- *               playlistId:
+ *               layoutId:
  *                 type: integer
  *               priority:
  *                 type: integer

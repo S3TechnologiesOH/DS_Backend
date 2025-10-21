@@ -1,8 +1,8 @@
 /**
  * Playlist Models
  *
- * Collections of layouts (customer-level).
- * Updated to use layouts instead of direct content references.
+ * Collections of content items (customer-level).
+ * Playlists can be used as widgets/layers within layouts.
  */
 export type TransitionType = 'Fade' | 'Slide' | 'None';
 export interface Playlist {
@@ -18,7 +18,7 @@ export interface Playlist {
 export interface PlaylistItem {
     playlistItemId: number;
     playlistId: number;
-    layoutId: number;
+    contentId: number;
     displayOrder: number;
     duration: number | null;
     transitionType: TransitionType;
@@ -38,7 +38,7 @@ export interface UpdatePlaylistDto {
 }
 export interface AddPlaylistItemDto {
     playlistId: number;
-    layoutId: number;
+    contentId: number;
     displayOrder: number;
     duration?: number;
     transitionType?: TransitionType;
@@ -52,10 +52,10 @@ export interface UpdatePlaylistItemDto {
 }
 export interface PlaylistWithItems extends Playlist {
     items: (PlaylistItem & {
-        layout: {
+        content: {
             name: string;
-            width: number;
-            height: number;
+            contentType: string;
+            url: string;
         };
     })[];
 }

@@ -12,7 +12,7 @@ const daysOfWeek = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
 exports.createScheduleSchema = zod_1.z.object({
     body: zod_1.z.object({
         name: zod_1.z.string().min(1, 'Name is required').max(255),
-        playlistId: zod_1.z.number().int().positive('Invalid playlist ID'),
+        layoutId: zod_1.z.number().int().positive('Invalid layout ID'),
         priority: zod_1.z.number().int().nonnegative().optional(),
         startDate: zod_1.z.string().regex(/^\d{4}-\d{2}-\d{2}$/, 'Invalid date format (YYYY-MM-DD)').optional(),
         endDate: zod_1.z.string().regex(/^\d{4}-\d{2}-\d{2}$/, 'Invalid date format (YYYY-MM-DD)').optional(),
@@ -30,7 +30,7 @@ exports.updateScheduleSchema = zod_1.z.object({
     }),
     body: zod_1.z.object({
         name: zod_1.z.string().min(1).max(255).optional(),
-        playlistId: zod_1.z.number().int().positive().optional(),
+        layoutId: zod_1.z.number().int().positive().optional(),
         priority: zod_1.z.number().int().nonnegative().optional(),
         startDate: zod_1.z.string().regex(/^\d{4}-\d{2}-\d{2}$/).nullable().optional(),
         endDate: zod_1.z.string().regex(/^\d{4}-\d{2}-\d{2}$/).nullable().optional(),
@@ -96,7 +96,7 @@ exports.listSchedulesSchema = zod_1.z.object({
             .string()
             .transform((val) => val === 'true')
             .optional(),
-        playlistId: zod_1.z.string().regex(/^\d+$/).transform(Number).optional(),
+        layoutId: zod_1.z.string().regex(/^\d+$/).transform(Number).optional(),
     }),
 });
 //# sourceMappingURL=schedule.validator.js.map

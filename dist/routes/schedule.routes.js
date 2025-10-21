@@ -3,14 +3,14 @@
  * Schedule Routes
  *
  * API endpoints for schedule management.
- * Schedules determine when and where playlists are played with hierarchical assignment.
+ * Schedules determine when and where layouts are played with hierarchical assignment.
  */
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = require("express");
 const ScheduleController_1 = require("../controllers/ScheduleController");
 const ScheduleService_1 = require("../services/ScheduleService");
 const ScheduleRepository_1 = require("../repositories/ScheduleRepository");
-const PlaylistRepository_1 = require("../repositories/PlaylistRepository");
+const LayoutRepository_1 = require("../repositories/LayoutRepository");
 const validateRequest_1 = require("../middleware/validateRequest");
 const authenticate_1 = require("../middleware/authenticate");
 const authorize_1 = require("../middleware/authorize");
@@ -19,8 +19,8 @@ const schedule_validator_1 = require("../validators/schedule.validator");
 const router = (0, express_1.Router)();
 // Initialize dependencies
 const scheduleRepository = new ScheduleRepository_1.ScheduleRepository();
-const playlistRepository = new PlaylistRepository_1.PlaylistRepository();
-const scheduleService = new ScheduleService_1.ScheduleService(scheduleRepository, playlistRepository);
+const layoutRepository = new LayoutRepository_1.LayoutRepository();
+const scheduleService = new ScheduleService_1.ScheduleService(scheduleRepository, layoutRepository);
 const scheduleController = new ScheduleController_1.ScheduleController(scheduleService);
 // All schedule routes require authentication
 router.use(authenticate_1.authenticate);
@@ -57,10 +57,10 @@ router.use(authenticate_1.authenticate);
  *           type: boolean
  *         description: Filter by active status
  *       - in: query
- *         name: playlistId
+ *         name: layoutId
  *         schema:
  *           type: integer
- *         description: Filter by playlist ID
+ *         description: Filter by layout ID
  *     responses:
  *       200:
  *         description: Schedules list retrieved successfully
@@ -120,7 +120,7 @@ router.get('/:scheduleId', (0, validateRequest_1.validateRequest)(schedule_valid
  * /schedules:
  *   post:
  *     summary: Create new schedule
- *     description: Create a new schedule for playing playlists at specific times
+ *     description: Create a new schedule for playing layouts at specific times
  *     tags: [Schedules]
  *     security:
  *       - bearerAuth: []
@@ -132,12 +132,12 @@ router.get('/:scheduleId', (0, validateRequest_1.validateRequest)(schedule_valid
  *             type: object
  *             required:
  *               - name
- *               - playlistId
+ *               - layoutId
  *             properties:
  *               name:
  *                 type: string
  *                 example: Morning Schedule
- *               playlistId:
+ *               layoutId:
  *                 type: integer
  *                 example: 1
  *               priority:
@@ -191,7 +191,7 @@ router.post('/', (0, authorize_1.authorize)('Admin', 'SiteManager'), (0, validat
  *             properties:
  *               name:
  *                 type: string
- *               playlistId:
+ *               layoutId:
  *                 type: integer
  *               priority:
  *                 type: integer

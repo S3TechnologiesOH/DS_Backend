@@ -48,17 +48,17 @@ class PlaylistRepository extends BaseRepository_1.BaseRepository {
       SELECT
         pi.PlaylistItemId as playlistItemId,
         pi.PlaylistId as playlistId,
-        pi.LayoutId as layoutId,
+        pi.ContentId as contentId,
         pi.DisplayOrder as displayOrder,
         pi.Duration as duration,
         pi.TransitionType as transitionType,
         pi.TransitionDuration as transitionDuration,
         pi.CreatedAt as createdAt,
-        l.Name as layoutName,
-        l.Width as layoutWidth,
-        l.Height as layoutHeight
+        c.Name as contentName,
+        c.ContentType as contentType,
+        c.Url as contentUrl
       FROM PlaylistItems pi
-      INNER JOIN Layouts l ON pi.LayoutId = l.LayoutId
+      INNER JOIN Content c ON pi.ContentId = c.ContentId
       WHERE pi.PlaylistId = @playlistId
       ORDER BY pi.DisplayOrder ASC;
     `;
@@ -71,16 +71,16 @@ class PlaylistRepository extends BaseRepository_1.BaseRepository {
         const items = itemsData.map(item => ({
             playlistItemId: item.playlistItemId,
             playlistId: item.playlistId,
-            layoutId: item.layoutId,
+            contentId: item.contentId,
             displayOrder: item.displayOrder,
             duration: item.duration,
             transitionType: item.transitionType,
             transitionDuration: item.transitionDuration,
             createdAt: item.createdAt,
-            layout: {
-                name: item.layoutName,
-                width: item.layoutWidth,
-                height: item.layoutHeight,
+            content: {
+                name: item.contentName,
+                contentType: item.contentType,
+                url: item.contentUrl,
             },
         }));
         return {
@@ -121,6 +121,46 @@ class PlaylistRepository extends BaseRepository_1.BaseRepository {
             params.limit = options.limit;
         }
         return this.queryMany(sql, params);
+    }
+    /**
+     * Get all items for a playlist
+     */
+    async findItemsByPlaylistId(playlistId, customerId) {
+        const sql = `
+      SELECT
+        pi.PlaylistItemId as playlistItemId,
+        pi.PlaylistId as playlistId,
+        pi.ContentId as contentId,
+        pi.DisplayOrder as displayOrder,
+        pi.Duration as duration,
+        pi.TransitionType as transitionType,
+        pi.TransitionDuration as transitionDuration,
+        pi.CreatedAt as createdAt,
+        c.Name as contentName,
+        c.ContentType as contentType,
+        c.Url as contentUrl
+      FROM PlaylistItems pi
+      INNER JOIN Content c ON pi.ContentId = c.ContentId
+      INNER JOIN Playlists p ON pi.PlaylistId = p.PlaylistId
+      WHERE pi.PlaylistId = @playlistId AND p.CustomerId = @customerId
+      ORDER BY pi.DisplayOrder ASC
+    `;
+        const itemsData = await this.queryMany(sql, { playlistId, customerId });
+        return itemsData.map(item => ({
+            playlistItemId: item.playlistItemId,
+            playlistId: item.playlistId,
+            contentId: item.contentId,
+            displayOrder: item.displayOrder,
+            duration: item.duration,
+            transitionType: item.transitionType,
+            transitionDuration: item.transitionDuration,
+            createdAt: item.createdAt,
+            content: {
+                name: item.contentName,
+                contentType: item.contentType,
+                url: item.contentUrl,
+            },
+        }));
     }
     /**
      * Create new playlist
@@ -207,22 +247,22 @@ class PlaylistRepository extends BaseRepository_1.BaseRepository {
     async addItem(data) {
         const sql = `
       INSERT INTO PlaylistItems (
-        PlaylistId, LayoutId, DisplayOrder, Duration, TransitionType, TransitionDuration
+        PlaylistId, ContentId, DisplayOrder, Duration, TransitionType, TransitionDuration
       )
       OUTPUT
         INSERTED.PlaylistItemId as playlistItemId,
         INSERTED.PlaylistId as playlistId,
-        INSERTED.LayoutId as layoutId,
+        INSERTED.ContentId as contentId,
         INSERTED.DisplayOrder as displayOrder,
         INSERTED.Duration as duration,
         INSERTED.TransitionType as transitionType,
         INSERTED.TransitionDuration as transitionDuration,
         INSERTED.CreatedAt as createdAt
-      VALUES (@playlistId, @layoutId, @displayOrder, @duration, @transitionType, @transitionDuration)
+      VALUES (@playlistId, @contentId, @displayOrder, @duration, @transitionType, @transitionDuration)
     `;
         return this.insert(sql, {
             playlistId: data.playlistId,
-            layoutId: data.layoutId,
+            contentId: data.contentId,
             displayOrder: data.displayOrder,
             duration: data.duration || null,
             transitionType: data.transitionType || 'None',

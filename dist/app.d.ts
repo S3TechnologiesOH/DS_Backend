@@ -3,6 +3,7 @@
  *
  * Configures Express app with middleware, security, and routes.
  */
+import { Application } from 'express';
 /**
  * Create and configure Express application
  */

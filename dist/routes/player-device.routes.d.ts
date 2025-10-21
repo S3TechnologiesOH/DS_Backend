@@ -9,6 +9,6 @@
  *   name: Player Devices
  *   description: Endpoints for digital signage player devices
  */
-declare const router: any;
+declare const router: import("express-serve-static-core").Router;
 export default router;
 //# sourceMappingURL=player-device.routes.d.ts.map

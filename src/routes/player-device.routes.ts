@@ -152,7 +152,7 @@ router.post(
  * /api/v1/player-devices/{playerId}/schedule:
  *   get:
  *     summary: Get current schedule for player
- *     description: Retrieve the active schedule with playlist content for the player to display
+ *     description: Retrieve the active schedule with layout to display
  *     tags: [Player Devices]
  *     security:
  *       - playerAuth: []
@@ -179,12 +179,8 @@ router.post(
  *                   properties:
  *                     schedule:
  *                       $ref: '#/components/schemas/Schedule'
- *                     playlist:
- *                       $ref: '#/components/schemas/Playlist'
- *                     content:
- *                       type: array
- *                       items:
- *                         $ref: '#/components/schemas/Content'
+ *                     layout:
+ *                       $ref: '#/components/schemas/Layout'
  *       401:
  *         $ref: '#/components/responses/Unauthorized'
  *       404:
@@ -218,33 +214,22 @@ router.get(
     // Take the highest priority schedule (they're already sorted by priority DESC)
     const activeSchedule = schedules[0];
 
-    // Get playlist with content items
-    const playlist = await playlistRepository.findByIdWithItems(activeSchedule.playlistId, req.user!.customerId);
+    // Get layout with all layers directly from the schedule
+    const layout = await layoutRepository.findByIdWithLayers(activeSchedule.layoutId, req.user!.customerId);
 
-    if (!playlist) {
+    if (!layout) {
       res.status(404).json({
         status: 'error',
-        message: 'Playlist not found',
+        message: 'Layout not found',
       });
       return;
     }
-
-    // Get full layout details for each playlist item (including all layers)
-    const layoutPromises = playlist.items.map(item =>
-      layoutRepository.findByIdWithLayers(item.layoutId, req.user!.customerId)
-    );
-    const layouts = await Promise.all(layoutPromises);
 
     res.json({
       status: 'success',
       data: {
         schedule: activeSchedule,
-        playlist: {
-          playlistId: playlist.playlistId,
-          name: playlist.name,
-          description: playlist.description,
-        },
-        layouts: layouts.filter(l => l !== null),
+        layout,
       },
     });
   }),

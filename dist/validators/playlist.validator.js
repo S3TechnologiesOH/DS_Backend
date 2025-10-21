@@ -39,7 +39,7 @@ exports.addPlaylistItemSchema = zod_1.z.object({
         playlistId: zod_1.z.string().regex(/^\d+$/, 'Invalid playlist ID').transform(Number),
     }),
     body: zod_1.z.object({
-        layoutId: zod_1.z.number().int().positive('Invalid layout ID'),
+        contentId: zod_1.z.number().int().positive('Invalid content ID'),
         displayOrder: zod_1.z.number().int().nonnegative('Display order must be non-negative'),
         duration: zod_1.z.number().int().positive().optional(),
         transitionType: zod_1.z.enum(transitionTypes).optional(),

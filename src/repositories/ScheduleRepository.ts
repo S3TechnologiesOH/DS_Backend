@@ -25,7 +25,7 @@ export class ScheduleRepository extends BaseRepository {
         ScheduleId as scheduleId,
         CustomerId as customerId,
         Name as name,
-        PlaylistId as playlistId,
+        LayoutId as layoutId,
         Priority as priority,
         StartDate as startDate,
         EndDate as endDate,
@@ -52,7 +52,7 @@ export class ScheduleRepository extends BaseRepository {
         s.ScheduleId as scheduleId,
         s.CustomerId as customerId,
         s.Name as name,
-        s.PlaylistId as playlistId,
+        s.LayoutId as layoutId,
         s.Priority as priority,
         s.StartDate as startDate,
         s.EndDate as endDate,
@@ -63,9 +63,9 @@ export class ScheduleRepository extends BaseRepository {
         s.CreatedBy as createdBy,
         s.CreatedAt as createdAt,
         s.UpdatedAt as updatedAt,
-        p.Name as playlistName
+        l.Name as layoutName
       FROM Schedules s
-      INNER JOIN Playlists p ON s.PlaylistId = p.PlaylistId
+      INNER JOIN Layouts l ON s.LayoutId = l.LayoutId
       WHERE s.ScheduleId = @scheduleId AND s.CustomerId = @customerId;
 
       SELECT
@@ -80,7 +80,7 @@ export class ScheduleRepository extends BaseRepository {
       WHERE ScheduleId = @scheduleId;
     `;
 
-    const result = await this.queryMultipleResultSets<[Schedule & { playlistName: string }, ScheduleAssignment]>(
+    const result = await this.queryMultipleResultSets<[Schedule & { layoutName: string }, ScheduleAssignment]>(
       sql,
       { scheduleId, customerId }
     );
@@ -89,14 +89,14 @@ export class ScheduleRepository extends BaseRepository {
       return null;
     }
 
-    const scheduleData = result.recordsets[0][0] as Schedule & { playlistName: string };
+    const scheduleData = result.recordsets[0][0] as Schedule & { layoutName: string };
     const assignmentsData = result.recordsets[1] as ScheduleAssignment[];
 
     return {
       scheduleId: scheduleData.scheduleId,
       customerId: scheduleData.customerId,
       name: scheduleData.name,
-      playlistId: scheduleData.playlistId,
+      layoutId: scheduleData.layoutId,
       priority: scheduleData.priority,
       startDate: scheduleData.startDate,
       endDate: scheduleData.endDate,
@@ -107,7 +107,7 @@ export class ScheduleRepository extends BaseRepository {
       createdBy: scheduleData.createdBy,
       createdAt: scheduleData.createdAt,
       updatedAt: scheduleData.updatedAt,
-      playlistName: scheduleData.playlistName,
+      layoutName: scheduleData.layoutName,
       assignments: assignmentsData,
     };
   }
@@ -119,7 +119,7 @@ export class ScheduleRepository extends BaseRepository {
     customerId: number,
     options?: {
       isActive?: boolean;
-      playlistId?: number;
+      layoutId?: number;
       search?: string;
       limit?: number;
       offset?: number;
@@ -130,7 +130,7 @@ export class ScheduleRepository extends BaseRepository {
         ScheduleId as scheduleId,
         CustomerId as customerId,
         Name as name,
-        PlaylistId as playlistId,
+        LayoutId as layoutId,
         Priority as priority,
         StartDate as startDate,
         EndDate as endDate,
@@ -152,9 +152,9 @@ export class ScheduleRepository extends BaseRepository {
       params.isActive = options.isActive;
     }
 
-    if (options?.playlistId) {
-      sql += ' AND PlaylistId = @playlistId';
-      params.playlistId = options.playlistId;
+    if (options?.layoutId) {
+      sql += ' AND LayoutId = @layoutId';
+      params.layoutId = options.layoutId;
     }
 
     if (options?.search) {
@@ -179,13 +179,13 @@ export class ScheduleRepository extends BaseRepository {
   async create(data: CreateScheduleDto): Promise<Schedule> {
     const sql = `
       INSERT INTO Schedules (
-        CustomerId, Name, PlaylistId, Priority, StartDate, EndDate, StartTime, EndTime, DaysOfWeek, CreatedBy
+        CustomerId, Name, LayoutId, Priority, StartDate, EndDate, StartTime, EndTime, DaysOfWeek, CreatedBy
       )
       OUTPUT
         INSERTED.ScheduleId as scheduleId,
         INSERTED.CustomerId as customerId,
         INSERTED.Name as name,
-        INSERTED.PlaylistId as playlistId,
+        INSERTED.LayoutId as layoutId,
         INSERTED.Priority as priority,
         INSERTED.StartDate as startDate,
         INSERTED.EndDate as endDate,
@@ -197,14 +197,14 @@ export class ScheduleRepository extends BaseRepository {
         INSERTED.CreatedAt as createdAt,
         INSERTED.UpdatedAt as updatedAt
       VALUES (
-        @customerId, @name, @playlistId, @priority, @startDate, @endDate, @startTime, @endTime, @daysOfWeek, @createdBy
+        @customerId, @name, @layoutId, @priority, @startDate, @endDate, @startTime, @endTime, @daysOfWeek, @createdBy
       )
     `;
 
     return this.insert<Schedule>(sql, {
       customerId: data.customerId,
       name: data.name,
-      playlistId: data.playlistId,
+      layoutId: data.layoutId,
       priority: data.priority || 50,
       startDate: data.startDate || null,
       endDate: data.endDate || null,
@@ -226,9 +226,9 @@ export class ScheduleRepository extends BaseRepository {
       updates.push('Name = @name');
       params.name = data.name;
     }
-    if (data.playlistId !== undefined) {
-      updates.push('PlaylistId = @playlistId');
-      params.playlistId = data.playlistId;
+    if (data.layoutId !== undefined) {
+      updates.push('LayoutId = @layoutId');
+      params.layoutId = data.layoutId;
     }
     if (data.priority !== undefined) {
       updates.push('Priority = @priority');
@@ -272,7 +272,7 @@ export class ScheduleRepository extends BaseRepository {
         INSERTED.ScheduleId as scheduleId,
         INSERTED.CustomerId as customerId,
         INSERTED.Name as name,
-        INSERTED.PlaylistId as playlistId,
+        INSERTED.LayoutId as layoutId,
         INSERTED.Priority as priority,
         INSERTED.StartDate as startDate,
         INSERTED.EndDate as endDate,
@@ -384,7 +384,7 @@ export class ScheduleRepository extends BaseRepository {
         s.ScheduleId as scheduleId,
         s.CustomerId as customerId,
         s.Name as name,
-        s.PlaylistId as playlistId,
+        s.LayoutId as layoutId,
         s.Priority as priority,
         s.StartDate as startDate,
         s.EndDate as endDate,
@@ -395,10 +395,10 @@ export class ScheduleRepository extends BaseRepository {
         s.CreatedBy as createdBy,
         s.CreatedAt as createdAt,
         s.UpdatedAt as updatedAt,
-        p.Name as playlistName,
+        l.Name as layoutName,
         sa.AssignmentType as assignmentType
       FROM Schedules s
-      INNER JOIN Playlists p ON s.PlaylistId = p.PlaylistId
+      INNER JOIN Layouts l ON s.LayoutId = l.LayoutId
       INNER JOIN ScheduleAssignments sa ON s.ScheduleId = sa.ScheduleId
       INNER JOIN Players pl ON pl.PlayerId = @playerId
       WHERE s.CustomerId = @customerId
@@ -411,7 +411,7 @@ export class ScheduleRepository extends BaseRepository {
       ORDER BY s.Priority DESC
     `;
 
-    const schedules = await this.queryMany<Schedule & { playlistName: string; assignmentType: string }>(sql, {
+    const schedules = await this.queryMany<Schedule & { layoutName: string; assignmentType: string }>(sql, {
       playerId,
       customerId,
     });
@@ -424,7 +424,7 @@ export class ScheduleRepository extends BaseRepository {
         scheduleId: schedule.scheduleId,
         customerId: schedule.customerId,
         name: schedule.name,
-        playlistId: schedule.playlistId,
+        layoutId: schedule.layoutId,
         priority: schedule.priority,
         startDate: schedule.startDate,
         endDate: schedule.endDate,
@@ -435,7 +435,7 @@ export class ScheduleRepository extends BaseRepository {
         createdBy: schedule.createdBy,
         createdAt: schedule.createdAt,
         updatedAt: schedule.updatedAt,
-        playlistName: schedule.playlistName,
+        layoutName: schedule.layoutName,
         assignments,
       });
     }

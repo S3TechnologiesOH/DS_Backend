@@ -21,6 +21,11 @@ export declare class PlaylistController {
      */
     getById(req: AuthRequest, res: Response, next: NextFunction): Promise<void>;
     /**
+     * GET /api/v1/playlists/:playlistId/items
+     * Get all items for a playlist
+     */
+    getItems(req: AuthRequest, res: Response, next: NextFunction): Promise<void>;
+    /**
      * POST /api/v1/playlists
      * Create new playlist
      *

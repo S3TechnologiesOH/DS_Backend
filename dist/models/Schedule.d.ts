@@ -1,14 +1,14 @@
 /**
  * Schedule Models
  *
- * When and where to play playlists with hierarchical assignment.
+ * When and where to play layouts with hierarchical assignment.
  */
 export type AssignmentType = 'Customer' | 'Site' | 'Player';
 export interface Schedule {
     scheduleId: number;
     customerId: number;
     name: string;
-    playlistId: number;
+    layoutId: number;
     priority: number;
     startDate: Date | null;
     endDate: Date | null;
@@ -32,7 +32,7 @@ export interface ScheduleAssignment {
 export interface CreateScheduleDto {
     customerId: number;
     name: string;
-    playlistId: number;
+    layoutId: number;
     priority?: number;
     startDate?: string;
     endDate?: string;
@@ -43,7 +43,7 @@ export interface CreateScheduleDto {
 }
 export interface UpdateScheduleDto {
     name?: string;
-    playlistId?: number;
+    layoutId?: number;
     priority?: number;
     startDate?: string | null;
     endDate?: string | null;
@@ -61,6 +61,6 @@ export interface CreateScheduleAssignmentDto {
 }
 export interface ScheduleWithAssignments extends Schedule {
     assignments: ScheduleAssignment[];
-    playlistName: string;
+    layoutName: string;
 }
 //# sourceMappingURL=Schedule.d.ts.map

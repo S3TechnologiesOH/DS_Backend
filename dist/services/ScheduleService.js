@@ -3,7 +3,7 @@
  * Schedule Service
  *
  * Business logic for schedule management.
- * Handles when and where playlists are played with hierarchical assignment (Customer > Site > Player).
+ * Handles when and where layouts are played with hierarchical assignment (Customer > Site > Player).
  */
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
@@ -15,10 +15,10 @@ const helpers_1 = require("../utils/helpers");
 const logger_1 = __importDefault(require("../utils/logger"));
 class ScheduleService {
     scheduleRepository;
-    playlistRepository;
-    constructor(scheduleRepository, playlistRepository) {
+    layoutRepository;
+    constructor(scheduleRepository, layoutRepository) {
         this.scheduleRepository = scheduleRepository;
-        this.playlistRepository = playlistRepository;
+        this.layoutRepository = layoutRepository;
     }
     /**
      * Get schedule by ID
@@ -53,7 +53,7 @@ class ScheduleService {
         const schedules = await this.scheduleRepository.findByCustomerId(customerId, {
             isActive: filters?.isActive,
             search: filters?.search,
-            playlistId: filters?.playlistId,
+            layoutId: filters?.layoutId,
             limit,
             offset,
         });
@@ -61,7 +61,7 @@ class ScheduleService {
         const allSchedules = await this.scheduleRepository.findByCustomerId(customerId, {
             isActive: filters?.isActive,
             search: filters?.search,
-            playlistId: filters?.playlistId,
+            layoutId: filters?.layoutId,
         });
         const total = allSchedules.length;
         logger_1.default.info(`Listed ${schedules.length} schedules for customer ${customerId}`);
@@ -80,10 +80,10 @@ class ScheduleService {
         if (!data.name || data.name.trim().length === 0) {
             throw new errors_1.ValidationError('Schedule name is required');
         }
-        // Validate playlist exists
-        const playlist = await this.playlistRepository.findById(data.playlistId, data.customerId);
-        if (!playlist) {
-            throw new errors_1.NotFoundError('Playlist not found');
+        // Validate layout exists
+        const layout = await this.layoutRepository.findById(data.layoutId, data.customerId);
+        if (!layout) {
+            throw new errors_1.NotFoundError('Layout not found');
         }
         // Validate date range if both provided
         if (data.startDate && data.endDate) {
@@ -119,11 +119,11 @@ class ScheduleService {
         if (data.name !== undefined && data.name.trim().length === 0) {
             throw new errors_1.ValidationError('Schedule name cannot be empty');
         }
-        // Validate playlist exists if provided
-        if (data.playlistId) {
-            const playlist = await this.playlistRepository.findById(data.playlistId, customerId);
-            if (!playlist) {
-                throw new errors_1.NotFoundError('Playlist not found');
+        // Validate layout exists if provided
+        if (data.layoutId) {
+            const layout = await this.layoutRepository.findById(data.layoutId, customerId);
+            if (!layout) {
+                throw new errors_1.NotFoundError('Layout not found');
             }
         }
         // Validate priority if provided

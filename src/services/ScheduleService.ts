@@ -2,11 +2,11 @@
  * Schedule Service
  *
  * Business logic for schedule management.
- * Handles when and where playlists are played with hierarchical assignment (Customer > Site > Player).
+ * Handles when and where layouts are played with hierarchical assignment (Customer > Site > Player).
  */
 
 import { ScheduleRepository } from '../repositories/ScheduleRepository';
-import { PlaylistRepository } from '../repositories/PlaylistRepository';
+import { LayoutRepository } from '../repositories/LayoutRepository';
 import {
   Schedule,
   ScheduleAssignment,
@@ -22,7 +22,7 @@ import logger from '../utils/logger';
 export class ScheduleService {
   constructor(
     private readonly scheduleRepository: ScheduleRepository,
-    private readonly playlistRepository: PlaylistRepository
+    private readonly layoutRepository: LayoutRepository
   ) {}
 
   /**
@@ -61,7 +61,7 @@ export class ScheduleService {
       limit?: string;
       search?: string;
       isActive?: boolean;
-      playlistId?: number;
+      layoutId?: number;
     }
   ): Promise<{ data: Schedule[]; total: number; page: number; limit: number }> {
     const { page, limit } = parsePaginationParams({
@@ -75,7 +75,7 @@ export class ScheduleService {
     const schedules = await this.scheduleRepository.findByCustomerId(customerId, {
       isActive: filters?.isActive,
       search: filters?.search,
-      playlistId: filters?.playlistId,
+      layoutId: filters?.layoutId,
       limit,
       offset,
     });
@@ -84,7 +84,7 @@ export class ScheduleService {
     const allSchedules = await this.scheduleRepository.findByCustomerId(customerId, {
       isActive: filters?.isActive,
       search: filters?.search,
-      playlistId: filters?.playlistId,
+      layoutId: filters?.layoutId,
     });
     const total = allSchedules.length;
 
@@ -107,10 +107,10 @@ export class ScheduleService {
       throw new ValidationError('Schedule name is required');
     }
 
-    // Validate playlist exists
-    const playlist = await this.playlistRepository.findById(data.playlistId, data.customerId);
-    if (!playlist) {
-      throw new NotFoundError('Playlist not found');
+    // Validate layout exists
+    const layout = await this.layoutRepository.findById(data.layoutId, data.customerId);
+    if (!layout) {
+      throw new NotFoundError('Layout not found');
     }
 
     // Validate date range if both provided
@@ -155,11 +155,11 @@ export class ScheduleService {
       throw new ValidationError('Schedule name cannot be empty');
     }
 
-    // Validate playlist exists if provided
-    if (data.playlistId) {
-      const playlist = await this.playlistRepository.findById(data.playlistId, customerId);
-      if (!playlist) {
-        throw new NotFoundError('Playlist not found');
+    // Validate layout exists if provided
+    if (data.layoutId) {
+      const layout = await this.layoutRepository.findById(data.layoutId, customerId);
+      if (!layout) {
+        throw new NotFoundError('Layout not found');
       }
     }
 

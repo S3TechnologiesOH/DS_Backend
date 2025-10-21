@@ -2,7 +2,7 @@
  * Schedule Controller
  *
  * Handles HTTP requests for schedule management endpoints.
- * Schedules determine when and where playlists are displayed.
+ * Schedules determine when and where layouts are displayed.
  */
 import { Response, NextFunction } from 'express';
 import { AuthRequest } from '../types/express';
@@ -27,7 +27,7 @@ export declare class ScheduleController {
      * Expected body:
      * {
      *   "name": "Schedule Name",
-     *   "playlistId": 1,
+     *   "layoutId": 1,
      *   "priority": 50,  // optional, 0-100
      *   "startDate": "2025-01-01",  // optional
      *   "endDate": "2025-12-31",    // optional
@@ -44,7 +44,7 @@ export declare class ScheduleController {
      * All fields are optional:
      * {
      *   "name": "Updated Name",
-     *   "playlistId": 2,
+     *   "layoutId": 2,
      *   "priority": 75,
      *   "startDate": "2025-02-01",
      *   "endDate": "2025-11-30",

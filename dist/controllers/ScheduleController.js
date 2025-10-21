@@ -3,7 +3,7 @@
  * Schedule Controller
  *
  * Handles HTTP requests for schedule management endpoints.
- * Schedules determine when and where playlists are displayed.
+ * Schedules determine when and where layouts are displayed.
  */
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.ScheduleController = void 0;
@@ -19,13 +19,13 @@ class ScheduleController {
     async list(req, res, next) {
         try {
             const customerId = req.user.customerId;
-            const { page, limit, search, isActive, playlistId } = req.query;
+            const { page, limit, search, isActive, layoutId } = req.query;
             const result = await this.scheduleService.list(customerId, {
                 page: page,
                 limit: limit,
                 search: search,
                 isActive: isActive === 'true' ? true : isActive === 'false' ? false : undefined,
-                playlistId: playlistId ? parseInt(playlistId, 10) : undefined,
+                layoutId: layoutId ? parseInt(layoutId, 10) : undefined,
             });
             res.status(200).json({
                 status: 'success',
@@ -67,7 +67,7 @@ class ScheduleController {
      * Expected body:
      * {
      *   "name": "Schedule Name",
-     *   "playlistId": 1,
+     *   "layoutId": 1,
      *   "priority": 50,  // optional, 0-100
      *   "startDate": "2025-01-01",  // optional
      *   "endDate": "2025-12-31",    // optional
@@ -83,7 +83,7 @@ class ScheduleController {
             const schedule = await this.scheduleService.create({
                 customerId,
                 name: req.body.name,
-                playlistId: req.body.playlistId,
+                layoutId: req.body.layoutId,
                 priority: req.body.priority,
                 startDate: req.body.startDate,
                 endDate: req.body.endDate,
@@ -109,7 +109,7 @@ class ScheduleController {
      * All fields are optional:
      * {
      *   "name": "Updated Name",
-     *   "playlistId": 2,
+     *   "layoutId": 2,
      *   "priority": 75,
      *   "startDate": "2025-02-01",
      *   "endDate": "2025-11-30",

@@ -2,15 +2,15 @@
  * Schedule Service
  *
  * Business logic for schedule management.
- * Handles when and where playlists are played with hierarchical assignment (Customer > Site > Player).
+ * Handles when and where layouts are played with hierarchical assignment (Customer > Site > Player).
  */
 import { ScheduleRepository } from '../repositories/ScheduleRepository';
-import { PlaylistRepository } from '../repositories/PlaylistRepository';
+import { LayoutRepository } from '../repositories/LayoutRepository';
 import { Schedule, ScheduleAssignment, CreateScheduleDto, UpdateScheduleDto, CreateScheduleAssignmentDto, ScheduleWithAssignments } from '../models';
 export declare class ScheduleService {
     private readonly scheduleRepository;
-    private readonly playlistRepository;
-    constructor(scheduleRepository: ScheduleRepository, playlistRepository: PlaylistRepository);
+    private readonly layoutRepository;
+    constructor(scheduleRepository: ScheduleRepository, layoutRepository: LayoutRepository);
     /**
      * Get schedule by ID
      */
@@ -27,7 +27,7 @@ export declare class ScheduleService {
         limit?: string;
         search?: string;
         isActive?: boolean;
-        playlistId?: number;
+        layoutId?: number;
     }): Promise<{
         data: Schedule[];
         total: number;

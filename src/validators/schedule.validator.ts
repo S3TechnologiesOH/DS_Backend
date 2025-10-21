@@ -12,7 +12,7 @@ const daysOfWeek = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
 export const createScheduleSchema = z.object({
   body: z.object({
     name: z.string().min(1, 'Name is required').max(255),
-    playlistId: z.number().int().positive('Invalid playlist ID'),
+    layoutId: z.number().int().positive('Invalid layout ID'),
     priority: z.number().int().nonnegative().optional(),
     startDate: z.string().regex(/^\d{4}-\d{2}-\d{2}$/, 'Invalid date format (YYYY-MM-DD)').optional(),
     endDate: z.string().regex(/^\d{4}-\d{2}-\d{2}$/, 'Invalid date format (YYYY-MM-DD)').optional(),
@@ -34,7 +34,7 @@ export const updateScheduleSchema = z.object({
   }),
   body: z.object({
     name: z.string().min(1).max(255).optional(),
-    playlistId: z.number().int().positive().optional(),
+    layoutId: z.number().int().positive().optional(),
     priority: z.number().int().nonnegative().optional(),
     startDate: z.string().regex(/^\d{4}-\d{2}-\d{2}$/).nullable().optional(),
     endDate: z.string().regex(/^\d{4}-\d{2}-\d{2}$/).nullable().optional(),
@@ -111,6 +111,6 @@ export const listSchedulesSchema = z.object({
       .string()
       .transform((val) => val === 'true')
       .optional(),
-    playlistId: z.string().regex(/^\d+$/).transform(Number).optional(),
+    layoutId: z.string().regex(/^\d+$/).transform(Number).optional(),
   }),
 });

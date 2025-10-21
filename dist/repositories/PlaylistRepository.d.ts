@@ -24,6 +24,16 @@ export declare class PlaylistRepository extends BaseRepository {
         offset?: number;
     }): Promise<Playlist[]>;
     /**
+     * Get all items for a playlist
+     */
+    findItemsByPlaylistId(playlistId: number, customerId: number): Promise<Array<PlaylistItem & {
+        content: {
+            name: string;
+            contentType: string;
+            url: string;
+        };
+    }>>;
+    /**
      * Create new playlist
      */
     create(data: CreatePlaylistDto): Promise<Playlist>;
