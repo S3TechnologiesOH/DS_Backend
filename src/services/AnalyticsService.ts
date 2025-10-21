@@ -26,7 +26,7 @@ export class AnalyticsService {
    */
   async recordProofOfPlay(data: {
     playerId: number;
-    contentId: number;
+    layoutId: number;
     playlistId?: number;
     scheduleId?: number;
   }): Promise<ProofOfPlay> {
@@ -35,7 +35,7 @@ export class AnalyticsService {
       playbackStartTime: new Date(),
     });
 
-    logger.info(`Recorded proof of play for player ${data.playerId}, content ${data.contentId}`);
+    logger.info(`Recorded proof of play for player ${data.playerId}, layout ${data.layoutId}`);
 
     return proofOfPlay;
   }

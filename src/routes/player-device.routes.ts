@@ -18,6 +18,7 @@ import { SiteRepository } from '../repositories/SiteRepository';
 import { ScheduleRepository } from '../repositories/ScheduleRepository';
 import { PlaylistRepository } from '../repositories/PlaylistRepository';
 import { LayoutRepository } from '../repositories/LayoutRepository';
+import { ContentRepository } from '../repositories/ContentRepository';
 import { ProofOfPlayRepository } from '../repositories/ProofOfPlayRepository';
 import { authenticatePlayer } from '../middleware/authenticate';
 import { asyncHandler } from '../middleware/asyncHandler';
@@ -32,6 +33,7 @@ const siteRepository = new SiteRepository();
 const scheduleRepository = new ScheduleRepository();
 const playlistRepository = new PlaylistRepository();
 const layoutRepository = new LayoutRepository();
+const contentRepository = new ContentRepository();
 const proofOfPlayRepository = new ProofOfPlayRepository();
 const playerService = new PlayerService(playerRepository, siteRepository);
 const playerController = new PlayerController(playerService);
@@ -62,7 +64,7 @@ const proofOfPlaySchema = z.object({
     playerId: z.string().regex(/^\d+$/),
   }),
   body: z.object({
-    contentId: z.number().int().positive(),
+    layoutId: z.number().int().positive(),
     playlistId: z.number().int().positive().optional(),
     scheduleId: z.number().int().positive().optional(),
     playedAt: z.string().datetime(),
@@ -418,13 +420,13 @@ router.post(
  *           schema:
  *             type: object
  *             required:
- *               - contentId
+ *               - layoutId
  *               - playedAt
  *             properties:
- *               contentId:
+ *               layoutId:
  *                 type: integer
  *                 example: 101
- *                 description: ID of content that was played
+ *                 description: ID of layout that was played
  *               playlistId:
  *                 type: integer
  *                 example: 5
@@ -466,11 +468,11 @@ router.post(
   validateRequest(proofOfPlaySchema),
   asyncHandler(async (req, res) => {
     const { playerId } = req.params;
-    const { contentId, playlistId, scheduleId, playedAt, duration } = req.body;
+    const { layoutId, playlistId, scheduleId, playedAt, duration } = req.body;
 
     await proofOfPlayRepository.create({
       playerId: Number(playerId),
-      contentId,
+      layoutId,
       playlistId,
       scheduleId,
       playedAt: new Date(playedAt),
