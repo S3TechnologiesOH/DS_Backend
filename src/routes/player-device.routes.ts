@@ -45,7 +45,21 @@ router.use(authenticatePlayer);
 const heartbeatSchema = z.object({
   body: z.object({
     status: z.enum(['Online', 'Offline', 'Error']),
-    ipAddress: z.string().ip().optional(),
+    ipAddress: z
+      .string()
+      .refine(
+        (val) => {
+          // Allow IP addresses with or without port (e.g., "192.168.1.1" or "192.168.1.1:8080")
+          const ipWithoutPort = val.split(':')[0];
+          // Basic IP validation (IPv4 or IPv6)
+          const ipv4Regex = /^(\d{1,3}\.){3}\d{1,3}$/;
+          const ipv6Regex = /^([0-9a-fA-F]{0,4}:){2,7}[0-9a-fA-F]{0,4}$/;
+          return ipv4Regex.test(ipWithoutPort) || ipv6Regex.test(ipWithoutPort);
+        },
+        { message: 'Invalid IP address format' }
+      )
+      .transform((val) => val.split(':')[0]) // Strip port if present
+      .optional(),
     playerVersion: z.string().optional(),
     osVersion: z.string().optional(),
   }),
