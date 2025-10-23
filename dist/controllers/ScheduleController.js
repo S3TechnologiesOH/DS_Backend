@@ -153,6 +153,32 @@ class ScheduleController {
         }
     }
     /**
+     * GET /api/v1/schedules/:scheduleId/assignments
+     * Get all assignments for a schedule
+     */
+    async getAssignments(req, res, next) {
+        try {
+            const scheduleId = parseInt(req.params.scheduleId, 10);
+            const customerId = req.user.customerId;
+            // Verify schedule belongs to customer
+            const schedule = await this.scheduleService.getByIdWithAssignments(scheduleId, customerId);
+            if (!schedule) {
+                res.status(404).json({
+                    status: 'error',
+                    message: 'Schedule not found',
+                });
+                return;
+            }
+            res.status(200).json({
+                status: 'success',
+                data: schedule.assignments,
+            });
+        }
+        catch (error) {
+            next(error);
+        }
+    }
+    /**
      * POST /api/v1/schedules/:scheduleId/assignments
      * Create schedule assignment
      *

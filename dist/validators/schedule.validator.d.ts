@@ -160,6 +160,23 @@ export declare const deleteScheduleSchema: z.ZodObject<{
         scheduleId?: string;
     };
 }>;
+export declare const getScheduleAssignmentsSchema: z.ZodObject<{
+    params: z.ZodObject<{
+        scheduleId: z.ZodEffects<z.ZodString, number, string>;
+    }, "strip", z.ZodTypeAny, {
+        scheduleId?: number;
+    }, {
+        scheduleId?: string;
+    }>;
+}, "strip", z.ZodTypeAny, {
+    params?: {
+        scheduleId?: number;
+    };
+}, {
+    params?: {
+        scheduleId?: string;
+    };
+}>;
 export declare const createScheduleAssignmentSchema: z.ZodObject<{
     params: z.ZodObject<{
         scheduleId: z.ZodEffects<z.ZodString, number, string>;

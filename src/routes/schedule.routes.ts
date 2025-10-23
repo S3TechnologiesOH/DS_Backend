@@ -19,6 +19,7 @@ import {
   updateScheduleSchema,
   getScheduleByIdSchema,
   deleteScheduleSchema,
+  getScheduleAssignmentsSchema,
   createScheduleAssignmentSchema,
   deleteScheduleAssignmentSchema,
   listSchedulesSchema,
@@ -275,6 +276,45 @@ router.delete(
   authorize('Admin'),
   validateRequest(deleteScheduleSchema),
   asyncHandler(scheduleController.delete.bind(scheduleController))
+);
+
+/**
+ * @swagger
+ * /schedules/{scheduleId}/assignments:
+ *   get:
+ *     summary: Get schedule assignments
+ *     description: Get all assignments for a schedule
+ *     tags: [Schedules]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: scheduleId
+ *         required: true
+ *         schema:
+ *           type: integer
+ *     responses:
+ *       200:
+ *         description: Assignments retrieved successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 status:
+ *                   type: string
+ *                   example: success
+ *                 data:
+ *                   type: array
+ *                   items:
+ *                     $ref: '#/components/schemas/ScheduleAssignment'
+ *       404:
+ *         description: Schedule not found
+ */
+router.get(
+  '/:scheduleId/assignments',
+  validateRequest(getScheduleAssignmentsSchema),
+  asyncHandler(scheduleController.getAssignments.bind(scheduleController))
 );
 
 /**

@@ -64,6 +64,12 @@ export const deleteScheduleSchema = z.object({
   }),
 });
 
+export const getScheduleAssignmentsSchema = z.object({
+  params: z.object({
+    scheduleId: z.string().regex(/^\d+$/, 'Invalid schedule ID').transform(Number),
+  }),
+});
+
 export const createScheduleAssignmentSchema = z.object({
   params: z.object({
     scheduleId: z.string().regex(/^\d+$/, 'Invalid schedule ID').transform(Number),

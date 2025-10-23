@@ -61,6 +61,11 @@ export declare class ScheduleController {
      */
     delete(req: AuthRequest, res: Response, next: NextFunction): Promise<void>;
     /**
+     * GET /api/v1/schedules/:scheduleId/assignments
+     * Get all assignments for a schedule
+     */
+    getAssignments(req: AuthRequest, res: Response, next: NextFunction): Promise<void>;
+    /**
      * POST /api/v1/schedules/:scheduleId/assignments
      * Create schedule assignment
      *

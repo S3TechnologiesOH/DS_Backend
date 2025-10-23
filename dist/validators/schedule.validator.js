@@ -5,7 +5,7 @@
  * Zod schemas for schedule-related requests.
  */
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.listSchedulesSchema = exports.deleteScheduleAssignmentSchema = exports.createScheduleAssignmentSchema = exports.deleteScheduleSchema = exports.getScheduleByIdSchema = exports.updateScheduleSchema = exports.createScheduleSchema = void 0;
+exports.listSchedulesSchema = exports.deleteScheduleAssignmentSchema = exports.createScheduleAssignmentSchema = exports.getScheduleAssignmentsSchema = exports.deleteScheduleSchema = exports.getScheduleByIdSchema = exports.updateScheduleSchema = exports.createScheduleSchema = void 0;
 const zod_1 = require("zod");
 const assignmentTypes = ['Customer', 'Site', 'Player'];
 const daysOfWeek = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
@@ -50,6 +50,11 @@ exports.getScheduleByIdSchema = zod_1.z.object({
     }),
 });
 exports.deleteScheduleSchema = zod_1.z.object({
+    params: zod_1.z.object({
+        scheduleId: zod_1.z.string().regex(/^\d+$/, 'Invalid schedule ID').transform(Number),
+    }),
+});
+exports.getScheduleAssignmentsSchema = zod_1.z.object({
     params: zod_1.z.object({
         scheduleId: zod_1.z.string().regex(/^\d+$/, 'Invalid schedule ID').transform(Number),
     }),

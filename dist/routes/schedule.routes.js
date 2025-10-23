@@ -241,6 +241,40 @@ router.delete('/:scheduleId', (0, authorize_1.authorize)('Admin'), (0, validateR
 /**
  * @swagger
  * /schedules/{scheduleId}/assignments:
+ *   get:
+ *     summary: Get schedule assignments
+ *     description: Get all assignments for a schedule
+ *     tags: [Schedules]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: scheduleId
+ *         required: true
+ *         schema:
+ *           type: integer
+ *     responses:
+ *       200:
+ *         description: Assignments retrieved successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 status:
+ *                   type: string
+ *                   example: success
+ *                 data:
+ *                   type: array
+ *                   items:
+ *                     $ref: '#/components/schemas/ScheduleAssignment'
+ *       404:
+ *         description: Schedule not found
+ */
+router.get('/:scheduleId/assignments', (0, validateRequest_1.validateRequest)(schedule_validator_1.getScheduleAssignmentsSchema), (0, asyncHandler_1.asyncHandler)(scheduleController.getAssignments.bind(scheduleController)));
+/**
+ * @swagger
+ * /schedules/{scheduleId}/assignments:
  *   post:
  *     summary: Create schedule assignment
  *     description: Assign schedule to a customer, site, or player (hierarchical priority)

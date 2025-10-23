@@ -225,11 +225,61 @@ router.get(
       return;
     }
 
+    // Extract content from layout layers
+    const content: any[] = [];
+
+    for (const layer of layout.layers) {
+      // Check if layer has playlist content configuration
+      if (layer.contentConfig) {
+        const config = typeof layer.contentConfig === 'string'
+          ? JSON.parse(layer.contentConfig)
+          : layer.contentConfig;
+
+        const playlistId = config.playlistId;
+
+        if (playlistId) {
+          // Get playlist with items and content details
+          const playlistWithItems = await playlistRepository.findByIdWithItems(playlistId, req.user!.customerId);
+
+          if (playlistWithItems && playlistWithItems.items) {
+            // Add each content item from this playlist
+            for (const item of playlistWithItems.items) {
+              content.push({
+                contentId: item.contentId,
+                name: item.content.name,
+                contentType: item.content.contentType,
+                fileUrl: item.content.url,
+                thumbnailUrl: null, // Not in current schema
+                duration: item.duration || 10,
+                displayOrder: item.displayOrder,
+                transitionType: item.transitionType || 'None',
+                transitionDuration: item.transitionDuration || 0,
+                mimeType: null, // Not in current schema
+                fileSize: null, // Not in current schema
+                width: null, // Not in current schema
+                height: null, // Not in current schema
+              });
+            }
+          }
+        }
+      }
+    }
+
+    // Sort content by display order
+    content.sort((a, b) => a.displayOrder - b.displayOrder);
+
     res.json({
       status: 'success',
       data: {
         schedule: activeSchedule,
+        playlist: {
+          playlistId: 0, // Virtual playlist from layout
+          name: layout.name,
+          description: `Content from layout: ${layout.name}`,
+          isActive: true,
+        },
         layout,
+        content,
       },
     });
   }),
