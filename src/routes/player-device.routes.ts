@@ -49,6 +49,9 @@ const heartbeatSchema = z.object({
       .string()
       .refine(
         (val) => {
+          // Allow "unknown" when IP cannot be detected
+          if (val === 'unknown') return true;
+
           // Allow IP addresses with or without port (e.g., "192.168.1.1" or "192.168.1.1:8080")
           const ipWithoutPort = val.split(':')[0];
           // Basic IP validation (IPv4 or IPv6)
@@ -58,7 +61,7 @@ const heartbeatSchema = z.object({
         },
         { message: 'Invalid IP address format' }
       )
-      .transform((val) => val.split(':')[0]) // Strip port if present
+      .transform((val) => val === 'unknown' ? 'unknown' : val.split(':')[0]) // Strip port if present, keep "unknown" as-is
       .optional(),
     playerVersion: z.string().optional(),
     osVersion: z.string().optional(),
