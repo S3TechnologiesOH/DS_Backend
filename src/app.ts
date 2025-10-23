@@ -15,6 +15,7 @@ import { errorHandler, notFoundHandler } from './middleware/errorHandler';
 import logger from './utils/logger';
 import apiRoutes from './routes';
 import { swaggerSpec } from './config/swagger';
+import { getClientIp } from './utils/ipUtils';
 
 /**
  * Create and configure Express application
@@ -51,6 +52,8 @@ export const createApp = (): Application => {
     message: 'Too many requests from this IP, please try again later',
     standardHeaders: true,
     legacyHeaders: false,
+    // Custom key generator to handle IPs with port numbers (from Azure App Service)
+    keyGenerator: (req) => getClientIp(req),
   });
   app.use('/api', limiter);
 

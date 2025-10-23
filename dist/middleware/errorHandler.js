@@ -13,6 +13,7 @@ exports.handleUncaughtException = exports.handleUnhandledRejection = exports.not
 const errors_1 = require("../utils/errors");
 const logger_1 = __importDefault(require("../utils/logger"));
 const environment_1 = require("../config/environment");
+const ipUtils_1 = require("../utils/ipUtils");
 const errorHandler = (err, req, res, _next) => {
     // Default to 500 server error
     let statusCode = 500;
@@ -32,7 +33,7 @@ const errorHandler = (err, req, res, _next) => {
         stack: err.stack,
         path: req.path,
         method: req.method,
-        ip: req.ip,
+        ip: (0, ipUtils_1.getClientIp)(req),
         user: req.user?.userId,
     });
     // Prepare error response

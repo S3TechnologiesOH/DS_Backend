@@ -9,6 +9,7 @@ import { Request, Response, NextFunction } from 'express';
 import { AppError } from '../utils/errors';
 import logger from '../utils/logger';
 import { env } from '../config/environment';
+import { getClientIp } from '../utils/ipUtils';
 
 export const errorHandler = (
   err: Error | AppError,
@@ -36,7 +37,7 @@ export const errorHandler = (
     stack: err.stack,
     path: req.path,
     method: req.method,
-    ip: req.ip,
+    ip: getClientIp(req),
     user: req.user?.userId,
   });
 
