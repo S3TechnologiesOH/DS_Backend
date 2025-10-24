@@ -137,3 +137,6 @@ build
 .pnp.*
 
 azure-app-settings.json
+/latest-logs2
+/latest-logs
+

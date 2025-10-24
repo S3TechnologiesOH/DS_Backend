@@ -278,6 +278,29 @@ router.get(
               });
             }
           }
+        } else if (config.kind) {
+          // Handle direct layer content (text, image, video, etc.)
+          // Create a virtual content item from the layer configuration
+          content.push({
+            contentId: layer.layerId, // Use layerId as virtual contentId
+            name: layer.layerName || `${config.kind} content`,
+            contentType: config.kind, // 'text', 'image', 'video', etc.
+            fileUrl: config.url || config.src || null, // For image/video content
+            thumbnailUrl: null,
+            duration: config.duration || 10, // Default 10 seconds
+            displayOrder: layer.zIndex || 0, // Use zIndex as display order
+            transitionType: 'None',
+            transitionDuration: 0,
+            mimeType: null,
+            fileSize: null,
+            width: layer.width || null,
+            height: layer.height || null,
+            // Include the full layer config for client-side rendering
+            layerConfig: config,
+            layerId: layer.layerId,
+            positionX: layer.positionX,
+            positionY: layer.positionY,
+          });
         }
       }
     }

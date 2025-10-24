@@ -49,7 +49,9 @@
       "Bash(xargs:*)",
       "Bash(npx typescript --version)",
       "Bash(npm run migrate:*)",
-      "Bash(git log:*)"
+      "Bash(git log:*)",
+      "Bash(timeout 60 az webapp log tail:*)",
+      "Bash(chmod:*)"
     ],
     "deny": [],
     "ask": []
