@@ -10,6 +10,7 @@ import { PlaylistController } from '../controllers/PlaylistController';
 import { PlaylistService } from '../services/PlaylistService';
 import { PlaylistRepository } from '../repositories/PlaylistRepository';
 import { ContentRepository } from '../repositories/ContentRepository';
+import { StorageService } from '../services/StorageService';
 import { validateRequest } from '../middleware/validateRequest';
 import { authenticate } from '../middleware/authenticate';
 import { authorize } from '../middleware/authorize';
@@ -30,7 +31,8 @@ const router = Router();
 // Initialize dependencies
 const playlistRepository = new PlaylistRepository();
 const contentRepository = new ContentRepository();
-const playlistService = new PlaylistService(playlistRepository, contentRepository);
+const storageService = new StorageService();
+const playlistService = new PlaylistService(playlistRepository, contentRepository, storageService);
 const playlistController = new PlaylistController(playlistService);
 
 // All playlist routes require authentication

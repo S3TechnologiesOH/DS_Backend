@@ -23,6 +23,32 @@ export class ContentService {
   ) {}
 
   /**
+   * Refresh SAS URLs for content items
+   * Generates fresh SAS tokens for fileUrl and thumbnailUrl
+   */
+  private async refreshContentUrls(content: Content): Promise<Content> {
+    try {
+      // Generate fresh SAS URL for file
+      if (content.fileUrl) {
+        const blobName = this.storageService.extractBlobName(content.fileUrl);
+        content.fileUrl = await this.storageService.getFileUrl(blobName, 60); // 60 minute expiry
+      }
+
+      // Generate fresh SAS URL for thumbnail
+      if (content.thumbnailUrl) {
+        const thumbnailBlobName = this.storageService.extractBlobName(content.thumbnailUrl);
+        content.thumbnailUrl = await this.storageService.getFileUrl(thumbnailBlobName, 60);
+      }
+
+      return content;
+    } catch (error) {
+      logger.warn('Failed to refresh SAS URLs for content', { contentId: content.contentId, error });
+      // Return content with original URLs if refresh fails
+      return content;
+    }
+  }
+
+  /**
    * Get content by ID
    */
   async getById(contentId: number, customerId: number): Promise<Content> {
@@ -32,7 +58,8 @@ export class ContentService {
       throw new NotFoundError('Content not found');
     }
 
-    return content;
+    // Refresh SAS URLs before returning
+    return this.refreshContentUrls(content);
   }
 
   /**
@@ -63,10 +90,15 @@ export class ContentService {
       offset,
     });
 
+    // Refresh SAS URLs for all content items
+    const contentWithFreshUrls = await Promise.all(
+      content.map((item) => this.refreshContentUrls(item))
+    );
+
     const total = await this.contentRepository.countByCustomerId(customerId);
 
     return {
-      data: content,
+      data: contentWithFreshUrls,
       total,
       page,
       limit,

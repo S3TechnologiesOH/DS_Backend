@@ -7,6 +7,7 @@
 
 import { PlaylistRepository } from '../repositories/PlaylistRepository';
 import { ContentRepository } from '../repositories/ContentRepository';
+import { StorageService } from './StorageService';
 import {
   Playlist,
   PlaylistItem,
@@ -23,7 +24,8 @@ import logger from '../utils/logger';
 export class PlaylistService {
   constructor(
     private readonly playlistRepository: PlaylistRepository,
-    private readonly contentRepository: ContentRepository
+    private readonly contentRepository: ContentRepository,
+    private readonly storageService: StorageService
   ) {}
 
   /**
@@ -108,9 +110,24 @@ export class PlaylistService {
 
     const items = await this.playlistRepository.findItemsByPlaylistId(playlistId, customerId);
 
-    logger.info(`Retrieved ${items.length} items for playlist ${playlistId}`);
+    // Refresh SAS URLs for all content items
+    const itemsWithFreshUrls = await Promise.all(
+      items.map(async (item) => {
+        try {
+          if (item.content.url) {
+            const blobName = this.storageService.extractBlobName(item.content.url);
+            item.content.url = await this.storageService.getFileUrl(blobName, 60);
+          }
+        } catch (error) {
+          logger.warn('Failed to refresh SAS URL for playlist item', { playlistItemId: item.playlistItemId, error });
+        }
+        return item;
+      })
+    );
 
-    return items;
+    logger.info(`Retrieved ${itemsWithFreshUrls.length} items for playlist ${playlistId}`);
+
+    return itemsWithFreshUrls;
   }
 
   /**
