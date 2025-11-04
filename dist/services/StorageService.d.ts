@@ -26,10 +26,10 @@ export declare class StorageService {
      */
     deleteFile(blobName: string): Promise<void>;
     /**
-     * Get file download URL (with SAS token for private access)
-     * For public access, just return the blob URL
+     * Get file download URL with SAS token for secure access
+     * Generates a time-limited URL with read permissions
      */
-    getFileUrl(blobName: string): Promise<string>;
+    getFileUrl(blobName: string, expiryMinutes?: number): Promise<string>;
     /**
      * Check if file exists
      */

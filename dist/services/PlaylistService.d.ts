@@ -6,11 +6,13 @@
  */
 import { PlaylistRepository } from '../repositories/PlaylistRepository';
 import { ContentRepository } from '../repositories/ContentRepository';
+import { StorageService } from './StorageService';
 import { Playlist, PlaylistItem, CreatePlaylistDto, UpdatePlaylistDto, AddPlaylistItemDto, UpdatePlaylistItemDto, PlaylistWithItems } from '../models';
 export declare class PlaylistService {
     private readonly playlistRepository;
     private readonly contentRepository;
-    constructor(playlistRepository: PlaylistRepository, contentRepository: ContentRepository);
+    private readonly storageService;
+    constructor(playlistRepository: PlaylistRepository, contentRepository: ContentRepository, storageService: StorageService);
     /**
      * Get playlist by ID
      */

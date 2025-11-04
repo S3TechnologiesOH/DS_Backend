@@ -16,6 +16,8 @@ const azure_1 = require("../config/azure");
 const helpers_1 = require("../utils/helpers");
 const logger_1 = __importDefault(require("../utils/logger"));
 const errors_1 = require("../utils/errors");
+const storage_blob_1 = require("@azure/storage-blob");
+const environment_1 = require("../config/environment");
 class StorageService {
     /**
      * Upload file to Azure Blob Storage
@@ -44,8 +46,10 @@ class StorageService {
                 size: file.size,
                 mimeType: file.mimetype,
             });
+            // Generate SAS URL for the uploaded file
+            const fileUrl = await this.getFileUrl(blobName, 525600); // 1 year expiry for uploaded files
             return {
-                fileUrl: blockBlobClient.url,
+                fileUrl,
                 fileName: blobName,
                 fileSize: file.size,
                 mimeType: file.mimetype,
@@ -72,13 +76,46 @@ class StorageService {
         }
     }
     /**
-     * Get file download URL (with SAS token for private access)
-     * For public access, just return the blob URL
+     * Get file download URL with SAS token for secure access
+     * Generates a time-limited URL with read permissions
      */
-    async getFileUrl(blobName) {
-        const containerClient = (0, azure_1.getContainerClient)();
-        const blockBlobClient = containerClient.getBlockBlobClient(blobName);
-        return blockBlobClient.url;
+    async getFileUrl(blobName, expiryMinutes = 60) {
+        try {
+            const containerClient = (0, azure_1.getContainerClient)();
+            const blockBlobClient = containerClient.getBlockBlobClient(blobName);
+            // Parse connection string to get account name and key
+            const connString = environment_1.env.AZURE_STORAGE_CONNECTION_STRING;
+            const accountNameMatch = connString.match(/AccountName=([^;]+)/);
+            const accountKeyMatch = connString.match(/AccountKey=([^;]+)/);
+            if (!accountNameMatch || !accountKeyMatch) {
+                logger_1.default.warn('Could not parse storage account credentials, returning blob URL without SAS');
+                return blockBlobClient.url;
+            }
+            const accountName = accountNameMatch[1];
+            const accountKey = accountKeyMatch[1];
+            // Create credentials
+            const sharedKeyCredential = new storage_blob_1.StorageSharedKeyCredential(accountName, accountKey);
+            // Set SAS token expiry time
+            const startsOn = new Date();
+            const expiresOn = new Date(startsOn.getTime() + expiryMinutes * 60 * 1000);
+            // Generate SAS token with read permissions
+            const sasToken = (0, storage_blob_1.generateBlobSASQueryParameters)({
+                containerName: environment_1.env.AZURE_STORAGE_CONTAINER,
+                blobName: blobName,
+                permissions: storage_blob_1.BlobSASPermissions.parse('r'), // Read-only permission
+                startsOn,
+                expiresOn,
+            }, sharedKeyCredential).toString();
+            // Return URL with SAS token
+            return `${blockBlobClient.url}?${sasToken}`;
+        }
+        catch (error) {
+            logger_1.default.error('Failed to generate SAS URL', { error, blobName });
+            // Fallback to regular URL if SAS generation fails
+            const containerClient = (0, azure_1.getContainerClient)();
+            const blockBlobClient = containerClient.getBlockBlobClient(blobName);
+            return blockBlobClient.url;
+        }
     }
     /**
      * Check if file exists

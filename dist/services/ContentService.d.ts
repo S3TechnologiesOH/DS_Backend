@@ -14,6 +14,11 @@ export declare class ContentService {
     private readonly storageService;
     constructor(contentRepository: ContentRepository, storageService: StorageService);
     /**
+     * Refresh SAS URLs for content items
+     * Generates fresh SAS tokens for fileUrl and thumbnailUrl
+     */
+    private refreshContentUrls;
+    /**
      * Get content by ID
      */
     getById(contentId: number, customerId: number): Promise<Content>;

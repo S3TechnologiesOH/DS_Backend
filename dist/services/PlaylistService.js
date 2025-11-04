@@ -16,9 +16,11 @@ const logger_1 = __importDefault(require("../utils/logger"));
 class PlaylistService {
     playlistRepository;
     contentRepository;
-    constructor(playlistRepository, contentRepository) {
+    storageService;
+    constructor(playlistRepository, contentRepository, storageService) {
         this.playlistRepository = playlistRepository;
         this.contentRepository = contentRepository;
+        this.storageService = storageService;
     }
     /**
      * Get playlist by ID
@@ -80,8 +82,21 @@ class PlaylistService {
             throw new errors_1.NotFoundError('Playlist not found');
         }
         const items = await this.playlistRepository.findItemsByPlaylistId(playlistId, customerId);
-        logger_1.default.info(`Retrieved ${items.length} items for playlist ${playlistId}`);
-        return items;
+        // Refresh SAS URLs for all content items
+        const itemsWithFreshUrls = await Promise.all(items.map(async (item) => {
+            try {
+                if (item.content.url) {
+                    const blobName = this.storageService.extractBlobName(item.content.url);
+                    item.content.url = await this.storageService.getFileUrl(blobName, 60);
+                }
+            }
+            catch (error) {
+                logger_1.default.warn('Failed to refresh SAS URL for playlist item', { playlistItemId: item.playlistItemId, error });
+            }
+            return item;
+        }));
+        logger_1.default.info(`Retrieved ${itemsWithFreshUrls.length} items for playlist ${playlistId}`);
+        return itemsWithFreshUrls;
     }
     /**
      * Create new playlist
