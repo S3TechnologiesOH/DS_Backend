@@ -45,7 +45,7 @@ export const createApp = (): Application => {
   // Compression middleware
   app.use(compression());
 
-  // Rate limiting
+  // Rate limiting - CMS endpoints only (exclude player endpoints)
   const limiter = rateLimit({
     windowMs: env.RATE_LIMIT_WINDOW_MS,
     max: env.RATE_LIMIT_MAX_REQUESTS,
@@ -54,6 +54,8 @@ export const createApp = (): Application => {
     legacyHeaders: false,
     // Custom key generator to handle IPs with port numbers (from Azure App Service)
     keyGenerator: (req) => getClientIp(req),
+    // Skip rate limiting for player device endpoints
+    skip: (req) => req.path.startsWith('/v1/player-devices'),
   });
   app.use('/api', limiter);
 
