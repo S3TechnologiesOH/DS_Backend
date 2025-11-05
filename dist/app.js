@@ -43,7 +43,7 @@ const createApp = () => {
     app.use(express_1.default.urlencoded({ extended: true, limit: '10mb' }));
     // Compression middleware
     app.use((0, compression_1.default)());
-    // Rate limiting
+    // Rate limiting - CMS endpoints only (exclude player endpoints)
     const limiter = (0, express_rate_limit_1.default)({
         windowMs: environment_1.env.RATE_LIMIT_WINDOW_MS,
         max: environment_1.env.RATE_LIMIT_MAX_REQUESTS,
@@ -52,6 +52,8 @@ const createApp = () => {
         legacyHeaders: false,
         // Custom key generator to handle IPs with port numbers (from Azure App Service)
         keyGenerator: (req) => (0, ipUtils_1.getClientIp)(req),
+        // Skip rate limiting for player device endpoints
+        skip: (req) => req.path.startsWith('/v1/player-devices'),
     });
     app.use('/api', limiter);
     // Request logging in development
