@@ -151,3 +151,62 @@ export const optionalAuthenticate = asyncHandler(
     next();
   }
 );
+
+/**
+ * Authenticate both CMS users and player clients
+ * Tries player authentication first, then falls back to user authentication
+ */
+export const authenticateUserOrPlayer = asyncHandler(
+  async (req: Request, _res: Response, next: NextFunction): Promise<void> => {
+    const token = extractToken(req);
+
+    if (!token) {
+      throw new UnauthorizedError('No authentication token provided');
+    }
+
+    // Try player authentication first
+    try {
+      const decoded = jwt.verify(token, env.PLAYER_JWT_SECRET) as PlayerJwtPayload;
+
+      // Verify token type
+      if (decoded.type === 'player') {
+        // Attach player info to request
+        req.user = {
+          playerId: decoded.playerId,
+          customerId: decoded.customerId,
+          siteId: decoded.siteId,
+          role: 'Player',
+        };
+
+        next();
+        return;
+      }
+    } catch (error) {
+      // If player auth fails, try user auth
+    }
+
+    // Try user authentication
+    try {
+      const decoded = jwt.verify(token, env.JWT_SECRET) as UserJwtPayload;
+
+      // Attach user info to request
+      req.user = {
+        userId: decoded.userId,
+        customerId: decoded.customerId,
+        email: decoded.email,
+        role: decoded.role,
+        assignedSiteId: decoded.assignedSiteId,
+      };
+
+      next();
+    } catch (error) {
+      if (error instanceof jwt.TokenExpiredError) {
+        throw new UnauthorizedError('Authentication token expired');
+      }
+      if (error instanceof jwt.JsonWebTokenError) {
+        throw new UnauthorizedError('Invalid authentication token');
+      }
+      throw new UnauthorizedError('Authentication failed');
+    }
+  }
+);

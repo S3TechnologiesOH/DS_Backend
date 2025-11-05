@@ -19,8 +19,6 @@ const router = (0, express_1.Router)();
 const analyticsRepository = new AnalyticsRepository_1.AnalyticsRepository();
 const analyticsService = new AnalyticsService_1.AnalyticsService(analyticsRepository);
 const analyticsController = new AnalyticsController_1.AnalyticsController(analyticsService);
-// All analytics routes require authentication
-router.use(authenticate_1.authenticate);
 /**
  * @swagger
  * /api/v1/analytics/summary:
@@ -82,7 +80,7 @@ router.use(authenticate_1.authenticate);
  *       401:
  *         $ref: '#/components/responses/Unauthorized'
  */
-router.get('/summary', (0, asyncHandler_1.asyncHandler)(analyticsController.getSummary.bind(analyticsController)));
+router.get('/summary', authenticate_1.authenticate, (0, asyncHandler_1.asyncHandler)(analyticsController.getSummary.bind(analyticsController)));
 /**
  * @swagger
  * /api/v1/analytics/content:
@@ -126,7 +124,7 @@ router.get('/summary', (0, asyncHandler_1.asyncHandler)(analyticsController.getS
  *       401:
  *         $ref: '#/components/responses/Unauthorized'
  */
-router.get('/content', (0, asyncHandler_1.asyncHandler)(analyticsController.getContentAnalytics.bind(analyticsController)));
+router.get('/content', authenticate_1.authenticate, (0, asyncHandler_1.asyncHandler)(analyticsController.getContentAnalytics.bind(analyticsController)));
 /**
  * @swagger
  * /api/v1/analytics/players:
@@ -159,7 +157,7 @@ router.get('/content', (0, asyncHandler_1.asyncHandler)(analyticsController.getC
  *       401:
  *         $ref: '#/components/responses/Unauthorized'
  */
-router.get('/players', (0, asyncHandler_1.asyncHandler)(analyticsController.getPlayerAnalytics.bind(analyticsController)));
+router.get('/players', authenticate_1.authenticate, (0, asyncHandler_1.asyncHandler)(analyticsController.getPlayerAnalytics.bind(analyticsController)));
 /**
  * @swagger
  * /api/v1/analytics/sites:
@@ -186,7 +184,7 @@ router.get('/players', (0, asyncHandler_1.asyncHandler)(analyticsController.getP
  *       401:
  *         $ref: '#/components/responses/Unauthorized'
  */
-router.get('/sites', (0, asyncHandler_1.asyncHandler)(analyticsController.getSiteAnalytics.bind(analyticsController)));
+router.get('/sites', authenticate_1.authenticate, (0, asyncHandler_1.asyncHandler)(analyticsController.getSiteAnalytics.bind(analyticsController)));
 /**
  * @swagger
  * /api/v1/analytics/playback-report:
@@ -230,7 +228,7 @@ router.get('/sites', (0, asyncHandler_1.asyncHandler)(analyticsController.getSit
  *       401:
  *         $ref: '#/components/responses/Unauthorized'
  */
-router.get('/playback-report', (0, asyncHandler_1.asyncHandler)(analyticsController.getPlaybackReport.bind(analyticsController)));
+router.get('/playback-report', authenticate_1.authenticate, (0, asyncHandler_1.asyncHandler)(analyticsController.getPlaybackReport.bind(analyticsController)));
 /**
  * @swagger
  * /api/v1/analytics/content-performance:
@@ -274,7 +272,7 @@ router.get('/playback-report', (0, asyncHandler_1.asyncHandler)(analyticsControl
  *       401:
  *         $ref: '#/components/responses/Unauthorized'
  */
-router.get('/content-performance', (0, asyncHandler_1.asyncHandler)(analyticsController.getContentPerformance.bind(analyticsController)));
+router.get('/content-performance', authenticate_1.authenticate, (0, asyncHandler_1.asyncHandler)(analyticsController.getContentPerformance.bind(analyticsController)));
 /**
  * @swagger
  * /api/v1/analytics/proof-of-play:
@@ -331,7 +329,7 @@ router.get('/content-performance', (0, asyncHandler_1.asyncHandler)(analyticsCon
  *       401:
  *         $ref: '#/components/responses/Unauthorized'
  */
-router.post('/proof-of-play', (0, asyncHandler_1.asyncHandler)(analyticsController.recordProofOfPlay.bind(analyticsController)));
+router.post('/proof-of-play', authenticate_1.authenticateUserOrPlayer, (0, asyncHandler_1.asyncHandler)(analyticsController.recordProofOfPlay.bind(analyticsController)));
 /**
  * @swagger
  * /api/v1/analytics/proof-of-play/{proofOfPlayId}:
@@ -383,6 +381,6 @@ router.post('/proof-of-play', (0, asyncHandler_1.asyncHandler)(analyticsControll
  *       404:
  *         $ref: '#/components/responses/NotFound'
  */
-router.patch('/proof-of-play/:proofOfPlayId', (0, asyncHandler_1.asyncHandler)(analyticsController.completeProofOfPlay.bind(analyticsController)));
+router.patch('/proof-of-play/:proofOfPlayId', authenticate_1.authenticateUserOrPlayer, (0, asyncHandler_1.asyncHandler)(analyticsController.completeProofOfPlay.bind(analyticsController)));
 exports.default = router;
 //# sourceMappingURL=analytics.routes.js.map

@@ -17,4 +17,9 @@ export declare const authenticatePlayer: (req: Request<import("express-serve-sta
  * Optional authentication - doesn't fail if no token provided
  */
 export declare const optionalAuthenticate: (req: Request<import("express-serve-static-core").ParamsDictionary, any, any, import("qs").ParsedQs, Record<string, any>>, res: Response<any, Record<string, any>>, next: NextFunction) => void;
+/**
+ * Authenticate both CMS users and player clients
+ * Tries player authentication first, then falls back to user authentication
+ */
+export declare const authenticateUserOrPlayer: (req: Request<import("express-serve-static-core").ParamsDictionary, any, any, import("qs").ParsedQs, Record<string, any>>, res: Response<any, Record<string, any>>, next: NextFunction) => void;
 //# sourceMappingURL=authenticate.d.ts.map

@@ -9,7 +9,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.optionalAuthenticate = exports.authenticatePlayer = exports.authenticate = void 0;
+exports.authenticateUserOrPlayer = exports.optionalAuthenticate = exports.authenticatePlayer = exports.authenticate = void 0;
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const environment_1 = require("../config/environment");
 const errors_1 = require("../utils/errors");
@@ -115,5 +115,56 @@ exports.optionalAuthenticate = (0, asyncHandler_1.asyncHandler)(async (req, _res
         // Silently fail for optional auth
     }
     next();
+});
+/**
+ * Authenticate both CMS users and player clients
+ * Tries player authentication first, then falls back to user authentication
+ */
+exports.authenticateUserOrPlayer = (0, asyncHandler_1.asyncHandler)(async (req, _res, next) => {
+    const token = extractToken(req);
+    if (!token) {
+        throw new errors_1.UnauthorizedError('No authentication token provided');
+    }
+    // Try player authentication first
+    try {
+        const decoded = jsonwebtoken_1.default.verify(token, environment_1.env.PLAYER_JWT_SECRET);
+        // Verify token type
+        if (decoded.type === 'player') {
+            // Attach player info to request
+            req.user = {
+                playerId: decoded.playerId,
+                customerId: decoded.customerId,
+                siteId: decoded.siteId,
+                role: 'Player',
+            };
+            next();
+            return;
+        }
+    }
+    catch (error) {
+        // If player auth fails, try user auth
+    }
+    // Try user authentication
+    try {
+        const decoded = jsonwebtoken_1.default.verify(token, environment_1.env.JWT_SECRET);
+        // Attach user info to request
+        req.user = {
+            userId: decoded.userId,
+            customerId: decoded.customerId,
+            email: decoded.email,
+            role: decoded.role,
+            assignedSiteId: decoded.assignedSiteId,
+        };
+        next();
+    }
+    catch (error) {
+        if (error instanceof jsonwebtoken_1.default.TokenExpiredError) {
+            throw new errors_1.UnauthorizedError('Authentication token expired');
+        }
+        if (error instanceof jsonwebtoken_1.default.JsonWebTokenError) {
+            throw new errors_1.UnauthorizedError('Invalid authentication token');
+        }
+        throw new errors_1.UnauthorizedError('Authentication failed');
+    }
 });
 //# sourceMappingURL=authenticate.js.map

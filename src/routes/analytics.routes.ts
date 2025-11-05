@@ -11,7 +11,7 @@ import { Router } from 'express';
 import { AnalyticsController } from '../controllers/AnalyticsController';
 import { AnalyticsService } from '../services/AnalyticsService';
 import { AnalyticsRepository } from '../repositories/AnalyticsRepository';
-import { authenticate } from '../middleware/authenticate';
+import { authenticate, authenticateUserOrPlayer } from '../middleware/authenticate';
 import { authorize } from '../middleware/authorize';
 import { asyncHandler } from '../middleware/asyncHandler';
 
@@ -21,9 +21,6 @@ const router = Router();
 const analyticsRepository = new AnalyticsRepository();
 const analyticsService = new AnalyticsService(analyticsRepository);
 const analyticsController = new AnalyticsController(analyticsService);
-
-// All analytics routes require authentication
-router.use(authenticate);
 
 /**
  * @swagger
@@ -86,7 +83,7 @@ router.use(authenticate);
  *       401:
  *         $ref: '#/components/responses/Unauthorized'
  */
-router.get('/summary', asyncHandler(analyticsController.getSummary.bind(analyticsController)));
+router.get('/summary', authenticate, asyncHandler(analyticsController.getSummary.bind(analyticsController)));
 
 /**
  * @swagger
@@ -131,7 +128,7 @@ router.get('/summary', asyncHandler(analyticsController.getSummary.bind(analytic
  *       401:
  *         $ref: '#/components/responses/Unauthorized'
  */
-router.get('/content', asyncHandler(analyticsController.getContentAnalytics.bind(analyticsController)));
+router.get('/content', authenticate, asyncHandler(analyticsController.getContentAnalytics.bind(analyticsController)));
 
 /**
  * @swagger
@@ -165,7 +162,7 @@ router.get('/content', asyncHandler(analyticsController.getContentAnalytics.bind
  *       401:
  *         $ref: '#/components/responses/Unauthorized'
  */
-router.get('/players', asyncHandler(analyticsController.getPlayerAnalytics.bind(analyticsController)));
+router.get('/players', authenticate, asyncHandler(analyticsController.getPlayerAnalytics.bind(analyticsController)));
 
 /**
  * @swagger
@@ -193,7 +190,7 @@ router.get('/players', asyncHandler(analyticsController.getPlayerAnalytics.bind(
  *       401:
  *         $ref: '#/components/responses/Unauthorized'
  */
-router.get('/sites', asyncHandler(analyticsController.getSiteAnalytics.bind(analyticsController)));
+router.get('/sites', authenticate, asyncHandler(analyticsController.getSiteAnalytics.bind(analyticsController)));
 
 /**
  * @swagger
@@ -238,7 +235,7 @@ router.get('/sites', asyncHandler(analyticsController.getSiteAnalytics.bind(anal
  *       401:
  *         $ref: '#/components/responses/Unauthorized'
  */
-router.get('/playback-report', asyncHandler(analyticsController.getPlaybackReport.bind(analyticsController)));
+router.get('/playback-report', authenticate, asyncHandler(analyticsController.getPlaybackReport.bind(analyticsController)));
 
 /**
  * @swagger
@@ -283,7 +280,7 @@ router.get('/playback-report', asyncHandler(analyticsController.getPlaybackRepor
  *       401:
  *         $ref: '#/components/responses/Unauthorized'
  */
-router.get('/content-performance', asyncHandler(analyticsController.getContentPerformance.bind(analyticsController)));
+router.get('/content-performance', authenticate, asyncHandler(analyticsController.getContentPerformance.bind(analyticsController)));
 
 /**
  * @swagger
@@ -341,7 +338,7 @@ router.get('/content-performance', asyncHandler(analyticsController.getContentPe
  *       401:
  *         $ref: '#/components/responses/Unauthorized'
  */
-router.post('/proof-of-play', asyncHandler(analyticsController.recordProofOfPlay.bind(analyticsController)));
+router.post('/proof-of-play', authenticateUserOrPlayer, asyncHandler(analyticsController.recordProofOfPlay.bind(analyticsController)));
 
 /**
  * @swagger
@@ -394,6 +391,6 @@ router.post('/proof-of-play', asyncHandler(analyticsController.recordProofOfPlay
  *       404:
  *         $ref: '#/components/responses/NotFound'
  */
-router.patch('/proof-of-play/:proofOfPlayId', asyncHandler(analyticsController.completeProofOfPlay.bind(analyticsController)));
+router.patch('/proof-of-play/:proofOfPlayId', authenticateUserOrPlayer, asyncHandler(analyticsController.completeProofOfPlay.bind(analyticsController)));
 
 export default router;
