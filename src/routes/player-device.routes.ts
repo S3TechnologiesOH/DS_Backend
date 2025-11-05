@@ -20,6 +20,7 @@ import { PlaylistRepository } from '../repositories/PlaylistRepository';
 import { LayoutRepository } from '../repositories/LayoutRepository';
 import { ContentRepository } from '../repositories/ContentRepository';
 import { ProofOfPlayRepository } from '../repositories/ProofOfPlayRepository';
+import { StorageService } from '../services/StorageService';
 import { authenticatePlayer } from '../middleware/authenticate';
 import { asyncHandler } from '../middleware/asyncHandler';
 import { validateRequest } from '../middleware/validateRequest';
@@ -35,6 +36,7 @@ const playlistRepository = new PlaylistRepository();
 const layoutRepository = new LayoutRepository();
 const contentRepository = new ContentRepository();
 const proofOfPlayRepository = new ProofOfPlayRepository();
+const storageService = new StorageService();
 const playerService = new PlayerService(playerRepository, siteRepository);
 const playerController = new PlayerController(playerService);
 
@@ -261,11 +263,23 @@ router.get(
           if (playlistWithItems && playlistWithItems.items) {
             // Add each content item from this playlist
             for (const item of playlistWithItems.items) {
+              // Generate SAS URL for the content if it has a file URL
+              let fileUrl = item.content.url;
+              if (fileUrl) {
+                try {
+                  const blobName = storageService.extractBlobName(fileUrl);
+                  fileUrl = await storageService.getFileUrl(blobName, 60); // 60 minute expiry
+                } catch (error) {
+                  // If SAS generation fails, fall back to original URL
+                  console.warn('Failed to generate SAS URL for content', { contentId: item.contentId, error });
+                }
+              }
+
               content.push({
                 contentId: item.contentId,
                 name: item.content.name,
                 contentType: item.content.contentType,
-                fileUrl: item.content.url,
+                fileUrl: fileUrl,
                 thumbnailUrl: null, // Not in current schema
                 duration: item.duration || 10,
                 displayOrder: item.displayOrder,
@@ -280,12 +294,24 @@ router.get(
           }
         } else if (config.kind) {
           // Handle direct layer content (text, image, video, etc.)
+          // Generate SAS URL for direct content if it has a file URL
+          let directFileUrl = config.url || config.src || null;
+          if (directFileUrl && typeof directFileUrl === 'string' && directFileUrl.includes('blob.core.windows.net')) {
+            try {
+              const blobName = storageService.extractBlobName(directFileUrl);
+              directFileUrl = await storageService.getFileUrl(blobName, 60); // 60 minute expiry
+            } catch (error) {
+              // If SAS generation fails, fall back to original URL
+              console.warn('Failed to generate SAS URL for layer content', { layerId: layer.layerId, error });
+            }
+          }
+
           // Create a virtual content item from the layer configuration
           content.push({
             contentId: layer.layerId, // Use layerId as virtual contentId
             name: layer.layerName || `${config.kind} content`,
             contentType: config.kind, // 'text', 'image', 'video', etc.
-            fileUrl: config.url || config.src || null, // For image/video content
+            fileUrl: directFileUrl, // For image/video content
             thumbnailUrl: null,
             duration: config.duration || 10, // Default 10 seconds
             displayOrder: layer.zIndex || 0, // Use zIndex as display order
@@ -378,9 +404,28 @@ router.get(
       status: 'Active',
     });
 
+    // Generate SAS URLs for all content items
+    const contentWithSasUrls = await Promise.all(
+      content.map(async (item) => {
+        try {
+          if (item.fileUrl) {
+            const blobName = storageService.extractBlobName(item.fileUrl);
+            item.fileUrl = await storageService.getFileUrl(blobName, 60); // 60 minute expiry
+          }
+          if (item.thumbnailUrl) {
+            const thumbnailBlobName = storageService.extractBlobName(item.thumbnailUrl);
+            item.thumbnailUrl = await storageService.getFileUrl(thumbnailBlobName, 60);
+          }
+        } catch (error) {
+          console.warn('Failed to generate SAS URLs for content', { contentId: item.contentId, error });
+        }
+        return item;
+      })
+    );
+
     res.json({
       status: 'success',
-      data: content,
+      data: contentWithSasUrls,
     });
   }),
 );
