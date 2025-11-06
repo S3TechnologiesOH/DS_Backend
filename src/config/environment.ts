@@ -50,10 +50,6 @@ const envSchema = z.object({
     .transform((val) => val === 'true')
     .default('true'),
 
-  // Rate Limiting
-  RATE_LIMIT_WINDOW_MS: z.string().transform(Number).pipe(z.number().min(1)).default('900000'),
-  RATE_LIMIT_MAX_REQUESTS: z.string().transform(Number).pipe(z.number().min(1)).default('100'),
-
   // Logging
   LOG_LEVEL: z
     .enum(['error', 'warn', 'info', 'http', 'verbose', 'debug', 'silly'])

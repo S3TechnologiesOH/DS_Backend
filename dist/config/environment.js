@@ -47,9 +47,6 @@ const envSchema = zod_1.z.object({
         .string()
         .transform((val) => val === 'true')
         .default('true'),
-    // Rate Limiting
-    RATE_LIMIT_WINDOW_MS: zod_1.z.string().transform(Number).pipe(zod_1.z.number().min(1)).default('900000'),
-    RATE_LIMIT_MAX_REQUESTS: zod_1.z.string().transform(Number).pipe(zod_1.z.number().min(1)).default('100'),
     // Logging
     LOG_LEVEL: zod_1.z
         .enum(['error', 'warn', 'info', 'http', 'verbose', 'debug', 'silly'])

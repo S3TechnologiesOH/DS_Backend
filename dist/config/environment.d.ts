@@ -24,8 +24,6 @@ declare const envSchema: z.ZodObject<{
     AZURE_STORAGE_CONTAINER: z.ZodString;
     CORS_ORIGIN: z.ZodDefault<z.ZodString>;
     CORS_CREDENTIALS: z.ZodDefault<z.ZodEffects<z.ZodString, boolean, string>>;
-    RATE_LIMIT_WINDOW_MS: z.ZodDefault<z.ZodPipeline<z.ZodEffects<z.ZodString, number, string>, z.ZodNumber>>;
-    RATE_LIMIT_MAX_REQUESTS: z.ZodDefault<z.ZodPipeline<z.ZodEffects<z.ZodString, number, string>, z.ZodNumber>>;
     LOG_LEVEL: z.ZodDefault<z.ZodEnum<["error", "warn", "info", "http", "verbose", "debug", "silly"]>>;
     LOG_FILE_PATH: z.ZodDefault<z.ZodString>;
     PLAYER_HEARTBEAT_TIMEOUT_MINUTES: z.ZodDefault<z.ZodPipeline<z.ZodEffects<z.ZodString, number, string>, z.ZodNumber>>;
@@ -48,8 +46,6 @@ declare const envSchema: z.ZodObject<{
     AZURE_STORAGE_CONTAINER?: string;
     CORS_ORIGIN?: string;
     CORS_CREDENTIALS?: boolean;
-    RATE_LIMIT_WINDOW_MS?: number;
-    RATE_LIMIT_MAX_REQUESTS?: number;
     LOG_LEVEL?: "error" | "warn" | "info" | "http" | "verbose" | "debug" | "silly";
     LOG_FILE_PATH?: string;
     PLAYER_HEARTBEAT_TIMEOUT_MINUTES?: number;
@@ -72,8 +68,6 @@ declare const envSchema: z.ZodObject<{
     AZURE_STORAGE_CONTAINER?: string;
     CORS_ORIGIN?: string;
     CORS_CREDENTIALS?: string;
-    RATE_LIMIT_WINDOW_MS?: string;
-    RATE_LIMIT_MAX_REQUESTS?: string;
     LOG_LEVEL?: "error" | "warn" | "info" | "http" | "verbose" | "debug" | "silly";
     LOG_FILE_PATH?: string;
     PLAYER_HEARTBEAT_TIMEOUT_MINUTES?: string;
@@ -97,8 +91,6 @@ export declare const env: {
     AZURE_STORAGE_CONTAINER?: string;
     CORS_ORIGIN?: string;
     CORS_CREDENTIALS?: boolean;
-    RATE_LIMIT_WINDOW_MS?: number;
-    RATE_LIMIT_MAX_REQUESTS?: number;
     LOG_LEVEL?: "error" | "warn" | "info" | "http" | "verbose" | "debug" | "silly";
     LOG_FILE_PATH?: string;
     PLAYER_HEARTBEAT_TIMEOUT_MINUTES?: number;

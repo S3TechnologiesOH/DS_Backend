@@ -13,14 +13,12 @@ const express_1 = __importDefault(require("express"));
 const helmet_1 = __importDefault(require("helmet"));
 const cors_1 = __importDefault(require("cors"));
 const compression_1 = __importDefault(require("compression"));
-const express_rate_limit_1 = __importDefault(require("express-rate-limit"));
 const swagger_ui_express_1 = __importDefault(require("swagger-ui-express"));
 const environment_1 = require("./config/environment");
 const errorHandler_1 = require("./middleware/errorHandler");
 const logger_1 = __importDefault(require("./utils/logger"));
 const routes_1 = __importDefault(require("./routes"));
 const swagger_1 = require("./config/swagger");
-const ipUtils_1 = require("./utils/ipUtils");
 /**
  * Create and configure Express application
  */
@@ -43,24 +41,6 @@ const createApp = () => {
     app.use(express_1.default.urlencoded({ extended: true, limit: '10mb' }));
     // Compression middleware
     app.use((0, compression_1.default)());
-    // Rate limiting - Disabled in development, lenient in production
-    // Skip player device endpoints as they're authenticated and have legitimate high frequency
-    const limiter = (0, express_rate_limit_1.default)({
-        windowMs: environment_1.env.RATE_LIMIT_WINDOW_MS,
-        max: environment_1.env.RATE_LIMIT_MAX_REQUESTS,
-        message: 'Too many requests from this IP, please try again later',
-        standardHeaders: true,
-        legacyHeaders: false,
-        // Custom key generator to handle IPs with port numbers (from Azure App Service)
-        keyGenerator: (req) => (0, ipUtils_1.getClientIp)(req),
-        // Skip rate limiting for:
-        // - Development environment (too restrictive for dev workflow)
-        // - Player device endpoints (authenticated, need high frequency for heartbeats/schedules)
-        skip: (req) => {
-            return environment_1.env.NODE_ENV === 'development' || req.path.startsWith('/v1/player-devices');
-        },
-    });
-    app.use('/api', limiter);
     // Request logging in development
     if (environment_1.env.NODE_ENV === 'development') {
         app.use((req, _res, next) => {

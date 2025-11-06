@@ -8,14 +8,12 @@ import express, { Application } from 'express';
 import helmet from 'helmet';
 import cors from 'cors';
 import compression from 'compression';
-import rateLimit from 'express-rate-limit';
 import swaggerUi from 'swagger-ui-express';
 import { env } from './config/environment';
 import { errorHandler, notFoundHandler } from './middleware/errorHandler';
 import logger from './utils/logger';
 import apiRoutes from './routes';
 import { swaggerSpec } from './config/swagger';
-import { getClientIp } from './utils/ipUtils';
 
 /**
  * Create and configure Express application
@@ -44,25 +42,6 @@ export const createApp = (): Application => {
 
   // Compression middleware
   app.use(compression());
-
-  // Rate limiting - Disabled in development, lenient in production
-  // Skip player device endpoints as they're authenticated and have legitimate high frequency
-  const limiter = rateLimit({
-    windowMs: env.RATE_LIMIT_WINDOW_MS,
-    max: env.RATE_LIMIT_MAX_REQUESTS,
-    message: 'Too many requests from this IP, please try again later',
-    standardHeaders: true,
-    legacyHeaders: false,
-    // Custom key generator to handle IPs with port numbers (from Azure App Service)
-    keyGenerator: (req) => getClientIp(req),
-    // Skip rate limiting for:
-    // - Development environment (too restrictive for dev workflow)
-    // - Player device endpoints (authenticated, need high frequency for heartbeats/schedules)
-    skip: (req) => {
-      return env.NODE_ENV === 'development' || req.path.startsWith('/v1/player-devices');
-    },
-  });
-  app.use('/api', limiter);
 
   // Request logging in development
   if (env.NODE_ENV === 'development') {
