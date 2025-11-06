@@ -89,8 +89,8 @@ export class PlayerAuthService {
     );
     const refreshToken = this.generateRefreshToken(player.playerId);
 
-    // Store refresh token with 30-day expiration
-    const expiresAt = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000);
+    // Store refresh token with 1-year expiration
+    const expiresAt = new Date(Date.now() + 365 * 24 * 60 * 60 * 1000);
     await this.playerTokenRepository.create({
       playerId: player.playerId,
       token: refreshToken,
@@ -237,7 +237,7 @@ export class PlayerAuthService {
 
   /**
    * Generate refresh token for player
-   * Long-lived (30 days)
+   * Long-lived (1 year)
    */
   private generateRefreshToken(playerId: number): string {
     const payload: PlayerRefreshJwtPayload = {
@@ -246,7 +246,7 @@ export class PlayerAuthService {
     };
 
     return jwt.sign(payload, env.PLAYER_JWT_SECRET, {
-      expiresIn: '30d',
+      expiresIn: '365d',
     });
   }
 }

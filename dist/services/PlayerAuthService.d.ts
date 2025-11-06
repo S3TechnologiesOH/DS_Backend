@@ -44,7 +44,7 @@ export declare class PlayerAuthService {
     private generateAccessToken;
     /**
      * Generate refresh token for player
-     * Long-lived (30 days)
+     * Long-lived (1 year)
      */
     private generateRefreshToken;
 }
