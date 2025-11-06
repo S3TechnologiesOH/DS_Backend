@@ -14,7 +14,7 @@ export declare const createLayoutSchema: z.ZodObject<{
         tags: z.ZodOptional<z.ZodString>;
         layers: z.ZodOptional<z.ZodArray<z.ZodObject<{
             layerName: z.ZodString;
-            layerType: z.ZodEnum<["text", "image", "video", "playlist", "html", "iframe", "weather", "rss", "news", "youtube", "clock", "shape"]>;
+            layerType: z.ZodEnum<["text", "scrolling-text", "image", "background-image", "video", "playlist", "html", "iframe", "webpage", "weather", "rss", "news", "youtube", "clock", "shape"]>;
             zIndex: z.ZodDefault<z.ZodNumber>;
             positionX: z.ZodNumber;
             positionY: z.ZodNumber;
@@ -219,7 +219,7 @@ export declare const createLayoutSchema: z.ZodObject<{
             width?: number;
             height?: number;
             layerName?: string;
-            layerType?: "text" | "image" | "video" | "playlist" | "html" | "iframe" | "weather" | "rss" | "news" | "youtube" | "clock" | "shape";
+            layerType?: "text" | "image" | "video" | "playlist" | "html" | "iframe" | "weather" | "rss" | "news" | "youtube" | "clock" | "shape" | "scrolling-text" | "background-image" | "webpage";
             zIndex?: number;
             positionX?: number;
             positionY?: number;
@@ -294,7 +294,7 @@ export declare const createLayoutSchema: z.ZodObject<{
             width?: number;
             height?: number;
             layerName?: string;
-            layerType?: "text" | "image" | "video" | "playlist" | "html" | "iframe" | "weather" | "rss" | "news" | "youtube" | "clock" | "shape";
+            layerType?: "text" | "image" | "video" | "playlist" | "html" | "iframe" | "weather" | "rss" | "news" | "youtube" | "clock" | "shape" | "scrolling-text" | "background-image" | "webpage";
             zIndex?: number;
             positionX?: number;
             positionY?: number;
@@ -377,7 +377,7 @@ export declare const createLayoutSchema: z.ZodObject<{
             width?: number;
             height?: number;
             layerName?: string;
-            layerType?: "text" | "image" | "video" | "playlist" | "html" | "iframe" | "weather" | "rss" | "news" | "youtube" | "clock" | "shape";
+            layerType?: "text" | "image" | "video" | "playlist" | "html" | "iframe" | "weather" | "rss" | "news" | "youtube" | "clock" | "shape" | "scrolling-text" | "background-image" | "webpage";
             zIndex?: number;
             positionX?: number;
             positionY?: number;
@@ -460,7 +460,7 @@ export declare const createLayoutSchema: z.ZodObject<{
             width?: number;
             height?: number;
             layerName?: string;
-            layerType?: "text" | "image" | "video" | "playlist" | "html" | "iframe" | "weather" | "rss" | "news" | "youtube" | "clock" | "shape";
+            layerType?: "text" | "image" | "video" | "playlist" | "html" | "iframe" | "weather" | "rss" | "news" | "youtube" | "clock" | "shape" | "scrolling-text" | "background-image" | "webpage";
             zIndex?: number;
             positionX?: number;
             positionY?: number;
@@ -545,7 +545,7 @@ export declare const createLayoutSchema: z.ZodObject<{
             width?: number;
             height?: number;
             layerName?: string;
-            layerType?: "text" | "image" | "video" | "playlist" | "html" | "iframe" | "weather" | "rss" | "news" | "youtube" | "clock" | "shape";
+            layerType?: "text" | "image" | "video" | "playlist" | "html" | "iframe" | "weather" | "rss" | "news" | "youtube" | "clock" | "shape" | "scrolling-text" | "background-image" | "webpage";
             zIndex?: number;
             positionX?: number;
             positionY?: number;
@@ -630,7 +630,7 @@ export declare const createLayoutSchema: z.ZodObject<{
             width?: number;
             height?: number;
             layerName?: string;
-            layerType?: "text" | "image" | "video" | "playlist" | "html" | "iframe" | "weather" | "rss" | "news" | "youtube" | "clock" | "shape";
+            layerType?: "text" | "image" | "video" | "playlist" | "html" | "iframe" | "weather" | "rss" | "news" | "youtube" | "clock" | "shape" | "scrolling-text" | "background-image" | "webpage";
             zIndex?: number;
             positionX?: number;
             positionY?: number;
@@ -892,7 +892,7 @@ export declare const addLayerSchema: z.ZodObject<{
     }>;
     body: z.ZodObject<{
         layerName: z.ZodString;
-        layerType: z.ZodEnum<["text", "image", "video", "playlist", "html", "iframe", "weather", "rss", "news", "youtube", "clock", "shape"]>;
+        layerType: z.ZodEnum<["text", "scrolling-text", "image", "background-image", "video", "playlist", "html", "iframe", "webpage", "weather", "rss", "news", "youtube", "clock", "shape"]>;
         zIndex: z.ZodDefault<z.ZodNumber>;
         positionX: z.ZodNumber;
         positionY: z.ZodNumber;
@@ -1097,7 +1097,7 @@ export declare const addLayerSchema: z.ZodObject<{
         width?: number;
         height?: number;
         layerName?: string;
-        layerType?: "text" | "image" | "video" | "playlist" | "html" | "iframe" | "weather" | "rss" | "news" | "youtube" | "clock" | "shape";
+        layerType?: "text" | "image" | "video" | "playlist" | "html" | "iframe" | "weather" | "rss" | "news" | "youtube" | "clock" | "shape" | "scrolling-text" | "background-image" | "webpage";
         zIndex?: number;
         positionX?: number;
         positionY?: number;
@@ -1172,7 +1172,7 @@ export declare const addLayerSchema: z.ZodObject<{
         width?: number;
         height?: number;
         layerName?: string;
-        layerType?: "text" | "image" | "video" | "playlist" | "html" | "iframe" | "weather" | "rss" | "news" | "youtube" | "clock" | "shape";
+        layerType?: "text" | "image" | "video" | "playlist" | "html" | "iframe" | "weather" | "rss" | "news" | "youtube" | "clock" | "shape" | "scrolling-text" | "background-image" | "webpage";
         zIndex?: number;
         positionX?: number;
         positionY?: number;
@@ -1252,7 +1252,7 @@ export declare const addLayerSchema: z.ZodObject<{
         width?: number;
         height?: number;
         layerName?: string;
-        layerType?: "text" | "image" | "video" | "playlist" | "html" | "iframe" | "weather" | "rss" | "news" | "youtube" | "clock" | "shape";
+        layerType?: "text" | "image" | "video" | "playlist" | "html" | "iframe" | "weather" | "rss" | "news" | "youtube" | "clock" | "shape" | "scrolling-text" | "background-image" | "webpage";
         zIndex?: number;
         positionX?: number;
         positionY?: number;
@@ -1332,7 +1332,7 @@ export declare const addLayerSchema: z.ZodObject<{
         width?: number;
         height?: number;
         layerName?: string;
-        layerType?: "text" | "image" | "video" | "playlist" | "html" | "iframe" | "weather" | "rss" | "news" | "youtube" | "clock" | "shape";
+        layerType?: "text" | "image" | "video" | "playlist" | "html" | "iframe" | "weather" | "rss" | "news" | "youtube" | "clock" | "shape" | "scrolling-text" | "background-image" | "webpage";
         zIndex?: number;
         positionX?: number;
         positionY?: number;
@@ -1418,7 +1418,7 @@ export declare const updateLayerSchema: z.ZodObject<{
     }>;
     body: z.ZodObject<{
         layerName: z.ZodOptional<z.ZodString>;
-        layerType: z.ZodOptional<z.ZodEnum<["text", "image", "video", "playlist", "html", "iframe", "weather", "rss", "news", "youtube", "clock", "shape"]>>;
+        layerType: z.ZodOptional<z.ZodEnum<["text", "scrolling-text", "image", "background-image", "video", "playlist", "html", "iframe", "webpage", "weather", "rss", "news", "youtube", "clock", "shape"]>>;
         zIndex: z.ZodOptional<z.ZodNumber>;
         positionX: z.ZodOptional<z.ZodNumber>;
         positionY: z.ZodOptional<z.ZodNumber>;
@@ -1623,7 +1623,7 @@ export declare const updateLayerSchema: z.ZodObject<{
         width?: number;
         height?: number;
         layerName?: string;
-        layerType?: "text" | "image" | "video" | "playlist" | "html" | "iframe" | "weather" | "rss" | "news" | "youtube" | "clock" | "shape";
+        layerType?: "text" | "image" | "video" | "playlist" | "html" | "iframe" | "weather" | "rss" | "news" | "youtube" | "clock" | "shape" | "scrolling-text" | "background-image" | "webpage";
         zIndex?: number;
         positionX?: number;
         positionY?: number;
@@ -1698,7 +1698,7 @@ export declare const updateLayerSchema: z.ZodObject<{
         width?: number;
         height?: number;
         layerName?: string;
-        layerType?: "text" | "image" | "video" | "playlist" | "html" | "iframe" | "weather" | "rss" | "news" | "youtube" | "clock" | "shape";
+        layerType?: "text" | "image" | "video" | "playlist" | "html" | "iframe" | "weather" | "rss" | "news" | "youtube" | "clock" | "shape" | "scrolling-text" | "background-image" | "webpage";
         zIndex?: number;
         positionX?: number;
         positionY?: number;
@@ -1779,7 +1779,7 @@ export declare const updateLayerSchema: z.ZodObject<{
         width?: number;
         height?: number;
         layerName?: string;
-        layerType?: "text" | "image" | "video" | "playlist" | "html" | "iframe" | "weather" | "rss" | "news" | "youtube" | "clock" | "shape";
+        layerType?: "text" | "image" | "video" | "playlist" | "html" | "iframe" | "weather" | "rss" | "news" | "youtube" | "clock" | "shape" | "scrolling-text" | "background-image" | "webpage";
         zIndex?: number;
         positionX?: number;
         positionY?: number;
@@ -1860,7 +1860,7 @@ export declare const updateLayerSchema: z.ZodObject<{
         width?: number;
         height?: number;
         layerName?: string;
-        layerType?: "text" | "image" | "video" | "playlist" | "html" | "iframe" | "weather" | "rss" | "news" | "youtube" | "clock" | "shape";
+        layerType?: "text" | "image" | "video" | "playlist" | "html" | "iframe" | "weather" | "rss" | "news" | "youtube" | "clock" | "shape" | "scrolling-text" | "background-image" | "webpage";
         zIndex?: number;
         positionX?: number;
         positionY?: number;

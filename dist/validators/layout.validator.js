@@ -9,11 +9,14 @@ exports.deleteLayerSchema = exports.updateLayerSchema = exports.addLayerSchema =
 const zod_1 = require("zod");
 const layerTypes = [
     'text',
+    'scrolling-text',
     'image',
+    'background-image',
     'video',
     'playlist',
     'html',
     'iframe',
+    'webpage',
     'weather',
     'rss',
     'news',

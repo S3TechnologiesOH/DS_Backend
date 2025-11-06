@@ -282,7 +282,7 @@ router.get('/:layoutId/layers', (0, validateRequest_1.validateRequest)(layout_va
  *                 example: Header Text
  *               layerType:
  *                 type: string
- *                 enum: [text, image, video, playlist, html, iframe, weather, rss, news, youtube, clock, shape]
+ *                 enum: [text, scrolling-text, image, background-image, video, playlist, html, iframe, webpage, weather, rss, news, youtube, clock, shape]
  *               positionX:
  *                 type: integer
  *               positionY:
